@@ -1,0 +1,7 @@
+POST http://localhost:3036/api/v1/FWBBD/usuarios/login
+content-type: application/json
+
+{
+  "correoElectronico": "omar@admin.com",
+  "password": "Caracolas1843_"
+}

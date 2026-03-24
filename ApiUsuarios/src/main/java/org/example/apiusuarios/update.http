@@ -1,0 +1,7 @@
+PUT http://localhost:3036/api/v1/FWBBD/mediciones/actualizar/113
+Content-Type: application/json
+
+{
+  "fecha": "'2025-12-12'",
+  "brazo": 40
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="ModificaRoot"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.ModificaController"
+      prefHeight="640" prefWidth="360"
+      alignment="TOP_CENTER"
+      spacing="16"
+      stylesheets="@estilos.css"
+      styleClass="fondo-oscuro">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToPerfilClick"
+                prefWidth="50" prefHeight="50" styleClass="volver-btn"/>
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="12" VBox.vgrow="ALWAYS">
+        <VBox id="ModificaCard" alignment="CENTER" spacing="12" maxWidth="320">
+            <Label fx:id="TituloGeneral"  text="MODIFICAR PERFIL"/>
+
+            <TextField fx:id="NombreTxt" promptText="Nombre" styleClass="fitwin-txt"/>
+            <TextField fx:id="ApellidosTxt" promptText="Apellidos" styleClass="fitwin-txt"/>
+            <TextField fx:id="CorreoTxt" promptText="Correo electrónico" styleClass="fitwin-txt"/>
+            <PasswordField fx:id="PasswordTxt"    promptText="Nueva contraseña" styleClass="fitwin-txt"/>
+            <DatePicker fx:id="FechaNacimientoPicker" promptText="Fecha de nacimiento (dia/mes/año)" showWeekNumbers="false"  styleClass="fitwin-txt"/>
+            <TextField fx:id="AlturaTxt"          promptText="Altura (m)" styleClass="fitwin-txt"/>
+        </VBox>
+
+        <HBox alignment="CENTER">
+            <Button fx:id="GuardarBtn" text=" " onAction="#guardarCambios"/>
+        </HBox>
+
+        <Label fx:id="EstadoLbl" text="" visible="false" managed="false" alignment="CENTER" wrapText="true" maxWidth="300" styleClass="alerta-texto"/>
+    </VBox>
+
+</VBox>

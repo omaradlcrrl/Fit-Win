@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.ObjetivosController"
+      prefWidth="360" prefHeight="640"
+      spacing="16"
+      stylesheets="@estilos.css"
+      styleClass="fondo-oscuro">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToMenuClick" styleClass="volver-btn"/>
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label alignment="CENTER" text="OBJETIVOS" styleClass="titulo-secundario"/>
+    </VBox>
+
+    <Label alignment="CENTER" text="Ve a la sección de peso e introduce tu peso de hoy para generar objetivos personalizados." styleClass="fitwin-txt" wrapText="true"/>
+
+    <VBox prefHeight="20" opacity="0"/>
+
+    <VBox fx:id="CajaGenerar" alignment="CENTER" spacing="6">
+
+        <Button fx:id="GenerarBtn" onAction="#onGenerarObjetivosClick"/>
+        <Label fx:id="GenerarLbl" text="GENERA TUS OBJETIVOS"/>
+
+    </VBox>
+
+    <HBox alignment="CENTER">
+        <Label fx:id="EstadoLbl" text="" visible="false" managed="false" wrapText="true" maxWidth="300" alignment="CENTER" styleClass="alerta-pill"/>
+    </HBox>
+
+    <VBox prefHeight="20" opacity="0"/>
+
+    <VBox fx:id="CajaSeguimiento" alignment="CENTER" spacing="15">
+        <Button fx:id="SeguimientoBtn" onAction="#onSeguimientoClick"/>
+        <Label fx:id="SeguimientoLbl" text="SEGUIMIENTO DE OBJETIVOS"/>
+    </VBox>
+
+    <Pane VBox.vgrow="ALWAYS"/>
+</VBox>

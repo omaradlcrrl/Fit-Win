@@ -1,0 +1,6 @@
+//GET http://localhost:3036/api/v1/FWBBD/usuarios/20
+//GET http://localhost:3036/api/v1/FWBBD/registrosdiarios/range/20?from=2025-08-10&to=2025-08-16
+//GET http://localhost:3036/api/v1/FWBBD/progreso/racha/20?hasta=2025-08-31&objetivo=SUPERAVIT
+
+GET http://localhost:3036/api/v1/FWBBD/objetivos/usuario/163
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiJvbWFyQGFkbWluLmNvbSIsImlhdCI6MTc2ODkxNzAxNCwiZXhwIjoxNzY5MDAzNDE0fQ.mBX1vdV-cvV9BY5dgLE69k5zNBMTUMsfsiZvHvyFEKoxEVkDZEDk6kD1bwCXmNrO

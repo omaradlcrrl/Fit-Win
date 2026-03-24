@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.PesoController"
+      styleClass="fondo-oscuro"
+      spacing="24"
+      stylesheets="@estilos.css"
+      prefHeight="640" prefWidth="360" >
+
+    <HBox alignment="TOP_LEFT" prefWidth="360">
+        <Button fx:id="VolverBtn" onAction="#onVolverClick" styleClass="volver-btn"/>
+    </HBox>
+    <VBox alignment="CENTER" spacing="18" VBox.vgrow="ALWAYS">
+    <VBox alignment="CENTER" spacing="20">
+        <Label id="PesoTitulo" text="Introduce tu peso de hoy" wrapText="true" styleClass="titulo-secundario"/>
+    </VBox>
+
+    <StackPane id="PesoCard" maxWidth="280" prefWidth="280" minWidth="280">
+        <HBox alignment="CENTER" spacing="10">
+            <TextField fx:id="PesoTxt" text="0"/>
+            <Label id="KgEtiq" text="kg"/>
+        </HBox>
+    </StackPane>
+   <HBox alignment="CENTER">
+       <Button fx:id="GuardarBtn" text="" onAction="#onGuardarPesoClick" styleClass="btn-guardar"/>
+   </HBox>
+    <Label fx:id="EstadoLbl" text="" visible="false" managed="false" wrapText="true" maxWidth="300" alignment="CENTER" styleClass="alerta-pill"/>
+</VBox>
+</VBox>

@@ -1,0 +1,15 @@
+POST http://localhost:3036/api/v1/FWBBD/usuarios/save
+Content-Type: application/json
+
+{
+  "nombre": "Omar",
+  "apellidos": "Fitness",
+  "correoElectronico": "omar.fitness@test.com",
+  "password": "password123",
+  "altura": 1.75,
+  "fechaNacimiento": "1995-05-15",
+  "genero": "MASCULINO",
+  "nivelActividad": "MODERADO",
+  "estrategia": "SUPERAVIT",
+  "ajusteCalorico": 15
+}

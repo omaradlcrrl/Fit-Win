@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.ProgresoController"
+      prefHeight="640" prefWidth="360"
+      spacing="16"
+      stylesheets="@estilos.css"
+      fx:id="ProgresoRoot"
+      styleClass="fondo-oscuro"
+      alignment="CENTER">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToMenuClick" styleClass="volver-btn"/>
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="10">
+        <Label fx:id="TituloLbl" text="PROGRESO" styleClass="fitwin-estilo"/>
+
+    </VBox>
+
+    <Label fx:id="SubtituloLbl" text="Selecciona qué progreso quieres visualizar." wrapText="true" alignment="CENTER" styleClass="fitwin-estilo"/>
+
+    <VBox prefHeight="20" opacity="0"/>
+
+    <VBox fx:id="CajaPeso" alignment="CENTER" spacing="6">
+        <Button fx:id="ProgresoPesoBtn" onAction="#onPesoClick"/>
+        <Label fx:id="ProgresoPesoLbl" text="PROGRESO DE PESO" styleClass="fitwin-estilo"/>
+    </VBox>
+
+
+    <HBox alignment="CENTER">
+        <Label fx:id="EstadoPesoLbl" text="" visible="false" managed="false" wrapText="true" maxWidth="300" alignment="CENTER"/>
+    </HBox>
+
+
+    <VBox prefHeight="20" opacity="0"/>
+
+    <VBox fx:id="CajaMedidas" alignment="CENTER" spacing="6">
+        <Button fx:id="ProgresoMedidasBtn" onAction="#onMedidasClick"/>
+        <Label fx:id="ProgresoMedidasLbl" text="PROGRESO DE MEDICIONES" styleClass="fitwin-estilo"/>
+    </VBox>
+
+
+    <HBox alignment="CENTER">
+        <Label fx:id="EstadoMedidasLbl" text="" visible="false" managed="false" wrapText="true" maxWidth="300" alignment="CENTER"/>
+    </HBox>
+
+
+    <Pane VBox.vgrow="ALWAYS"/>
+</VBox>

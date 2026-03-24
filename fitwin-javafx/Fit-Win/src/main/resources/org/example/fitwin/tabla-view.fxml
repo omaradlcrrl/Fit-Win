@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="640" prefWidth="360" spacing="20"
+      stylesheets="@estilos.css"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.TableController"
+      styleClass="fondo-oscuro">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToEjercicioClick" styleClass="volver-btn"/>
+    </HBox>
+
+    <HBox alignment="CENTER">
+        <ImageView fitHeight="60" fitWidth="60">
+            <image>
+                <Image url="@iconos/entrenamiento-amarillo.png" />
+            </image>
+        </ImageView>
+    </HBox>
+<VBox alignment="CENTER" spacing="18" VBox.vgrow="ALWAYS">
+    <Label text="TABLA DE ENTRENO" textFill="WHITE" styleClass="titulo-principal" />
+    </VBox>
+<HBox>
+    <Label fx:id="DiaEntreno" text="Entreno del día: " />
+    <ComboBox fx:id="DiaCombo"  prefWidth="200" promptText="Seleccione un día"/>
+
+</HBox>
+    <TableView fx:id="TablaEjercicios"  prefWidth="350" maxHeight="360">
+        <columns>
+            <TableColumn text="Ejercicio" fx:id="colEjercicio" />
+            <TableColumn text="Series"    fx:id="colSeries"    />
+            <TableColumn text="Reps"      fx:id="colReps"      />
+        </columns>
+    </TableView>
+
+
+</VBox>
