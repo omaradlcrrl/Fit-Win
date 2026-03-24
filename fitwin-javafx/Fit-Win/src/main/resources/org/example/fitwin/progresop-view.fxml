@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.ProgresoPController"
+      prefHeight="640" prefWidth="360"
+      spacing="16"
+      stylesheets="@estilos.css"
+      styleClass="fondo-oscuro">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToProgresoClick" styleClass="volver-btn"/>
+    </HBox>
+
+    <HBox alignment="CENTER" spacing="12">
+        <VBox alignment="CENTER">
+            <Label text="Desde" styleClass="etiqueta-progreso"/>
+            <DatePicker fx:id="desdePicker"/>
+        </VBox>
+        <VBox alignment="CENTER">
+            <Label text="Hasta" styleClass="etiqueta-progreso"/>
+            <DatePicker fx:id="hastaPicker"/>
+        </VBox>
+
+    </HBox>
+
+    <StackPane styleClass="progreso-chart-card">
+        <LineChart fx:id="pesoChart" animated="false" legendVisible="false" prefHeight="300" styleClass="progreso-linechart">
+            <xAxis><CategoryAxis fx:id="xAxis" styleClass="progreso-xaxis" label="Fecha"/></xAxis>
+            <yAxis><NumberAxis fx:id="yAxis" label="Peso (kg)"  styleClass="progreso-yaxis"/></yAxis>
+        </LineChart>
+    </StackPane>
+<HBox alignment="CENTER">
+    <Button fx:id="CalcularBtn" text="" onAction="#onCalcularClick"  styleClass="btn-actualizar"/>
+</HBox>
+
+    <HBox alignment="CENTER">
+    <Label alignment="CENTER" fx:id="ResultadoLbl" text="" wrapText="true" styleClass="progreso-mensaje"/>
+    </HBox>
+    <Pane VBox.vgrow="ALWAYS"/>
+</VBox>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" prefHeight="640" prefWidth="360" spacing="16"
+      styleClass="fondo-oscuro" stylesheets="@estilos.css"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.RegisterController">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackButtonClick" styleClass="volver-btn" />
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="0">
+        <ImageView fitHeight="150" fitWidth="150" preserveRatio="true">
+            <image><Image url="@iconos/Logo2.0.png" /></image>
+        </ImageView>
+        
+        <Label fx:id="RegistroTituloLbl" styleClass="titulo-principal" text="CREAR CUENTA" textFill="WHITE" />
+
+        <VBox alignment="CENTER" spacing="8">
+
+            <TextField fx:id="NomTxt" promptText="NOMBRE" styleClass="fitwin-txt" />
+            <TextField fx:id="ApellTxt" promptText="APELLIDO" styleClass="fitwin-txt" />
+            <TextField fx:id="EmailTxt" promptText="EMAIL" styleClass="fitwin-txt" />
+            <PasswordField fx:id="PassTxt" promptText="CONTRASEÑA" styleClass="fitwin-txt" />
+            <TextField fx:id="AltuTxt" promptText="ALTURA (m)" styleClass="fitwin-txt" />
+            <TextField fx:id="IdiomTxt" promptText="IDIOMA" styleClass="fitwin-txt" />
+            <DatePicker fx:id="FNacimientoPicker" promptText="FECHA DE NACIMIENTO (DD/MM/AAAA)"  showWeekNumbers="false"  styleClass="fitwin-txt" />
+            <ComboBox fx:id="EstratCombo" prefWidth="260" promptText="OBJETIVO" styleClass="fit-combo" />
+            <Label fx:id="EstratEtq" text="" />
+            <Label fx:id="EstadoLbl" text="" visible="false" managed="false" styleClass="alerta-texto" />
+
+
+            <Button fx:id="RegisterBtn" onAction="#onRegisterButtonClick" styleClass="sesion-btn" text="REGISTRARSE" />
+        </VBox>
+    </VBox>
+</VBox>

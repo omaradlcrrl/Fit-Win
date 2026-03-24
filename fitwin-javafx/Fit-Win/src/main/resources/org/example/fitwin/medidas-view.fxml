@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.MedidasController"
+      styleClass="fondo-oscuro"
+      prefHeight="640" prefWidth="360"
+      stylesheets="@estilos.css">
+
+    <HBox alignment="TOP_LEFT">
+        <Button fx:id="VolverBtn" onAction="#onBackToMenuClick" styleClass="volver-btn"/>
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="18" VBox.vgrow="ALWAYS">
+
+        <VBox alignment="CENTER" spacing="4">
+            <Label text="Medición Corporal" styleClass="titulo-secundario"/>
+            <Label id="MedicionSubtitulo" text="Introduce las medidas de los campos indicados" wrapText="true"/>
+        </VBox>
+
+        <Label fx:id="CircTitulo" text="Circunferencias (cm)"/>
+
+        <VBox id="MedicionForm" alignment="CENTER" spacing="12">
+            <TextField fx:id="BrazoTxt" promptText="Brazo" styleClass="fitwin-txt"/>
+            <TextField fx:id="PechoTxt" promptText="Pecho" styleClass="fitwin-txt"/>
+            <TextField fx:id="EspaldaTxt" promptText="Espalda" styleClass="fitwin-txt"/>
+            <TextField fx:id="MusloTxt" promptText="Muslo" styleClass="fitwin-txt"/>
+            <TextField fx:id="HombroTxt"  id="HombroTxt" promptText="Hombro" styleClass="fitwin-txt"/>
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="15">
+            <Button fx:id="GuardarBtn" text="" onAction="#onGuardarMedidasClick" styleClass="btn-guardar"/>
+            <Button fx:id="BorrarBtn"  text="" onAction="#onBorrarMedidasClick" styleClass="btn-borrar"/>
+        </HBox>
+
+
+        <Label fx:id="EstadoLbl"  text="" visible="false" managed="false" wrapText="true" maxWidth="300" alignment="CENTER" styleClass="alerta-pill"/>
+    </VBox>
+</VBox>

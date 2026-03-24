@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="16"
+      prefHeight="640" prefWidth="360"
+      xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.EjercicioController"
+      stylesheets="@estilos.css" styleClass="fondo-oscuro">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToMenuClick" styleClass="volver-btn"/>
+    </HBox>
+
+    <VBox alignment="CENTER">
+        <ImageView fitHeight="60" fitWidth="60">
+            <image><Image url="@iconos/entrenamiento-amarillo.png"/></image>
+        </ImageView>
+    </VBox>
+
+    <HBox alignment="CENTER">
+      <Label fx:id="EjercicioTituloLbl" text="Añadir Ejercicios" styleClass="titulo-principal"/>
+    </HBox>
+
+    <GridPane alignment="CENTER" hgap="10" vgap="10">
+        <TextField fx:id="NombreTxt"  prefWidth="200" promptText="Nombre del ejercicio:"      styleClass="fitwin-txt" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <TextField fx:id="PosicionTxt" prefWidth="200" promptText="Posición del ejercicio (opcional para Guardar):" styleClass="fitwin-txt" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <ComboBox  fx:id="DiaCombo" prefWidth="200" promptText="Seleccione un día"  styleClass="fit-combo"  GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <TextField fx:id="SeriesTxt" prefWidth="200" promptText="Series:"                    styleClass="fitwin-txt" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <TextField fx:id="RepeticionesTxt" prefWidth="200" promptText="Repeticiones:"              styleClass="fitwin-txt" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+    </GridPane>
+
+    <HBox alignment="CENTER" spacing="10">
+        <Button fx:id="GuiaBtn"     onAction="#onGuiaButtonClick" />
+        <Button fx:id="GuardarBtn"  onAction="#onSaveEjercicioButtonClick" styleClass="btn-guardar"/>
+        <Button fx:id="BorrarBtn"   onAction="#onDeleteEjercicioButtonClick" styleClass="btn-borrar"/>
+    </HBox>
+    <Label fx:id="EstadoLbl" text="" visible="false" managed="false" wrapText="true" maxWidth="320" styleClass="alerta-texto"/>
+    <HBox alignment="CENTER" spacing="10">
+        <Button fx:id="RutinaBtn" onAction="#onRutinaDeHoyButtonClick" text="RUTINA DE HOY"/>
+    </HBox>
+
+</VBox>

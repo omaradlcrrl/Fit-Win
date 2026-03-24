@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.AjustesController"
+      stylesheets="@estilos.css"
+      styleClass="fondo-oscuro"
+      prefHeight="640" prefWidth="360"
+      spacing="0" >
+
+    <HBox alignment="TOP_LEFT">
+        <padding><Insets top="20" right="20" bottom="0" left="20"/></padding>
+        <Button fx:id="VolverBtn" onAction="#onBackToMenuClick" styleClass="volver-btn"/>
+    </HBox>
+
+
+    <VBox alignment="CENTER" spacing="18" VBox.vgrow="ALWAYS">
+
+        <VBox alignment="CENTER">
+            <ImageView fitWidth="60" fitHeight="60">
+                <image>
+                    <Image url="@iconos/estrategiaicono.png"/>
+                </image>
+            </ImageView>
+        </VBox>
+        <Label fx:id="AjustesTituloLbl" text="Modifica tu estrategia" styleClass="titulo-principal"/>
+
+        <HBox alignment="CENTER">
+            <ComboBox fx:id="ComboEstrategia" styleClass="fit-combo"
+                      prefWidth="240" prefHeight="48"/>
+        </HBox>
+
+        <HBox alignment="CENTER">
+            <Button fx:id="GuardarBtn" text="" onAction="#guardarEstrategia" styleClass="btn-guardar"/>
+        </HBox>
+
+        <Label fx:id="EstadoLbl"  text="" visible="false" managed="false" wrapText="true" maxWidth="280" alignment="CENTER" styleClass="alerta-texto"/>
+    </VBox>
+</VBox>

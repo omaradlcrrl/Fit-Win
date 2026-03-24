@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.ObjSeguimientoController"
+      prefWidth="360" prefHeight="640"
+      spacing="16"
+      fx:id="ObjSeguimientoRoot"
+      stylesheets="@estilos.css"
+      styleClass="fondo-oscuro">
+
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToMenuClick" styleClass="volver-btn"/>
+    </HBox>
+
+    <VBox alignment="CENTER">
+        <Label text="OBJETIVOS DIARIOS" styleClass="titulo-secundario"/>
+    </VBox>
+
+    <VBox fx:id="MetricasCard" alignment="CENTER" spacing="6">
+        <GridPane fx:id="MetricasGrid" hgap="10" vgap="6" alignment="CENTER">
+            <Label fx:id="PesoTituloLbl"   text="Peso actual:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Label fx:id="AlturaTituloLbl" text="Altura:"      GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Label fx:id="ImcTituloLbl"    text="IMC:"         GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+
+            <Label fx:id="PesoValorLbl"   text="-" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label fx:id="AlturaValorLbl" text="-" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label fx:id="ImcValorLbl"    text="-" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+        </GridPane>
+    </VBox>
+
+    <HBox alignment="CENTER">
+        <Button fx:id="EstrategiaBtn" text="SUPERAVIT" disable="true"/>
+    </HBox>
+
+    <VBox fx:id="ObjetivosCard" spacing="12" alignment="CENTER_LEFT">
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="CaloriasTituloLbl" text="CALORIAS OBJETIVO"/>
+            <Label fx:id="CaloriasValorLbl" text="-"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="ProteinasTituloLbl" text="PROTEINAS OBJETIVO"/>
+            <Label fx:id="ProteinasValorLbl" text="-"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="CarbohidratosTituloLbl" text="CARBOHIDRATOS OBJETIVO"/>
+            <Label fx:id="CarbohidratosValorLbl" text="-"/>
+        </HBox>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="GrasasTituloLbl" text="GRASAS OBJETIVO"/>
+            <Label fx:id="GrasasValorLbl" text="-"/>
+        </HBox>
+    </VBox>
+
+    <Pane VBox.vgrow="ALWAYS"/>
+</VBox>

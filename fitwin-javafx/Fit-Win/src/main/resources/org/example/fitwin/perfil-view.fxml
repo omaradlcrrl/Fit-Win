@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.fitwin.PerfilController"
+      prefHeight="640" prefWidth="360"
+      spacing="16" fillWidth="true"
+      alignment="TOP_CENTER"
+      stylesheets="@estilos.css"
+      styleClass="fondo-oscuro">
+
+    <HBox alignment="TOP_LEFT" spacing="20">
+        <Button fx:id="VolverBtn" onAction="#onBackToMenuClick"
+                prefWidth="50" prefHeight="50" styleClass="volver-btn"/>
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="18" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER" spacing="5">
+            <Label text="PERFIL" styleClass="titulo-principal" alignment="CENTER"/>
+        </HBox>
+
+        <VBox id="PerfilCard" alignment="CENTER" spacing="16" maxWidth="320">
+            <ImageView fitHeight="88" fitWidth="88" preserveRatio="true">
+                <image><Image url="@iconos/usuario.png"/></image>
+            </ImageView>
+
+            <Label fx:id="PerfilNombre"
+                   text="Nombre Apellido" alignment="CENTER" wrapText="true"/>
+
+            <Label fx:id="PerfilAltura"
+                   text="Altura: X m" alignment="CENTER"/>
+
+            <Button fx:id="ModificarPerfilBtn" onAction="#abrirModificarPerfil" text="Modificar Perfil" maxWidth="Infinity" prefHeight="44"/>
+        </VBox>
+    </VBox>
+
+    <Label fx:id="EstadoLbl" text="" visible="false" managed="false" alignment="CENTER" maxWidth="300" wrapText="true"/>
+
+    <Button fx:id="BorrarCuentaBtn" text="Borrar Cuenta" onAction="#borrarCuenta" maxWidth="200" prefHeight="44"/>
+
+</VBox>

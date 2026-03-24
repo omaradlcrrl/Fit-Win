@@ -1,0 +1,1539 @@
+/* Estilos genericos entre pantallas */
+
+.fondo-oscuro {
+    -fx-background-color: #000000;
+    -fx-border-color: #000000;
+    -fx-border-radius: 40;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+}
+
+.titulo-blanco {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-translate-y: -50px;
+}
+.titulo-principal {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 3, 0, 2, 2);
+}
+/* Para Peso, Medidas, Objetivos... */
+.titulo-secundario {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-alignment: center;
+}
+
+#FitWinEtiq {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-alignment: center;
+}
+
+.sesion-btn {
+    -fx-font-family: "Bebas Neue";
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-background-color: #FFC107;
+    -fx-border-color: #000000;
+    -fx-border-width: 3;
+    -fx-border-radius: 40;
+    -fx-background-radius: 40;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.75), 10, 0, 2, 2);
+}
+
+.sesion-btn:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+}
+
+.fitwin-txt {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14;
+    -fx-padding: 10;
+    -fx-font-weight: bold;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1;
+    -fx-text-fill: #A7A7A7;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-background-color: #1E1E1E;
+}
+
+.fitwin-txt:focused {
+    -fx-text-fill: #A7A7A7;
+}
+
+.fit-combo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14;
+    -fx-padding: 10;
+    -fx-font-weight: bold;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1;
+    -fx-text-fill: #A7A7A7;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-background-color: #1E1E1E;
+}
+
+.fit-combo .list-cell {
+    -fx-text-fill: #A7A7A7;
+}
+
+.fit-combo .list-view {
+    -fx-background-color: #1E1E1E;
+}
+
+.fit-combo .arrow {
+    -fx-background-color: #A7A7A7;
+}
+
+.fit-combo .combo-box-popup .list-view {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+}
+
+.fit-combo .combo-box-popup .list-view .list-cell {
+    -fx-text-fill: #A7A7A7;
+    -fx-background-color: #1E1E1E;
+}
+
+.fit-combo .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #000000;
+}
+
+.volver-btn {
+    -fx-background-image: url("iconos/volveramarillo.png");
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+    -fx-padding: 10px;
+    -fx-min-height: 50px;
+    -fx-min-width: 50px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #1E1E1E;
+    -fx-translate-y: -50px;
+}
+
+.volver-btn:hover {
+    -fx-background-image: url("iconos/volver.png");
+    -fx-background-color: #FFC107;
+    -fx-border-color: #1E1E1E;
+}
+/* DatePicker Styles */
+.date-picker {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+}
+
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: #A7A7A7;
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.date-picker > .arrow-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.date-picker > .arrow-button > .arrow {
+    -fx-background-color: #FFC107;
+}
+
+.date-picker-popup {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1px;
+}
+
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #1E1E1E;
+}
+
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: #FFC107;
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+}
+
+.date-picker-popup .spinner .button .left-arrow,
+.date-picker-popup .spinner .button .right-arrow {
+    -fx-background-color: #FFC107;
+}
+
+.date-picker-popup .calendar-grid {
+    -fx-background-color: #1E1E1E;
+}
+
+.date-picker-popup .day-cell {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+}
+
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #FFC107 !important;
+    -fx-text-fill: #000000 !important;
+}
+
+.date-picker-popup .selected {
+    -fx-background-color: #FFC107 !important;
+    -fx-text-fill: #000000 !important;
+}
+/* Registro */
+
+#EstratEtq {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 12;
+    -fx-text-fill: rgba(255, 255, 255, 0.6);
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+    -fx-max-width: 300px;
+}
+
+/* Menu */
+
+#CajaMenu {
+    -fx-background-color: #0E0E0E;
+}
+
+#ZonaPrincipal {
+    -fx-pref-height: 70%;
+}
+
+#CajaInferior {
+    -fx-background-color: #FFC107;
+    -fx-padding: 24 28 24 28;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-spacing: 18px;
+    -fx-alignment: center;
+    -fx-pref-height: 30%;
+}
+
+.btn-negro {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-min-height: 100px;
+    -fx-min-width: 100px;
+    -fx-pref-height: 120px;
+    -fx-pref-width: 120px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+}
+
+.btn-amarillo {
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #1E1E1E;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50px;
+    -fx-background-radius: 50px;
+    -fx-padding: 10px;
+    -fx-min-height: 100px;
+    -fx-min-width: 100px;
+    -fx-pref-height: 120px;
+    -fx-pref-width: 120px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+}
+
+.btn-negro:hover {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #1E1E1E;
+    -fx-border-color: #1E1E1E;
+}
+
+.btn-amarillo:hover {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+}
+
+#ComidaBtn {
+    -fx-background-image: url("iconos/comida-amarillo.png");
+    -fx-background-size: 50 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#ComidaBtn:hover {
+    -fx-background-image: url("iconos/comida.png");
+}
+
+#EjercicioBtn {
+    -fx-background-image: url("iconos/ejercicio-amarillo.png");
+    -fx-background-size: 50 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#EjercicioBtn:hover {
+    -fx-background-image: url("iconos/ejercicio.png");
+}
+
+#TrackerBtn {
+    -fx-background-image: url("iconos/progreso-amarillo.png");
+    -fx-background-size: 50 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#TrackerBtn:hover {
+    -fx-background-image: url("iconos/progreso.png");
+}
+
+#PerfilBtn {
+    -fx-background-image: url("iconos/usuario.png");
+    -fx-background-size: 50 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#PerfilBtn:hover {
+    -fx-background-image: url("iconos/usuario-amarillo.png");
+}
+
+#AjustesBtn {
+    -fx-background-image: url("iconos/ajustes.png");
+    -fx-background-size: 50 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#AjustesBtn:hover {
+    -fx-background-image: url("iconos/ajustes-amarillo.png");
+}
+
+#CerrarSesionBtn {
+    -fx-background-image: url("iconos/cerrarsesion.png");
+    -fx-background-size: 50 50;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+#CerrarSesionBtn:hover {
+    -fx-background-image: url("iconos/cerrarsesion-amarillo.png");
+}
+
+#PesoBtn,
+#MedidasBtn,
+#ObjetivosBtn {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-pref-width: 160px;
+    -fx-pref-height: 46px;
+    -fx-min-width: 160px;
+    -fx-min-height: 46px;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+}
+
+#PesoBtn:hover,
+#MedidasBtn:hover,
+#ObjetivosBtn:hover {
+    -fx-opacity: 0.9;
+}
+
+#CajaInferior #PesoBtn,
+#CajaInferior #MedidasBtn,
+#CajaInferior #ObjetivosBtn {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #FFC107;
+}
+
+/* Comida */
+
+
+
+#ComidaEstadoLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-alignment: center;
+}
+
+.comida-txt {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14;
+    -fx-padding: 10;
+    -fx-font-weight: bold;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1;
+    -fx-text-fill: #A7A7A7;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-background-color: #1E1E1E;
+}
+
+.comida-txt:focused {
+    -fx-text-fill: #A7A7A7;
+}
+
+#GuardarBtn {
+    -fx-background-image: url("iconos/guardar.png");
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-min-height: 80px;
+    -fx-min-width: 80px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #FFC107;
+}
+
+#GuardarBtn:hover {
+    -fx-background-image: url("iconos/guardar-amarillo.png");
+    -fx-background-color: #000000;
+}
+
+#BorrarBtn {
+    -fx-background-image: url("iconos/borrar.png");
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-min-height: 80px;
+    -fx-min-width: 80px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #FFC107;
+}
+
+#BorrarBtn:hover {
+    -fx-background-image: url("iconos/borrar-amarillo.png");
+    -fx-background-color: #000000;
+}
+
+/* Resumen nutricional */
+
+#ResumenBtn {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-min-width: 220px;
+    -fx-min-height: 70px;
+    -fx-padding: 10px 16px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.75), 10, 0, 2, 2);
+}
+
+#ResumenIcono {
+    -fx-background-image: url("iconos/resumen-amarillo.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 32px 32px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-background-color: transparent;
+}
+
+#ResumenTexto {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 16px;
+    -fx-font-style: italic;
+    -fx-font-weight: bold;
+    -fx-underline: false;
+}
+
+#ResumenBtn:hover {
+    -fx-background-color: #FFC107;
+    -fx-border-color: #000000;
+}
+
+#ResumenBtn:hover #ResumenTexto {
+    -fx-text-fill: #000000;
+    -fx-underline: false;
+}
+
+#ResumenBtn:hover #ResumenIcono {
+    -fx-background-image: url("iconos/resumen.png");
+}
+
+/* Resumen diario */
+
+#CajaCalorias {
+    -fx-border-width: 2px;
+    -fx-border-color: #FFC107;
+    -fx-background-color: #1E1E1E;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-pref-width: 240px;
+    -fx-pref-height: 320px;
+    -fx-alignment: center;
+}
+
+#CajaMacros {
+    -fx-background-color: none;
+    -fx-border-width: 0;
+}
+
+#ResumenTitulo {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-translate-y: -50px;
+}
+
+#CaloriasTitulo {
+    -fx-text-fill: #A7A7A7;
+    -fx-font-size: 20px;
+    -fx-translate-y: -30px;
+}
+
+#CaloriasEtiq {
+    -fx-text-fill: #FFC107;
+    -fx-font-size: 60px;
+    -fx-wrap-text: false;
+    -fx-alignment: center;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 120px;
+}
+
+.macro-num {
+    -fx-text-fill: #FFC107;
+    -fx-font-size: 15px;
+}
+
+.macro-titulo {
+    -fx-text-fill: #A7A7A7;
+}
+
+#AguaEtiq {
+    -fx-text-fill: #ffffff;
+}
+
+#BarraAgua .track {
+    -fx-background-color: #A7A7A7;
+    -fx-background-radius: 10px;
+    -fx-pref-height: 8px;
+}
+
+#BarraAgua .thumb {
+    -fx-background-color: #FFC107;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 15px;
+    -fx-pref-height: 15px;
+}
+
+#DiaCombo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14;
+    -fx-padding: 10;
+    -fx-font-weight: bold;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1;
+    -fx-text-fill: #A7A7A7;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-background-color: #1E1E1E;
+}
+
+#DiaCombo .list-cell {
+    -fx-text-fill: #A7A7A7;
+}
+
+#DiaCombo .list-view {
+    -fx-background-color: #1E1E1E;
+}
+
+#DiaCombo .arrow {
+    -fx-background-color: #A7A7A7;
+}
+
+#DiaCombo .combo-box-popup .list-view {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+}
+
+#DiaCombo .combo-box-popup .list-view .list-cell {
+    -fx-text-fill: #A7A7A7;
+    -fx-background-color: #1E1E1E;
+}
+
+#DiaCombo .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #000000;
+}
+
+/* Ejercicio */
+
+#RutinaBtn {
+    -fx-background-color: #1E1E1E;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2;
+    -fx-border-radius: 40;
+    -fx-background-radius: 40;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-padding: 15 40;
+    -fx-alignment: center;
+    -fx-translate-y: 50px;
+}
+
+#RutinaBtn:hover {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #1E1E1E;
+    -fx-border-color: #1E1E1E;
+}
+
+#TablaEjercicios {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 3px;
+    -fx-max-height: 360px;
+}
+
+#TablaEjercicios .column-header-background {
+    -fx-background-color: #FFC107;
+}
+
+#TablaEjercicios .column-header {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: black;
+    -fx-alignment: CENTER;
+}
+
+#TablaEjercicios .table-row-cell {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+    -fx-pref-height: 50px;
+}
+
+#TablaEjercicios .table-cell {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+#colEjercicio .table-cell {
+    -fx-font-size: 14px;
+}
+
+#DiaEntreno {
+    -fx-text-fill: #FFC107;
+}
+
+/* Guia */
+
+#FondoGuia {
+    -fx-background-color: #0E0E0E;
+}
+
+.guia-btn {
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+    -fx-background-color: #000000;
+    -fx-text-fill: #ffffff;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.guia-btn:hover {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-border-color: #000000;
+}
+
+.guia-txt {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14;
+    -fx-padding: 10;
+    -fx-font-weight: bold;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1;
+    -fx-text-fill: #A7A7A7;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-background-color: #1E1E1E;
+}
+
+.guia-txt:focused {
+    -fx-text-fill: #A7A7A7;
+    -fx-border-color: #FFC107;
+}
+
+#GuiaBtn {
+    -fx-background-image: url("iconos/guia.png");
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-min-height: 80px;
+    -fx-min-width: 80px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #FFC107;
+}
+
+#GuiaBtn:hover {
+    -fx-background-image: url("iconos/guia-amarillo.png");
+    -fx-background-color: #000000;
+}
+
+#VolverBtn {
+    -fx-translate-y: 0;
+}
+
+#GuiaScroll {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 5;
+}
+
+#GuiaScroll .viewport {
+    -fx-background-color: #1E1E1E;
+    -fx-background-radius: 18px;
+}
+
+.guia-img {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 2, 2);
+    -fx-opacity: 1.0;
+    -fx-cursor: hand;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 3px;
+}
+
+.guia-img:hover {
+    -fx-opacity: 0.85;
+}
+
+/* Perfil */
+
+#PerfilPane {
+    -fx-background-color: #000000;
+}
+
+#PerfilCard {
+    -fx-background-color: #FFC107;
+    -fx-background-radius: 24;
+    -fx-border-color: #000000;
+    -fx-border-width: 3;
+    -fx-border-radius: 24;
+    -fx-padding: 28 24;
+    -fx-spacing: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.65), 12, 0, 2, 4);
+}
+
+#PerfilNombre {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-text-alignment: center;
+}
+
+#PerfilAltura {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-text-fill: #1E1E1E;
+    -fx-opacity: 0.85;
+}
+
+#ModificarPerfilBtn {
+    -fx-font-family: "Bebas Neue";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: #000000;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 10 16;
+}
+
+#ModificarPerfilBtn:hover {
+    -fx-background-color: #1E1E1E;
+}
+
+/* Progreso */
+
+.progreso-header-card {
+    -fx-background-color: #000000;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 12px;
+    -fx-spacing: 10px;
+}
+
+.objetivo-card {
+    -fx-background-color: #FFC107;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 8px 12px 8px 12px;
+    -fx-spacing: 6px;
+    -fx-max-width: 180px;
+}
+
+.objetivo-titulo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+.objetivo-opcion {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-background-color: transparent;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-padding: 4 8;
+    -fx-cursor: hand;
+}
+
+.objetivo-opcion:selected,
+.objetivo-opcion:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #000000;
+}
+
+.semana-card {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-spacing: 4px;
+}
+
+.semana-titulo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 11px;
+    -fx-text-fill: #A7A7A7;
+    -fx-font-weight: bold;
+}
+
+.semana-fecha {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 11px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+
+.progreso-datepicker {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-opacity: 0.0;
+    -fx-pref-width: 120px;
+    -fx-pref-height: 30px;
+    -fx-cursor: hand;
+}
+
+.progreso-datepicker .text-field {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+.progreso-datepicker .arrow-button {
+    -fx-opacity: 0;
+    -fx-padding: 0;
+}
+
+.progreso-chart-card {
+    -fx-background-color: #000000;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 12px;
+}
+
+.progreso-linechart {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.progreso-linechart .chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.progreso-linechart .chart-series-line {
+    -fx-stroke: #FFC107;
+    -fx-stroke-width: 2px;
+}
+
+.progreso-linechart .chart-line-symbol {
+    -fx-background-color: #FFC107, #FFC107;
+    -fx-background-radius: 4px;
+    -fx-padding: 3px;
+    -fx-shape: "M0,0 L1,0 L1,1 L0,1 Z";
+}
+
+.progreso-linechart .chart-vertical-grid-lines,
+.progreso-linechart .chart-horizontal-grid-lines {
+    -fx-stroke: rgba(167, 167, 167, 0.3);
+    -fx-stroke-dash-array: 2 4;
+}
+
+.progreso-xaxis,
+.progreso-yaxis {
+    -fx-tick-label-fill: #FFC107;
+    -fx-tick-label-font-family: "Bebas Neue Black";
+    -fx-tick-label-font-size: 12px;
+    -fx-tick-label-font-weight: bold;
+    -fx-axis-line-visible: false;
+    -fx-tick-mark-visible: false;
+    -fx-border-color: transparent;
+    -fx-background-color: transparent;
+}
+.btn-actualizar {
+    -fx-background-image: url("iconos/actualizar.png");
+    -fx-background-color: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-min-height: 80px;
+    -fx-min-width: 80px;
+    -fx-padding: 10px;
+    -fx-alignment: center;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-cursor: hand;
+}
+.btn-actualizar:hover {
+    /* Inversión de colores al pasar el ratón */
+    -fx-background-image: url("iconos/actualizar-amarillo.png");
+    -fx-background-color: #000000;
+}
+.progreso-mensaje {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 12px;
+    -fx-text-fill: #A7A7A7;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+}
+
+.progreso-racha-box {
+    -fx-background-color: #000000;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-padding: 20px;
+    -fx-alignment: center;
+}
+
+.progreso-racha-text {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+#PesoTitulo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-text-fill: #FFC107;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#PesoCard {
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-background-radius: 24px;
+    -fx-border-radius: 24px;
+    -fx-padding: 22px 16px;
+    -fx-min-width: 320px;
+    -fx-pref-width: 320px;
+    -fx-max-width: 320px;
+    -fx-min-height: 160px;
+    -fx-alignment: center;
+}
+
+#PesoTxt {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 72px;
+    -fx-text-fill: #FFC107;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-alignment: center-right;
+    -fx-pref-width: 200px;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-translate-x: 20px;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+#KgEtiq {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 44px;
+    -fx-text-fill: #FFC107;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 6, 0, 0, 0);
+    -fx-translate-x: 5px;
+}
+
+/* Medicion */
+
+#MedicionTitulo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#MedicionSubtitulo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-text-fill: #A7A7A7;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#CircTitulo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-text-fill: #FFC107;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 6 0;
+    -fx-alignment: center;
+    -fx-underline: true;
+}
+
+#MedicionForm {
+    -fx-max-width: 300px;
+    -fx-pref-width: 300px;
+    -fx-min-width: 300px;
+}
+
+.medicion-txt {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14;
+    -fx-text-fill: #A7A7A7;
+    -fx-background-color: #1E1E1E;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 1;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 10 14 10 14;
+}
+
+.medicion-txt:focused {
+    -fx-text-fill: #A7A7A7;
+}
+
+#MedicionRoot #VolverBtn {
+    -fx-translate-y: 0;
+}
+
+#PerfilPane #VolverBtn {
+    -fx-translate-y: -0px;
+}
+
+#ObjetivosRoot #VolverBtn {
+    -fx-translate-y: -0px;
+}
+
+#ObjSeguimientoRoot #VolverBtn {
+    -fx-translate-y: -0px;
+}
+
+/* Ajustes */
+
+#AjustesRoot {
+    -fx-background-color: #000000;
+    -fx-background-radius: 40;
+    -fx-border-radius: 40;
+    -fx-padding: 24 16 28 16;
+}
+
+#AjustesTitulo {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-text-fill: #ffc109;
+    -fx-opacity: 0.75;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+#SeguimientoBtn {
+    -fx-background-image: url("iconos/seguimiento.png");
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-min-height: 80px;
+    -fx-min-width: 80px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #FFC107;
+}
+
+#SeguimientoBtn:hover {
+    -fx-background-image: url("iconos/seguimiento-amarillo.png");
+    -fx-background-color: #000000;
+}
+
+#GenerarBtn {
+    -fx-background-image: url("iconos/generar.png");
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-min-height: 80px;
+    -fx-min-width: 80px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-color: #FFC107;
+}
+
+#GenerarBtn:hover {
+    -fx-background-image: url("iconos/generar-amarillo.png");
+    -fx-background-color: #000000;
+}
+
+#GenerarLbl,
+#SeguimientoLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-alignment: center;
+}
+
+/* Objetivos */
+
+#ObjetivosRoot #SubtituloLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #A7A7A7;
+    -fx-alignment: center;
+}
+
+#ObjetivosRoot #TituloLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 39px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-alignment: center;
+}
+
+#CajaGenerar {
+    -fx-border-color: #FFC107;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 15px;
+}
+#CajaSeguimiento {
+    -fx-border-color: #FFC107;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 15px;
+}
+
+#ObjSeguimientoRoot #MetricasCard {
+    -fx-background-color: transparent;
+    -fx-padding: 6 10 8 10;
+}
+
+#ObjSeguimientoRoot #MetricasGrid {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-padding: 10 16 10 16;
+    -fx-hgap: 18;
+    -fx-vgap: 8;
+}
+
+#ObjSeguimientoRoot #PesoTituloLbl,
+#ObjSeguimientoRoot #AlturaTituloLbl,
+#ObjSeguimientoRoot #ImcTituloLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-text-fill: #A7A7A7;
+    -fx-font-weight: bold;
+    -fx-min-width: 120px;
+}
+
+#ObjSeguimientoRoot #PesoValorLbl,
+#ObjSeguimientoRoot #AlturaValorLbl,
+#ObjSeguimientoRoot #ImcValorLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-weight: bold;
+}
+
+#ObjSeguimientoRoot #EstrategiaBtn {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-background-color: #FFC107;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-min-width: 260px;
+    -fx-min-height: 80px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 2, 2);
+}
+
+#ObjSeguimientoRoot #EstrategiaBtn:disabled {
+    -fx-opacity: 1.0;
+}
+
+#ObjSeguimientoRoot #ObjetivosCard {
+    -fx-background-color: #0E0E0E;
+    -fx-border-width: 2px;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-padding: 18 20 18 20;
+    -fx-max-width: 320px;
+    -fx-min-width: 280px;
+}
+
+#ObjSeguimientoRoot #CaloriasTituloLbl,
+#ObjSeguimientoRoot #ProteinasTituloLbl,
+#ObjSeguimientoRoot #CarbohidratosTituloLbl,
+#ObjSeguimientoRoot #GrasasTituloLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 12px;
+    -fx-text-fill: #ffc109;
+    -fx-font-weight: bold;
+}
+
+#ObjSeguimientoRoot #CaloriasValorLbl,
+#ObjSeguimientoRoot #ProteinasValorLbl,
+#ObjSeguimientoRoot #CarbohidratosValorLbl,
+#ObjSeguimientoRoot #GrasasValorLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 12px;
+    -fx-text-fill: #FFC107;
+    -fx-font-weight: bold;
+}
+
+.logout-btn {
+    -fx-font-family: "Arial";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #ff0202;
+}
+
+/* Modificar perfil */
+
+#ModificaRoot {
+    -fx-background-color: #000000;
+}
+
+#ModificaCard {
+    -fx-background-color: #FFC107;
+    -fx-background-radius: 24;
+    -fx-border-color: #000000;
+    -fx-border-width: 3;
+    -fx-border-radius: 24;
+    -fx-padding: 24 20;
+    -fx-spacing: 12;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.65), 12, 0, 2, 4);
+}
+
+#TituloGeneral {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+}
+
+#ModificaCard .fitwin-txt {
+    -fx-pref-width: 260px;
+    -fx-max-width: 260px;
+}
+
+#ModificaRoot #VolverBtn {
+    -fx-translate-y: 0;
+}
+
+/* Estado inline */
+
+#EstadoLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 14;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0, 1, 2);
+}
+
+#EstadoLbl.estado-ok {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #000000;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+}
+
+#EstadoLbl.estado-error {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #000000;
+    -fx-border-color: #ff3b30;
+    -fx-border-width: 2px;
+}
+
+/* Progreso pantalla */
+
+#ProgresoRoot #ProgresoPesoBtn,
+#ProgresoRoot #ProgresoMedidasBtn {
+    -fx-font-family: "Bebas Neue";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #000000;
+    -fx-border-color: #FFC107;
+    -fx-border-width: 2px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-min-height: 80px;
+    -fx-min-width: 80px;
+    -fx-pref-height: 100px;
+    -fx-pref-width: 100px;
+    -fx-alignment: center;
+    -fx-cursor: hand;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-background-size: 48px 48px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.75), 10, 0, 2, 2);
+}
+
+#ProgresoRoot #ProgresoPesoBtn {
+    -fx-background-image: url("iconos/pesos.png");
+}
+
+#ProgresoRoot #ProgresoMedidasBtn {
+    -fx-background-image: url("iconos/medidas.png");
+}
+
+#ProgresoRoot #ProgresoPesoBtn:hover,
+#ProgresoRoot #ProgresoMedidasBtn:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: #FFC107;
+    -fx-border-color: #FFC107;
+}
+
+#ProgresoRoot #ProgresoPesoBtn:hover {
+    -fx-background-image: url("iconos/pesosamarillo.png");
+}
+
+#ProgresoRoot #ProgresoMedidasBtn:hover {
+    -fx-background-image: url("iconos/medidasamarillo.png");
+}
+
+#ProgresoRoot #ProgresoPesoLbl,
+#ProgresoRoot #ProgresoMedidasLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-alignment: center;
+}
+
+#ProgresoRoot #TituloLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-alignment: center;
+}
+
+#ProgresoRoot #SubtituloLbl {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #A7A7A7;
+    -fx-alignment: center;
+}
+
+#ProgresoRoot #VolverBtn {
+    -fx-translate-y: 0;
+}
+
+
+.etiqueta-progreso {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-padding: 0 0 5 0;
+}
+
+
+.alerta-pill {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 14;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 8, 0, 1, 2);
+}
+.alerta-pill.ok {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #000000;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+}
+.alerta-pill.error {
+    -fx-background-color: #FFC107;
+    -fx-text-fill: #000000;
+    -fx-border-color: #ff3b30;
+    -fx-border-width: 2px;
+}
+.alerta-texto {
+    -fx-font-family: "Bebas Neue Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFC107;
+    -fx-alignment: center;
+    -fx-padding: 5;
+}
+
+#BorrarCuentaBtn {
+    -fx-font-family: "Bebas Neue";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-background-color: #ff3b30;
+    -fx-border-color: #ff3b30;
+    -fx-border-width: 2px;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 8, 0, 1, 1);
+}
+#BorrarCuentaBtn:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: #ff3b30;
+    -fx-border-color: #ff3b30;
+}
