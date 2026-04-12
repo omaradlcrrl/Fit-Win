@@ -1,4 +1,5 @@
 HELP.md
+NOTAS_DESARROLLO.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
