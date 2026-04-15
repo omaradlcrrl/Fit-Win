@@ -81,6 +81,24 @@ public class ComidaService {
                 .collect(java.util.stream.Collectors.toList());
     }
 
+    public List<ComidaDTO> findByUsuario(Integer usuarioId) {
+        return comidaRepository.findByUsuario_UsuarioIdOrderByFechaDesc(usuarioId)
+                .stream().map(ComidaDTO::new)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public List<ComidaDTO> findByUsuarioAndFecha(Integer usuarioId, LocalDate fecha) {
+        return comidaRepository.findByUsuario_UsuarioIdAndFecha(usuarioId, fecha)
+                .stream().map(ComidaDTO::new)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    public List<ComidaDTO> findByUsuarioAndRango(Integer usuarioId, LocalDate from, LocalDate to) {
+        return comidaRepository.findByUsuario_UsuarioIdAndFechaBetweenOrderByFechaAsc(usuarioId, from, to)
+                .stream().map(ComidaDTO::new)
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     public void deleteById(Integer id) {
         if (!comidaRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comida no encontrada");
@@ -104,6 +122,12 @@ public class ComidaService {
             entidad.setCarbohidratos(dto.getCarbohidratos());
         if (dto.getFecha() != null)
             entidad.setFecha(dto.getFecha());
+        if (dto.getTipoComida() != null)
+            entidad.setTipoComida(dto.getTipoComida());
+        if (dto.getCantidad() != null)
+            entidad.setCantidad(dto.getCantidad());
+        if (dto.getUnidad() != null)
+            entidad.setUnidad(dto.getUnidad());
 
         if (dto.getUsuarioId() != null) {
             Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
@@ -123,6 +147,9 @@ public class ComidaService {
         c.setGrasasSaturadas(dto.getGrasasSaturadas());
         c.setCarbohidratos(dto.getCarbohidratos());
         c.setProteinas(dto.getProteinas());
+        c.setTipoComida(dto.getTipoComida());
+        c.setCantidad(dto.getCantidad());
+        c.setUnidad(dto.getUnidad());
         c.setFecha(dto.getFecha());
         return c;
     }

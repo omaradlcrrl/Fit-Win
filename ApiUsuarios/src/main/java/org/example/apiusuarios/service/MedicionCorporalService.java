@@ -61,6 +61,14 @@ public class MedicionCorporalService {
             m.setFecha(dto.getFecha());
         }
 
+        if (dto.getPeso() != null)
+            m.setPeso(dto.getPeso());
+        if (dto.getPorcentajeGrasa() != null)
+            m.setPorcentajeGrasa(dto.getPorcentajeGrasa());
+        if (dto.getMasaMagra() != null)
+            m.setMasaMagra(dto.getMasaMagra());
+        if (dto.getCintura() != null)
+            m.setCintura(dto.getCintura());
         if (dto.getPecho() != null)
             m.setPecho(dto.getPecho());
         if (dto.getEspalda() != null)
@@ -129,6 +137,10 @@ public class MedicionCorporalService {
 
     private MedicionCorporal convertirAEntidad(MedicionCorporalDTO dto) {
         MedicionCorporal m = new MedicionCorporal();
+        m.setPeso(dto.getPeso());
+        m.setPorcentajeGrasa(dto.getPorcentajeGrasa());
+        m.setMasaMagra(dto.getMasaMagra());
+        m.setCintura(dto.getCintura());
         m.setPecho(dto.getPecho());
         m.setEspalda(dto.getEspalda());
         m.setBrazo(dto.getBrazo());

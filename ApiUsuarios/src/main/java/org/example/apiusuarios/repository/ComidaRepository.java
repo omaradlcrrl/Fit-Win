@@ -10,4 +10,8 @@ import java.util.List;
 public interface ComidaRepository extends JpaRepository<Comida, Integer> {
 
     List<Comida> findByUsuario_UsuarioIdAndFecha(Integer usuarioid, LocalDate fecha);
+
+    List<Comida> findByUsuario_UsuarioIdOrderByFechaDesc(Integer usuarioId);
+
+    List<Comida> findByUsuario_UsuarioIdAndFechaBetweenOrderByFechaAsc(Integer usuarioId, LocalDate from, LocalDate to);
 }
