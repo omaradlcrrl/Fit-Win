@@ -5,6 +5,7 @@ import org.example.apiusuarios.dto.login.LoginRequest;
 import org.example.apiusuarios.dto.login.LoginResponse;
 import org.example.apiusuarios.exception.CredencialesInvalidasException;
 import org.example.apiusuarios.exception.RecursoNoEncontradoException;
+import org.example.apiusuarios.model.RefreshToken;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.UsuarioRepository;
 import org.example.apiusuarios.security.JwtService;
@@ -39,6 +40,9 @@ public class UsuarioService {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     public UsuarioDTO save(UsuarioDTO usuarioDTO) {
 
@@ -142,9 +146,12 @@ public class UsuarioService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getCorreoElectronico());
         String jwtToken = jwtService.generateToken(userDetails);
 
+        RefreshToken refreshToken = refreshTokenService.crear(usuario.getUsuarioId());
+
         LoginResponse response = new LoginResponse();
         response.setMensaje("Inicio de sesión exitoso");
-        response.setToken(jwtToken); // Asignar el token
+        response.setToken(jwtToken);
+        response.setRefreshToken(refreshToken.getToken());
         response.setUsuarioId(usuario.getUsuarioId());
 
         return response;
@@ -211,6 +218,14 @@ public class UsuarioService {
             usuario.setNivelActividad(updates.getNivelActividad());
         }
 
+        if (updates.getPesoActual() != null) {
+            usuario.setPesoActual(updates.getPesoActual());
+        }
+
+        if (updates.getOnboardingCompleto() != null) {
+            usuario.setOnboardingCompleto(updates.getOnboardingCompleto());
+        }
+
         Usuario actualizado = usuarioRepository.save(usuario);
         return new UsuarioDTO(actualizado);
     }
@@ -231,6 +246,8 @@ public class UsuarioService {
         u.setAjusteCalorico(dto.getAjusteCalorico());
         u.setGenero(dto.getGenero());
         u.setNivelActividad(dto.getNivelActividad());
+        u.setPesoActual(dto.getPesoActual());
+        u.setOnboardingCompleto(dto.getOnboardingCompleto());
         return u;
     }
 }

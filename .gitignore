@@ -8,6 +8,18 @@ target/
 .idea/
 *.iml
 
+
 # Ignorar archivos de sistema operativo
 .DS_Store
 Thumbs.db
+
+# MCP keys (no subir al repo)
+.mcp.json
+.agents
+.claude
+.junie
+
+
+CLAUDE.md
+README.md
+

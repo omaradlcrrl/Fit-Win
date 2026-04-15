@@ -2,10 +2,8 @@ package org.example.apiusuarios.service;
 
 import org.example.apiusuarios.dto.ObjetivoDTO;
 import org.example.apiusuarios.model.Objetivo;
-import org.example.apiusuarios.model.RegistroDiario;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.ObjetivoRepository;
-import org.example.apiusuarios.repository.RegistroDiarioRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,9 +23,6 @@ public class ObjetivoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private RegistroDiarioRepository registroDiarioRepository;
-
     public ObjetivoDTO generarAutomatico(Integer usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
@@ -37,14 +32,9 @@ public class ObjetivoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Falta altura del usuario");
         }
 
-        RegistroDiario ultimo = registroDiarioRepository
-                .findFirstByUsuario_UsuarioIdOrderByFechaDesc(usuarioId)
-                .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sin registro de peso disponible"));
-
-        Double peso = ultimo.getPeso();
+        Double peso = usuario.getPesoActual();
         if (peso == null || peso <= 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Peso inválido en el último registro");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Falta peso actual del usuario");
         }
 
         double imc = peso / (altura * altura);
@@ -134,7 +124,6 @@ public class ObjetivoService {
             objetivo.setActivo(true);
         }
 
-        objetivo.setRegistroDiario(ultimo);
         objetivo.setImc(imc);
         objetivo.setTipo(estrategia);
         objetivo.setCaloriasObjetivo(calorias);

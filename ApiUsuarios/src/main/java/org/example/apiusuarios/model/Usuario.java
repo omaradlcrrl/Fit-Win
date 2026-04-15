@@ -37,25 +37,38 @@ public class Usuario {
 
     private Integer ajusteCalorico;
 
-    // Relaciones con CascadeType.ALL para borrar en cascada
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comida> comidas;
 
+    // Rutinas y Sesiones
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RegistroDiario> registrosDiarios;
+    private Set<Rutina> rutinas;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Entrenamiento> entrenamientos;
+    private Set<SesionEntrenamiento> sesionesEntrenamiento;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Ejercicio> ejercicios;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RecordPersonal> recordsPersonales;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FotoProgreso> fotosProgreso;
+
+    // Body Metrics y Objetivos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MedicionCorporal> medicionesCorporales;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Objetivo> objetivos;
+    private Set<Objetivo> historicoObjetivos;
 
     private String genero; // Added new field
 
     private String nivelActividad; // Added new field
+    private Double pesoActual;
+    private String objetivo;
+    private Boolean onboardingCompleto = false;
 
     @Enumerated(EnumType.STRING)
     private Role role;

@@ -36,8 +36,8 @@ public class ObjetivoDTO {
         this.fechaFin = o.getFechaFin();
         this.activo = o.getActivo();
         this.usuarioId = (o.getUsuario() != null) ? o.getUsuario().getUsuarioId() : null;
-        this.registroId = (o.getRegistroDiario() != null) ? o.getRegistroDiario().getRegistroId() : null;
+        this.registroId = null;
         this.altura = (o.getUsuario() != null) ? o.getUsuario().getAltura() : 0.0;
-        this.peso = (o.getRegistroDiario() != null) ? o.getRegistroDiario().getPeso() : 0.0;
+        this.peso = (o.getUsuario() != null) ? o.getUsuario().getPesoActual() : 0.0;
     }
 }

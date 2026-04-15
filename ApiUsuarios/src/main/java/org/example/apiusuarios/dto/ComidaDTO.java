@@ -3,6 +3,8 @@ package org.example.apiusuarios.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.apiusuarios.model.Comida;
+import org.example.apiusuarios.model.TipoComida;
+import org.example.apiusuarios.model.UnidadComida;
 import java.time.LocalDate;
 
 @Data
@@ -15,6 +17,9 @@ public class ComidaDTO {
     private Double grasasSaturadas;
     private Double proteinas;
     private Double carbohidratos;
+    private TipoComida tipoComida;
+    private Double cantidad;
+    private UnidadComida unidad;
     private LocalDate fecha;
     private Integer usuarioId;
 
@@ -25,6 +30,9 @@ public class ComidaDTO {
         this.grasasSaturadas = c.getGrasasSaturadas();
         this.proteinas = c.getProteinas();
         this.carbohidratos = c.getCarbohidratos();
+        this.tipoComida = c.getTipoComida();
+        this.cantidad = c.getCantidad();
+        this.unidad = c.getUnidad();
         this.fecha = c.getFecha();
         this.usuarioId = c.getUsuario() != null ? c.getUsuario().getUsuarioId() : null;
     }

@@ -22,11 +22,13 @@ public class UsuarioDTO {
     private Integer ajusteCalorico;
     private String genero;
     private String nivelActividad;
+    private Double pesoActual;
+    private String objetivo;
+    private Boolean onboardingCompleto;
 
     public UsuarioDTO(Usuario u) {
         this.usuarioId = u.getUsuarioId();
         this.nombre = u.getNombre();
-        this.password = u.getPassword();
         this.apellidos = u.getApellidos();
         this.correoElectronico = u.getCorreoElectronico();
         this.fechaNacimiento = u.getFechaNacimiento();
@@ -37,5 +39,8 @@ public class UsuarioDTO {
         this.ajusteCalorico = u.getAjusteCalorico();
         this.genero = u.getGenero();
         this.nivelActividad = u.getNivelActividad();
+        this.pesoActual = u.getPesoActual();
+        this.objetivo = u.getObjetivo();
+        this.onboardingCompleto = u.getOnboardingCompleto();
     }
 }

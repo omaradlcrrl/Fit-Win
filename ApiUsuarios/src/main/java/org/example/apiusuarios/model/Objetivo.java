@@ -34,10 +34,6 @@ public class Objetivo {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @OneToOne
-    @JoinColumn(name = "registro_id", unique = true, nullable = true)
-    private RegistroDiario registroDiario;
-
     @PrePersist
     public void initFechas() {
         if (this.fechaInicio == null) this.fechaInicio = LocalDate.now();

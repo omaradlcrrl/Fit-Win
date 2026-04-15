@@ -18,11 +18,15 @@ public class MedicionCorporal {
 
     private LocalDate fecha;
 
+    private Double peso;
+    private Double porcentajeGrasa;
+    private Double masaMagra;
     private Double pecho;
     private Double espalda;
     private Double hombro;
     private Double brazo;
     private Double muslo;
+    private Double cintura;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

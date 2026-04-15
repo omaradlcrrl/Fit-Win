@@ -21,6 +21,14 @@ public class Comida {
     private Double grasasSaturadas;
     private Double proteinas;
 
+    @Enumerated(EnumType.STRING)
+    private TipoComida tipoComida;
+
+    private Double cantidad;
+
+    @Enumerated(EnumType.STRING)
+    private UnidadComida unidad;
+
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 

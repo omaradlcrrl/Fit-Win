@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -35,6 +36,24 @@ public class ComidaController {
     @GetMapping("/{id}")
     public ResponseEntity<ComidaDTO> findById(@PathVariable Integer id) {
         return new ResponseEntity<>(comidaService.findById(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<ComidaDTO>> getByUsuario(@PathVariable Integer usuarioId) {
+        return new ResponseEntity<>(comidaService.findByUsuario(usuarioId), HttpStatus.OK);
+    }
+
+    @GetMapping("/fecha/{usuarioId}")
+    public ResponseEntity<List<ComidaDTO>> getByFecha(@PathVariable Integer usuarioId,
+                                                       @RequestParam LocalDate fecha) {
+        return new ResponseEntity<>(comidaService.findByUsuarioAndFecha(usuarioId, fecha), HttpStatus.OK);
+    }
+
+    @GetMapping("/range/{usuarioId}")
+    public ResponseEntity<List<ComidaDTO>> getByRange(@PathVariable Integer usuarioId,
+                                                       @RequestParam LocalDate from,
+                                                       @RequestParam LocalDate to) {
+        return new ResponseEntity<>(comidaService.findByUsuarioAndRango(usuarioId, from, to), HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteByNombre")
