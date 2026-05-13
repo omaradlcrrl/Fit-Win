@@ -25,6 +25,9 @@ public class EjercicioService {
     @Autowired private EjercicioGlobalRepository ejercicioGlobalRepository;
 
     public EjercicioDTO save(EjercicioDTO dto) {
+        if (dto.getUsuarioId() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
+            
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -43,11 +46,15 @@ public class EjercicioService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada"));
             e.setRutina(rutina);
         }
-        if (dto.getEjercicioGlobalId() != null) {
+        
+        if (dto.getEjercicioGlobalId() != null && dto.getEjercicioGlobalId() != 0) {
             EjercicioGlobal global = ejercicioGlobalRepository.findById(dto.getEjercicioGlobalId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejercicio global no encontrado"));
             e.setEjercicioGlobal(global);
+        } else {
+            e.setNombrePersonalizado(dto.getNombreEjercicio());
         }
+        
         return new EjercicioDTO(ejercicioRepository.save(e));
     }
 

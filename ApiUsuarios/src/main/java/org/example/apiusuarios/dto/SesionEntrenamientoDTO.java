@@ -18,6 +18,7 @@ public class SesionEntrenamientoDTO {
     private Integer duracionMinutos;
     private Integer nivelIntensidad;
     private Integer nivelRecuperacion;
+    private String notasUsuario;
 
     public SesionEntrenamientoDTO(SesionEntrenamiento s) {
         this.sesionId = s.getSesionId();
@@ -29,5 +30,6 @@ public class SesionEntrenamientoDTO {
         this.duracionMinutos = s.getDuracionMinutos();
         this.nivelIntensidad = s.getNivelIntensidad();
         this.nivelRecuperacion = s.getNivelRecuperacion();
+        this.notasUsuario = s.getNotasUsuario();
     }
 }

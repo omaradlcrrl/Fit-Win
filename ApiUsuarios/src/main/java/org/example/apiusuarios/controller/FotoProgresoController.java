@@ -16,18 +16,18 @@ public class FotoProgresoController {
     private FotoProgresoService fotoService;
 
     @PostMapping("/save")
-    public ResponseEntity<FotoProgresoDTO> save(@RequestBody FotoProgresoDTO dto) {
-        return new ResponseEntity<>(fotoService.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<FotoProgresoDTO> save(@RequestBody FotoProgresoDTO fotoProgresoDTO) {
+        return new ResponseEntity<>(fotoService.save(fotoProgresoDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<FotoProgresoDTO>> findByUsuario(@RequestParam Integer usuarioId) {
-        return ResponseEntity.ok(fotoService.findByUsuario(usuarioId));
+        return new ResponseEntity<>(fotoService.findByUsuario(usuarioId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         fotoService.deleteById(id);
-        return ResponseEntity.ok("Foto con ID " + id + " eliminada");
+        return new ResponseEntity<>("Foto con ID " + id + " eliminada exitosamente", HttpStatus.OK);
     }
 }

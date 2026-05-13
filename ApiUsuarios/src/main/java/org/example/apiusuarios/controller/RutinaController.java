@@ -16,29 +16,29 @@ public class RutinaController {
     private RutinaService rutinaService;
 
     @PostMapping("/save")
-    public ResponseEntity<RutinaDTO> save(@RequestBody RutinaDTO dto) {
-        return new ResponseEntity<>(rutinaService.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<RutinaDTO> save(@RequestBody RutinaDTO rutinaDTO) {
+        return new ResponseEntity<>(rutinaService.save(rutinaDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<RutinaDTO>> findAll(@RequestParam(required = false) Integer usuarioId) {
-        if (usuarioId != null) return ResponseEntity.ok(rutinaService.findByUsuario(usuarioId));
-        return ResponseEntity.ok(rutinaService.findAll());
+        if (usuarioId != null) return new ResponseEntity<>(rutinaService.findByUsuario(usuarioId), HttpStatus.OK);
+        return new ResponseEntity<>(rutinaService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RutinaDTO> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(rutinaService.findById(id));
+        return new ResponseEntity<>(rutinaService.findById(id), HttpStatus.OK);
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<RutinaDTO> update(@PathVariable Integer id, @RequestBody RutinaDTO dto) {
-        return ResponseEntity.ok(rutinaService.update(id, dto));
+    public ResponseEntity<RutinaDTO> update(@PathVariable Integer id, @RequestBody RutinaDTO rutinaDTO) {
+        return new ResponseEntity<>(rutinaService.update(id, rutinaDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         rutinaService.deleteById(id);
-        return ResponseEntity.ok("Rutina con ID " + id + " eliminada");
+        return new ResponseEntity<>("Rutina con ID " + id + " eliminada exitosamente", HttpStatus.OK);
     }
 }

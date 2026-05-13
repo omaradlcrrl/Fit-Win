@@ -8,6 +8,7 @@ import org.example.apiusuarios.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +23,10 @@ public class RutinaService {
     private UsuarioRepository usuarioRepository;
 
     public RutinaDTO save(RutinaDTO dto) {
+        if (dto.getUsuarioId() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
+        if (dto.getNombre() == null || dto.getNombre().trim().isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de la rutina es obligatorio");
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         Rutina r = new Rutina();
@@ -57,9 +62,34 @@ public class RutinaService {
         return new RutinaDTO(rutinaRepository.save(r));
     }
 
+    @Autowired
+    private org.example.apiusuarios.repository.SesionEntrenamientoRepository sesionRepository;
+    
+    @Autowired
+    private org.example.apiusuarios.repository.SerieRealizadaRepository serieRealizadaRepository;
+
+    @Transactional
     public void deleteById(Integer id) {
-        if (!rutinaRepository.existsById(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada");
+        Rutina rutina = rutinaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada"));
+        
+        // Desvincular las sesiones de entrenamiento para no perder el historial al borrar la rutina
+        List<org.example.apiusuarios.model.SesionEntrenamiento> sesiones = sesionRepository.findByRutina_RutinaId(id);
+        for (org.example.apiusuarios.model.SesionEntrenamiento sesion : sesiones) {
+            sesion.setRutina(null);
+            sesionRepository.save(sesion);
+        }
+        
+        // Desvincular también los ejercicios de las series realizadas en el historial
+        if (rutina.getEjercicios() != null) {
+            for (org.example.apiusuarios.model.Ejercicio ej : rutina.getEjercicios()) {
+                List<org.example.apiusuarios.model.SerieRealizada> series = serieRealizadaRepository.findByEjercicio_EjercicioId(ej.getEjercicioId());
+                for (org.example.apiusuarios.model.SerieRealizada serie : series) {
+                    serie.setEjercicio(null);
+                    serieRealizadaRepository.save(serie);
+                }
+            }
+        }
+            
         rutinaRepository.deleteById(id);
     }
 }

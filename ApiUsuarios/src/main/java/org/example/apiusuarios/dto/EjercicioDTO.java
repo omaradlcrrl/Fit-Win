@@ -23,8 +23,8 @@ public class EjercicioDTO {
 
     public EjercicioDTO(Ejercicio e) {
         this.ejercicioId = e.getEjercicioId();
-        this.ejercicioGlobalId = e.getEjercicioGlobal() != null ? e.getEjercicioGlobal().getEjercicioGlobalId() : null;
-        this.nombreEjercicio = e.getEjercicioGlobal() != null ? e.getEjercicioGlobal().getNombre() : null;
+        this.ejercicioGlobalId = e.getEjercicioGlobal() != null ? e.getEjercicioGlobal().getEjercicioGlobalId() : 0;
+        this.nombreEjercicio = e.getEjercicioGlobal() != null ? e.getEjercicioGlobal().getNombre() : e.getNombrePersonalizado();
         this.rutinaId = e.getRutina() != null ? e.getRutina().getRutinaId() : null;
         this.usuarioId = e.getUsuario() != null ? e.getUsuario().getUsuarioId() : null;
         this.diaSemana = e.getDiaSemana();

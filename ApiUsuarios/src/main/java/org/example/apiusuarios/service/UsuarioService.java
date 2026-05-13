@@ -80,10 +80,10 @@ public class UsuarioService {
 
         usuarioDTO.setCorreoElectronico(correo);
 
-        if (usuarioDTO.getGenero() == null) {
+        if (usuarioDTO.getGenero() == null || usuarioDTO.getGenero().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El género es obligatorio");
         }
-        if (usuarioDTO.getNivelActividad() == null) {
+        if (usuarioDTO.getNivelActividad() == null || usuarioDTO.getNivelActividad().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nivel de actividad es obligatorio");
         }
 
@@ -153,6 +153,9 @@ public class UsuarioService {
         response.setToken(jwtToken);
         response.setRefreshToken(refreshToken.getToken());
         response.setUsuarioId(usuario.getUsuarioId());
+        response.setNombre(usuario.getNombre());
+        response.setCorreoElectronico(usuario.getCorreoElectronico());
+        response.setOnboardingCompleto(usuario.getOnboardingCompleto() != null && usuario.getOnboardingCompleto());
 
         return response;
     }
@@ -226,6 +229,10 @@ public class UsuarioService {
             usuario.setOnboardingCompleto(updates.getOnboardingCompleto());
         }
 
+        if (updates.getObjetivo() != null) {
+            usuario.setObjetivo(updates.getObjetivo());
+        }
+
         Usuario actualizado = usuarioRepository.save(usuario);
         return new UsuarioDTO(actualizado);
     }
@@ -248,6 +255,7 @@ public class UsuarioService {
         u.setNivelActividad(dto.getNivelActividad());
         u.setPesoActual(dto.getPesoActual());
         u.setOnboardingCompleto(dto.getOnboardingCompleto());
+        u.setObjetivo(dto.getObjetivo());
         return u;
     }
 }

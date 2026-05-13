@@ -16,24 +16,24 @@ public class SerieRealizadaController {
     private SerieRealizadaService serieService;
 
     @PostMapping("/save")
-    public ResponseEntity<SerieRealizadaDTO> save(@RequestBody SerieRealizadaDTO dto) {
-        return new ResponseEntity<>(serieService.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<SerieRealizadaDTO> save(@RequestBody SerieRealizadaDTO serieRealizadaDTO) {
+        return new ResponseEntity<>(serieService.save(serieRealizadaDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<SerieRealizadaDTO>> findBySesion(@RequestParam Integer sesionId) {
-        return ResponseEntity.ok(serieService.findBySesion(sesionId));
+        return new ResponseEntity<>(serieService.findBySesion(sesionId), HttpStatus.OK);
     }
 
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<SerieRealizadaDTO> update(@PathVariable Integer id,
-                                                     @RequestBody SerieRealizadaDTO dto) {
-        return ResponseEntity.ok(serieService.update(id, dto));
+                                                     @RequestBody SerieRealizadaDTO serieRealizadaDTO) {
+        return new ResponseEntity<>(serieService.update(id, serieRealizadaDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         serieService.deleteById(id);
-        return ResponseEntity.ok("Serie con ID " + id + " eliminada");
+        return new ResponseEntity<>("Serie con ID " + id + " eliminada exitosamente", HttpStatus.OK);
     }
 }

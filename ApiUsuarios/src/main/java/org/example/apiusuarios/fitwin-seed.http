@@ -1,0 +1,478 @@
+### Fitwin API — Seed completo de datos de prueba
+### Ejecutar EN ORDEN de arriba a abajo
+### Tras el paso 2 (Login), copiar token y refreshToken en las variables
+
+@base = http://localhost:3036/api/v1/FWBBD
+@token = PEGAR_TOKEN_AQUI
+@usuarioId = 1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 1 — Registro
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 1. Registrar usuario Omar
+POST {{base}}/usuarios/save
+Content-Type: application/json
+
+{
+  "nombre": "Omar",
+  "apellidos": "Adel",
+  "correoElectronico": "omar@fitwin.com",
+  "password": "fitwin123",
+  "fechaNacimiento": "2000-05-15",
+  "altura": 178.0,
+  "genero": "MASCULINO",
+  "nivelActividad": "MODERADO",
+  "pesoActual": 80.0,
+  "objetivo": "GANAR_MUSCULO",
+  "idioma": "es"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 2 — Login  ► COPIAR token en @token de arriba
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 2. Login
+POST {{base}}/usuarios/login
+Content-Type: application/json
+
+{
+  "correoElectronico": "omar@fitwin.com",
+  "password": "fitwin123"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 3 — Completar perfil (onboarding)
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 3. Actualizar perfil con estrategia y marcar onboarding completo
+PUT {{base}}/usuarios/actualizar/{{usuarioId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "estrategia": "SUPERAVIT",
+  "ajusteCalorico": 15,
+  "onboardingCompleto": true
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 4 — Catálogo de ejercicios globales
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 4a. Crear ejercicio global — Press banca
+POST {{base}}/ejercicios-globales/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Press banca",
+  "categoria": "FUERZA",
+  "musculoPrimario": "Pectorales",
+  "musculosSecundarios": "Tríceps, Deltoides anterior",
+  "equipamiento": "BARRA",
+  "cueCoaching": "Escápulas retraídas, pies en el suelo, baja la barra al pecho de forma controlada."
+}
+
+### 4b. Crear ejercicio global — Sentadilla
+POST {{base}}/ejercicios-globales/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Sentadilla",
+  "categoria": "FUERZA",
+  "musculoPrimario": "Cuádriceps",
+  "musculosSecundarios": "Glúteos, Isquiotibiales",
+  "equipamiento": "BARRA",
+  "cueCoaching": "Rodillas en línea con los pies, pecho arriba, baja hasta paralelo o más."
+}
+
+### 4c. Crear ejercicio global — Dominadas
+POST {{base}}/ejercicios-globales/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Dominadas",
+  "categoria": "FUERZA",
+  "musculoPrimario": "Dorsales",
+  "musculosSecundarios": "Bíceps, Romboides",
+  "equipamiento": "PESO_CORPORAL",
+  "cueCoaching": "Agarre prono, parte de colgado con brazos extendidos, sube hasta barbilla sobre la barra."
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 5 — Rutina PPL
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 5. Crear rutina Push Pull Legs
+POST {{base}}/rutinas/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "nombre": "Push Pull Legs",
+  "etiqueta": "Hipertrofia",
+  "diasActivos": "LUNES,MARTES,MIERCOLES,JUEVES,VIERNES",
+  "duracionEstimadaMin": 75
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 6 — Ejercicios dentro de la rutina (rutinaId=1, ejercicioGlobalId 1-3)
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 6a. Press banca en rutina — Lunes
+POST {{base}}/ejercicios/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "rutinaId": 1,
+  "ejercicioGlobalId": 1,
+  "diaSemana": "LUNES",
+  "series": 4,
+  "repeticionesMin": 8,
+  "repeticionesMax": 12,
+  "descansoSegundos": 90,
+  "pesoKg": 80.0,
+  "posicion": 1
+}
+
+### 6b. Sentadilla en rutina — Miércoles
+POST {{base}}/ejercicios/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "rutinaId": 1,
+  "ejercicioGlobalId": 2,
+  "diaSemana": "MIERCOLES",
+  "series": 4,
+  "repeticionesMin": 6,
+  "repeticionesMax": 10,
+  "descansoSegundos": 120,
+  "pesoKg": 100.0,
+  "posicion": 1
+}
+
+### 6c. Dominadas en rutina — Martes
+POST {{base}}/ejercicios/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "rutinaId": 1,
+  "ejercicioGlobalId": 3,
+  "diaSemana": "MARTES",
+  "series": 3,
+  "repeticionesMin": 6,
+  "repeticionesMax": 10,
+  "descansoSegundos": 90,
+  "pesoKg": 0.0,
+  "posicion": 1
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 7 — Sesión de entrenamiento completa (Press banca)
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 7a. Iniciar sesión
+POST {{base}}/sesiones/iniciar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "rutinaId": 1
+}
+
+### 7b. Serie 1 — 80kg x 12 reps (completado=true → auto-record)
+POST {{base}}/series/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sesionId": 1,
+  "ejercicioId": 1,
+  "pesoKg": 80.0,
+  "repeticionesRealizadas": 12,
+  "completado": true,
+  "orden": 1
+}
+
+### 7c. Serie 2 — 82.5kg x 10 reps (nuevo record automático)
+POST {{base}}/series/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sesionId": 1,
+  "ejercicioId": 1,
+  "pesoKg": 82.5,
+  "repeticionesRealizadas": 10,
+  "completado": true,
+  "orden": 2
+}
+
+### 7d. Serie 3 — 85kg x 8 reps (nuevo record automático)
+POST {{base}}/series/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sesionId": 1,
+  "ejercicioId": 1,
+  "pesoKg": 85.0,
+  "repeticionesRealizadas": 8,
+  "completado": true,
+  "orden": 3
+}
+
+### 7e. Serie 4 — 85kg x 7 reps (no supera record, no crea nuevo)
+POST {{base}}/series/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sesionId": 1,
+  "ejercicioId": 1,
+  "pesoKg": 85.0,
+  "repeticionesRealizadas": 7,
+  "completado": true,
+  "orden": 4
+}
+
+### 7f. Finalizar sesión con notas
+PUT {{base}}/sesiones/finalizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nivelIntensidad": 8,
+  "nivelRecuperacion": 7,
+  "notasUsuario": "Buena sesión, nuevo record en press banca. Hombro izquierdo algo tenso."
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 8 — Dominadas (record por repeticiones, sin peso)
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 8a. Iniciar segunda sesión
+POST {{base}}/sesiones/iniciar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "rutinaId": 1
+}
+
+### 8b. Serie dominadas — 18 reps (auto-record por repeticiones)
+POST {{base}}/series/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sesionId": 2,
+  "ejercicioId": 3,
+  "pesoKg": 0.0,
+  "repeticionesRealizadas": 18,
+  "completado": true,
+  "orden": 1
+}
+
+### 8c. Finalizar segunda sesión
+PUT {{base}}/sesiones/finalizar/2
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nivelIntensidad": 7,
+  "nivelRecuperacion": 8,
+  "notasUsuario": "Dominadas bien, 18 reps sin lastre."
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 9 — Nutrición del día
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 9a. Desayuno — Avena
+POST {{base}}/comidas/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "nombre": "Avena con leche",
+  "calorias": 380,
+  "proteinas": 14.0,
+  "carbohidratos": 58.0,
+  "grasasSaturadas": 3.0,
+  "tipoComida": "DESAYUNO",
+  "cantidad": 100,
+  "unidad": "GRAMOS"
+}
+
+### 9b. Almuerzo — Pollo con arroz
+POST {{base}}/comidas/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "nombre": "Pechuga de pollo con arroz",
+  "calorias": 520,
+  "proteinas": 48.0,
+  "carbohidratos": 62.0,
+  "grasasSaturadas": 2.5,
+  "tipoComida": "ALMUERZO",
+  "cantidad": 400,
+  "unidad": "GRAMOS"
+}
+
+### 9c. Cena — Salmón con verduras
+POST {{base}}/comidas/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "nombre": "Salmón al horno con verduras",
+  "calorias": 450,
+  "proteinas": 38.0,
+  "carbohidratos": 20.0,
+  "grasasSaturadas": 6.0,
+  "tipoComida": "CENA",
+  "cantidad": 350,
+  "unidad": "GRAMOS"
+}
+
+### 9d. Snack — Batido de proteínas
+POST {{base}}/comidas/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "nombre": "Batido de proteínas",
+  "calorias": 160,
+  "proteinas": 30.0,
+  "carbohidratos": 6.0,
+  "grasasSaturadas": 1.0,
+  "tipoComida": "SNACK",
+  "cantidad": 300,
+  "unidad": "ML"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 10 — Medición corporal
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 10. Registrar medición corporal completa
+POST {{base}}/mediciones/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "peso": 80.0,
+  "porcentajeGrasa": 16.5,
+  "masaMagra": 66.8,
+  "cintura": 82.0,
+  "pecho": 102.0,
+  "brazo": 37.0,
+  "muslo": 58.0,
+  "hombro": 116.0,
+  "espalda": 109.0
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 11 — Foto de progreso
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 11a. Foto frontal
+POST {{base}}/fotos-progreso/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "urlFoto": "https://cdn.fitwin.app/fotos/omar/2025-04-17-frontal.jpg",
+  "tipoFoto": "FRONTAL"
+}
+
+### 11b. Foto espalda
+POST {{base}}/fotos-progreso/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "urlFoto": "https://cdn.fitwin.app/fotos/omar/2025-04-17-espalda.jpg",
+  "tipoFoto": "ESPALDA"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PASO 12 — Generar objetivo nutricional
+# ─────────────────────────────────────────────────────────────────────────────
+
+### 12. Generar objetivo calórico automático (TDEE + ajuste SUPERAVIT 15%)
+POST {{base}}/objetivos/generar/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VERIFICACIÓN — Leer todo lo creado
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Ver perfil completo
+GET {{base}}/usuarios/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Ver objetivo del día
+GET {{base}}/objetivos/actual/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Ver comidas de hoy
+GET {{base}}/comidas/hoy/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Ver historial de sesiones
+GET {{base}}/sesiones?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Ver series de la sesión 1
+GET {{base}}/series?sesionId=1
+Authorization: Bearer {{token}}
+
+### Ver records del usuario (deberían aparecer auto-generados)
+GET {{base}}/records?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Ver mejor record de press banca (ejercicioGlobalId=1)
+GET {{base}}/records/ejercicio/max?usuarioId={{usuarioId}}&ejercicioGlobalId=1
+Authorization: Bearer {{token}}
+
+### Ver historial de records de press banca
+GET {{base}}/records/ejercicio?usuarioId={{usuarioId}}&ejercicioGlobalId=1
+Authorization: Bearer {{token}}
+
+### Ver última medición corporal
+GET {{base}}/mediciones/ultima/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Ver fotos de progreso
+GET {{base}}/fotos-progreso?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Ver ejercicios de la rutina
+GET {{base}}/ejercicios?rutinaId=1
+Authorization: Bearer {{token}}
+
+### Ver catálogo completo de ejercicios
+GET {{base}}/ejercicios-globales
+Authorization: Bearer {{token}}

@@ -18,6 +18,10 @@ public class EjercicioGlobalService {
     private EjercicioGlobalRepository repo;
 
     public EjercicioGlobalDTO save(EjercicioGlobalDTO dto) {
+        if (dto.getNombre() == null || dto.getNombre().trim().isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre del ejercicio es obligatorio");
+        if (dto.getCategoria() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La categoría es obligatoria");
         EjercicioGlobal e = new EjercicioGlobal();
         e.setNombre(dto.getNombre());
         e.setCategoria(dto.getCategoria());

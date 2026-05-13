@@ -51,9 +51,9 @@ public class ComidaController {
 
     @GetMapping("/range/{usuarioId}")
     public ResponseEntity<List<ComidaDTO>> getByRange(@PathVariable Integer usuarioId,
-                                                       @RequestParam LocalDate from,
-                                                       @RequestParam LocalDate to) {
-        return new ResponseEntity<>(comidaService.findByUsuarioAndRango(usuarioId, from, to), HttpStatus.OK);
+                                                       @RequestParam LocalDate desde,
+                                                       @RequestParam LocalDate hasta) {
+        return new ResponseEntity<>(comidaService.findByUsuarioAndRango(usuarioId, desde, hasta), HttpStatus.OK);
     }
 
     @DeleteMapping("/deleteByNombre")

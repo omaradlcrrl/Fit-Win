@@ -14,6 +14,7 @@ public class RecordPersonalDTO {
     private String nombreEjercicio;
     private Integer usuarioId;
     private Double pesoKg;
+    private Integer repeticiones;
     private LocalDate fecha;
 
     public RecordPersonalDTO(RecordPersonal r) {
@@ -22,6 +23,7 @@ public class RecordPersonalDTO {
         this.nombreEjercicio = r.getEjercicioGlobal() != null ? r.getEjercicioGlobal().getNombre() : null;
         this.usuarioId = r.getUsuario() != null ? r.getUsuario().getUsuarioId() : null;
         this.pesoKg = r.getPesoKg();
+        this.repeticiones = r.getRepeticiones();
         this.fecha = r.getFecha();
     }
 }

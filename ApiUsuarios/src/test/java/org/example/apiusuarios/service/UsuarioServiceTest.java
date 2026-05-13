@@ -5,6 +5,7 @@ import org.example.apiusuarios.dto.login.LoginRequest;
 import org.example.apiusuarios.dto.login.LoginResponse;
 import org.example.apiusuarios.exception.CredencialesInvalidasException;
 import org.example.apiusuarios.exception.RecursoNoEncontradoException;
+import org.example.apiusuarios.model.RefreshToken;
 import org.example.apiusuarios.model.Role;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.UsuarioRepository;
@@ -37,6 +38,7 @@ class UsuarioServiceTest {
     @Mock PasswordEncoder passwordEncoder;
     @Mock JwtService jwtService;
     @Mock UserDetailsService userDetailsService;
+    @Mock RefreshTokenService refreshTokenService;
 
     @InjectMocks UsuarioService usuarioService;
 
@@ -161,13 +163,18 @@ class UsuarioServiceTest {
 
         UserDetails ud = mock(UserDetails.class);
 
+        RefreshToken rt = new RefreshToken();
+        rt.setToken("refresh.token.here");
+
         when(usuarioRepository.findByCorreoElectronico("ana@example.com")).thenReturn(Optional.of(usuarioBase));
         when(userDetailsService.loadUserByUsername("ana@example.com")).thenReturn(ud);
         when(jwtService.generateToken(ud)).thenReturn("jwt.token.here");
+        when(refreshTokenService.crear(1)).thenReturn(rt);
 
         LoginResponse resp = usuarioService.login(req);
 
         assertThat(resp.getToken()).isEqualTo("jwt.token.here");
+        assertThat(resp.getRefreshToken()).isEqualTo("refresh.token.here");
         assertThat(resp.getUsuarioId()).isEqualTo(1);
     }
 

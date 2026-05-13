@@ -19,11 +19,16 @@ public class FotoProgresoService {
     @Autowired private UsuarioRepository usuarioRepository;
 
     public FotoProgresoDTO save(FotoProgresoDTO dto) {
+        if (dto.getUsuarioId() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
+        if (dto.getUrlFoto() == null || dto.getUrlFoto().trim().isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "urlFoto es obligatoria");
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         FotoProgreso f = new FotoProgreso();
         f.setUsuario(usuario);
         f.setUrlFoto(dto.getUrlFoto());
+        f.setTipoFoto(dto.getTipoFoto());
         f.setFecha(dto.getFecha());
         return new FotoProgresoDTO(repo.save(f));
     }

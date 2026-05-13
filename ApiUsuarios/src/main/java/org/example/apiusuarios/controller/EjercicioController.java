@@ -16,8 +16,8 @@ public class EjercicioController {
     private EjercicioService ejercicioService;
 
     @PostMapping("/save")
-    public ResponseEntity<EjercicioDTO> save(@RequestBody EjercicioDTO dto) {
-        return new ResponseEntity<>(ejercicioService.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<EjercicioDTO> save(@RequestBody EjercicioDTO ejercicioDTO) {
+        return new ResponseEntity<>(ejercicioService.save(ejercicioDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -26,25 +26,25 @@ public class EjercicioController {
             @RequestParam(required = false) String diaSemana,
             @RequestParam(required = false) Integer rutinaId) {
         if (usuarioId != null && diaSemana != null)
-            return ResponseEntity.ok(ejercicioService.findByUsuarioAndDia(usuarioId, diaSemana));
+            return new ResponseEntity<>(ejercicioService.findByUsuarioAndDia(usuarioId, diaSemana), HttpStatus.OK);
         if (rutinaId != null)
-            return ResponseEntity.ok(ejercicioService.findByRutina(rutinaId));
-        return ResponseEntity.ok(ejercicioService.findAll());
+            return new ResponseEntity<>(ejercicioService.findByRutina(rutinaId), HttpStatus.OK);
+        return new ResponseEntity<>(ejercicioService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EjercicioDTO> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(ejercicioService.findById(id));
+        return new ResponseEntity<>(ejercicioService.findById(id), HttpStatus.OK);
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<EjercicioDTO> update(@PathVariable Integer id, @RequestBody EjercicioDTO dto) {
-        return ResponseEntity.ok(ejercicioService.update(id, dto));
+    public ResponseEntity<EjercicioDTO> update(@PathVariable Integer id, @RequestBody EjercicioDTO ejercicioDTO) {
+        return new ResponseEntity<>(ejercicioService.update(id, ejercicioDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         ejercicioService.deleteById(id);
-        return ResponseEntity.ok("Ejercicio con ID " + id + " eliminado");
+        return new ResponseEntity<>("Ejercicio con ID " + id + " eliminado exitosamente", HttpStatus.OK);
     }
 }

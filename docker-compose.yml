@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  db:
+    image: mariadb:11
+    container_name: fitwin-db
+    environment:
+      MYSQL_ROOT_PASSWORD: fitwin2024
+      MYSQL_DATABASE: fit_win
+    ports:
+      - "3306:3306"
+    volumes:
+      - fitwin-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: ./ApiUsuarios
+    container_name: fitwin-api
+    ports:
+      - "3036:3036"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/fit_win
+      DB_USER: root
+      DB_PASSWORD: fitwin2024
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  fitwin-data:

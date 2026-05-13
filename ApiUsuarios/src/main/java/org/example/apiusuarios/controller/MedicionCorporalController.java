@@ -17,9 +17,8 @@ public class MedicionCorporalController {
     private MedicionCorporalService medicionService;
 
     @PostMapping("/save")
-    public ResponseEntity<MedicionCorporalDTO> save(@RequestBody MedicionCorporalDTO dto) {
-        MedicionCorporalDTO resultado = medicionService.save(dto);
-        return new ResponseEntity<>(resultado, HttpStatus.CREATED);
+    public ResponseEntity<MedicionCorporalDTO> save(@RequestBody MedicionCorporalDTO medicionCorporalDTO) {
+        return new ResponseEntity<>(medicionService.save(medicionCorporalDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -45,10 +44,10 @@ public class MedicionCorporalController {
     @GetMapping("/range/{usuarioId}")
     public ResponseEntity<List<MedicionCorporalDTO>> findByRange(
             @PathVariable Integer usuarioId,
-            @RequestParam LocalDate from,
-            @RequestParam LocalDate to
+            @RequestParam LocalDate desde,
+            @RequestParam LocalDate hasta
     ) {
-        return new ResponseEntity<>(medicionService.findByUsuarioAndRango(usuarioId, from, to), HttpStatus.OK);
+        return new ResponseEntity<>(medicionService.findByUsuarioAndRango(usuarioId, desde, hasta), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -71,9 +70,8 @@ public class MedicionCorporalController {
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<MedicionCorporalDTO> update(
             @PathVariable Integer id,
-            @RequestBody MedicionCorporalDTO dto
+            @RequestBody MedicionCorporalDTO medicionCorporalDTO
     ) {
-        MedicionCorporalDTO resultado = medicionService.update(id, dto);
-        return new ResponseEntity<>(resultado, HttpStatus.OK);
+        return new ResponseEntity<>(medicionService.update(id, medicionCorporalDTO), HttpStatus.OK);
     }
 }

@@ -17,6 +17,7 @@ public class RecordPersonal {
     private Integer recordId;
 
     private Double pesoKg;
+    private Integer repeticiones;
     private LocalDate fecha;
 
     @ManyToOne

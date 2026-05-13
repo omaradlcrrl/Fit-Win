@@ -16,23 +16,37 @@ public class RecordPersonalController {
     private RecordPersonalService recordService;
 
     @PostMapping("/save")
-    public ResponseEntity<RecordPersonalDTO> save(@RequestBody RecordPersonalDTO dto) {
-        return new ResponseEntity<>(recordService.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<RecordPersonalDTO> save(@RequestBody RecordPersonalDTO recordPersonalDTO) {
+        return new ResponseEntity<>(recordService.save(recordPersonalDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<RecordPersonalDTO>> findByUsuario(@RequestParam Integer usuarioId) {
-        return ResponseEntity.ok(recordService.findByUsuario(usuarioId));
+        return new ResponseEntity<>(recordService.findByUsuario(usuarioId), HttpStatus.OK);
+    }
+
+    @GetMapping("/ejercicio")
+    public ResponseEntity<List<RecordPersonalDTO>> findByUsuarioAndEjercicio(
+            @RequestParam Integer usuarioId,
+            @RequestParam Integer ejercicioGlobalId) {
+        return new ResponseEntity<>(recordService.findByUsuarioAndEjercicio(usuarioId, ejercicioGlobalId), HttpStatus.OK);
+    }
+
+    @GetMapping("/ejercicio/max")
+    public ResponseEntity<RecordPersonalDTO> findMaxByUsuarioAndEjercicio(
+            @RequestParam Integer usuarioId,
+            @RequestParam Integer ejercicioGlobalId) {
+        return new ResponseEntity<>(recordService.findMaxByUsuarioAndEjercicio(usuarioId, ejercicioGlobalId), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RecordPersonalDTO> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(recordService.findById(id));
+        return new ResponseEntity<>(recordService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         recordService.deleteById(id);
-        return ResponseEntity.ok("Record con ID " + id + " eliminado");
+        return new ResponseEntity<>("Record con ID " + id + " eliminado exitosamente", HttpStatus.OK);
     }
 }

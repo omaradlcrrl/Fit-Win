@@ -36,6 +36,7 @@ public class SesionEntrenamientoService {
         }
         if (dto.getNivelIntensidad() != null) s.setNivelIntensidad(dto.getNivelIntensidad());
         if (dto.getNivelRecuperacion() != null) s.setNivelRecuperacion(dto.getNivelRecuperacion());
+        if (dto.getNotasUsuario() != null) s.setNotasUsuario(dto.getNotasUsuario());
         return new SesionEntrenamientoDTO(repo.save(s));
     }
 
@@ -47,6 +48,7 @@ public class SesionEntrenamientoService {
         s.setDuracionMinutos((int) ChronoUnit.MINUTES.between(s.getFechaInicio(), fin));
         if (dto.getNivelIntensidad() != null) s.setNivelIntensidad(dto.getNivelIntensidad());
         if (dto.getNivelRecuperacion() != null) s.setNivelRecuperacion(dto.getNivelRecuperacion());
+        if (dto.getNotasUsuario() != null) s.setNotasUsuario(dto.getNotasUsuario());
         return new SesionEntrenamientoDTO(repo.save(s));
     }
 

@@ -1,0 +1,440 @@
+### Fitwin API — Colección completa de solicitudes HTTP
+### Base URL: http://localhost:3036/api/v1/FWBBD
+### Uso: Ejecutar primero el bloque "Login" y copiar el token en la variable @token
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VARIABLES (actualizar tras login)
+# ─────────────────────────────────────────────────────────────────────────────
+@base = http://localhost:3036/api/v1/FWBBD
+@token = PEGAR_TOKEN_AQUI
+@refreshToken = PEGAR_REFRESH_TOKEN_AQUI
+@usuarioId = 1
+
+# ─────────────────────────────────────────────────────────────────────────────
+# USUARIOS — Registro y Login (sin auth)
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Registrar usuario
+POST {{base}}/usuarios/save
+Content-Type: application/json
+
+{
+  "nombre": "Omar",
+  "apellidos": "Fitness",
+  "correoElectronico": "omar@fitwin.com",
+  "password": "password123",
+  "altura": 1.78,
+  "fechaNacimiento": "1995-05-15",
+  "genero": "MASCULINO",
+  "nivelActividad": "MODERADO",
+  "estrategia": "SUPERAVIT",
+  "ajusteCalorico": 15,
+  "pesoActual": 80.0
+}
+
+### Login — copia el token y refreshToken en las variables de arriba
+POST {{base}}/usuarios/login
+Content-Type: application/json
+
+{
+  "correoElectronico": "omar@fitwin.com",
+  "password": "password123"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AUTH — Refresh Token y Logout
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Renovar JWT con refresh token (sin auth)
+POST {{base}}/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### Logout — revoca todos los refresh tokens del usuario
+POST {{base}}/auth/logout?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# USUARIOS — CRUD
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Listar todos los usuarios
+GET {{base}}/usuarios
+Authorization: Bearer {{token}}
+
+### Obtener usuario por ID
+GET {{base}}/usuarios/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Actualizar perfil (partial update)
+PUT {{base}}/usuarios/actualizar/{{usuarioId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "pesoActual": 78.5,
+  "onboardingCompleto": true,
+  "estrategia": "MANTENIMIENTO"
+}
+
+### Eliminar usuario
+DELETE {{base}}/usuarios/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OBJETIVOS — Cálculo nutricional
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Generar objetivo automático
+POST {{base}}/objetivos/generar/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Objetivo de hoy
+GET {{base}}/objetivos/hoy/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Objetivo más reciente
+GET {{base}}/objetivos/actual/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Histórico completo
+GET {{base}}/objetivos/usuario/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Por rango de fechas
+GET {{base}}/objetivos/range/{{usuarioId}}?from=2025-01-01&to=2025-12-31
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# COMIDAS — Nutrición
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Registrar comida
+POST {{base}}/comidas/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "nombre": "Arroz integral",
+  "calorias": 350,
+  "proteinas": 7.0,
+  "carbohidratos": 72.0,
+  "grasasSaturadas": 1.5,
+  "tipoComida": "ALMUERZO",
+  "cantidad": 200.0,
+  "unidad": "GRAMOS"
+}
+
+### Comidas de hoy
+GET {{base}}/comidas/hoy/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Todas las comidas del usuario (historial)
+GET {{base}}/comidas/usuario/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Comidas por fecha específica
+GET {{base}}/comidas/fecha/{{usuarioId}}?fecha=2025-04-15
+Authorization: Bearer {{token}}
+
+### Comidas por rango de fechas
+GET {{base}}/comidas/range/{{usuarioId}}?from=2025-04-01&to=2025-04-30
+Authorization: Bearer {{token}}
+
+### Actualizar comida
+PUT {{base}}/comidas/actualizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "calorias": 380,
+  "cantidad": 220.0
+}
+
+### Eliminar comida por ID
+DELETE {{base}}/comidas/1
+Authorization: Bearer {{token}}
+
+### Eliminar comida por nombre (hoy)
+DELETE {{base}}/comidas/deleteByNombre?usuarioId={{usuarioId}}&nombre=Arroz integral
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MEDICIONES CORPORALES
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Registrar medición
+POST {{base}}/mediciones/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "peso": 80.0,
+  "porcentajeGrasa": 18.5,
+  "masaMagra": 65.2,
+  "cintura": 82.0,
+  "pecho": 102.0,
+  "brazo": 36.0,
+  "muslo": 58.0,
+  "hombro": 115.0,
+  "espalda": 108.0
+}
+
+### Última medición
+GET {{base}}/mediciones/ultima/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Todas las mediciones del usuario
+GET {{base}}/mediciones/usuario/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Por rango de fechas
+GET {{base}}/mediciones/range/{{usuarioId}}?from=2025-01-01&to=2025-12-31
+Authorization: Bearer {{token}}
+
+### Actualizar medición
+PUT {{base}}/mediciones/actualizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "peso": 79.5,
+  "cintura": 81.0
+}
+
+### Eliminar medición de hoy
+DELETE {{base}}/mediciones/deleteHoy/{{usuarioId}}
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EJERCICIOS GLOBALES — Catálogo
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Crear ejercicio en catálogo
+POST {{base}}/ejercicios-globales/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nombre": "Press de banca",
+  "categoria": "FUERZA",
+  "musculoPrimario": "Pectorales",
+  "musculosSecundarios": "Tríceps, Deltoides anterior",
+  "equipamiento": "BARRA",
+  "cueCoaching": "Retrae las escápulas, pies en el suelo, baja la barra al pecho controlando la excéntrica."
+}
+
+### Listar todo el catálogo
+GET {{base}}/ejercicios-globales
+Authorization: Bearer {{token}}
+
+### Filtrar por categoría
+GET {{base}}/ejercicios-globales?categoria=FUERZA
+Authorization: Bearer {{token}}
+
+### Buscar por nombre
+GET {{base}}/ejercicios-globales?buscar=banca
+Authorization: Bearer {{token}}
+
+### Obtener por ID
+GET {{base}}/ejercicios-globales/1
+Authorization: Bearer {{token}}
+
+### Actualizar ejercicio global
+PUT {{base}}/ejercicios-globales/actualizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "cueCoaching": "Texto actualizado de coaching."
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RUTINAS
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Crear rutina
+POST {{base}}/rutinas/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "nombre": "Push Pull Legs",
+  "etiqueta": "Hipertrofia",
+  "diasActivos": "L,M,X,J,V",
+  "duracionEstimadaMin": 75
+}
+
+### Listar rutinas del usuario
+GET {{base}}/rutinas?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Obtener rutina por ID
+GET {{base}}/rutinas/1
+Authorization: Bearer {{token}}
+
+### Actualizar rutina
+PUT {{base}}/rutinas/actualizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "duracionEstimadaMin": 90
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EJERCICIOS — Dentro de rutinas
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Añadir ejercicio a rutina
+POST {{base}}/ejercicios/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "rutinaId": 1,
+  "ejercicioGlobalId": 1,
+  "diaSemana": "LUNES",
+  "series": 4,
+  "repeticionesMin": 8,
+  "repeticionesMax": 12,
+  "descansoSegundos": 90,
+  "pesoKg": 80.0,
+  "posicion": 1
+}
+
+### Ejercicios de una rutina
+GET {{base}}/ejercicios?rutinaId=1
+Authorization: Bearer {{token}}
+
+### Ejercicios del usuario en un día
+GET {{base}}/ejercicios?usuarioId={{usuarioId}}&diaSemana=LUNES
+Authorization: Bearer {{token}}
+
+### Actualizar ejercicio
+PUT {{base}}/ejercicios/actualizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "pesoKg": 82.5,
+  "series": 5
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SESIONES DE ENTRENAMIENTO — Workout en vivo
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Iniciar sesión de entrenamiento
+POST {{base}}/sesiones/iniciar
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "rutinaId": 1
+}
+
+### Finalizar sesión
+PUT {{base}}/sesiones/finalizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "nivelIntensidad": 8,
+  "nivelRecuperacion": 7
+}
+
+### Historial de sesiones del usuario
+GET {{base}}/sesiones?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Obtener sesión por ID
+GET {{base}}/sesiones/1
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SERIES REALIZADAS — Tracking granular
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Registrar serie
+POST {{base}}/series/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sesionId": 1,
+  "ejercicioId": 1,
+  "pesoKg": 80.0,
+  "repeticionesRealizadas": 10,
+  "completado": true,
+  "orden": 1
+}
+
+### Series de una sesión
+GET {{base}}/series?sesionId=1
+Authorization: Bearer {{token}}
+
+### Marcar serie como completada
+PUT {{base}}/series/actualizar/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "completado": true,
+  "repeticionesRealizadas": 10
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RECORDS PERSONALES
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Registrar record personal
+POST {{base}}/records/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "ejercicioGlobalId": 1,
+  "pesoKg": 100.0,
+  "fecha": "2025-04-15"
+}
+
+### Records del usuario
+GET {{base}}/records?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Obtener record por ID
+GET {{base}}/records/1
+Authorization: Bearer {{token}}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FOTOS DE PROGRESO
+# ─────────────────────────────────────────────────────────────────────────────
+
+### Subir foto de progreso
+POST {{base}}/fotos-progreso/save
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "usuarioId": {{usuarioId}},
+  "urlFoto": "https://cdn.fitwin.app/fotos/usuario1/2025-04-15.jpg",
+  "fecha": "2025-04-15"
+}
+
+### Fotos del usuario
+GET {{base}}/fotos-progreso?usuarioId={{usuarioId}}
+Authorization: Bearer {{token}}
+
+### Eliminar foto
+DELETE {{base}}/fotos-progreso/1
+Authorization: Bearer {{token}}

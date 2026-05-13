@@ -17,6 +17,10 @@ public class FotoProgreso {
     private Integer fotoId;
 
     private String urlFoto;
+
+    @Enumerated(EnumType.STRING)
+    private TipoFoto tipoFoto;
+
     private LocalDate fecha;
 
     @ManyToOne

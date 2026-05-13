@@ -14,35 +14,35 @@ import java.util.List;
 public class EjercicioGlobalController {
 
     @Autowired
-    private EjercicioGlobalService service;
+    private EjercicioGlobalService ejercicioGlobalService;
 
     @PostMapping("/save")
-    public ResponseEntity<EjercicioGlobalDTO> save(@RequestBody EjercicioGlobalDTO dto) {
-        return new ResponseEntity<>(service.save(dto), HttpStatus.CREATED);
+    public ResponseEntity<EjercicioGlobalDTO> save(@RequestBody EjercicioGlobalDTO ejercicioGlobalDTO) {
+        return new ResponseEntity<>(ejercicioGlobalService.save(ejercicioGlobalDTO), HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<List<EjercicioGlobalDTO>> findAll(
             @RequestParam(required = false) CategoriaEjercicio categoria,
             @RequestParam(required = false) String buscar) {
-        if (categoria != null) return ResponseEntity.ok(service.findByCategoria(categoria));
-        if (buscar != null) return ResponseEntity.ok(service.search(buscar));
-        return ResponseEntity.ok(service.findAll());
+        if (categoria != null) return new ResponseEntity<>(ejercicioGlobalService.findByCategoria(categoria), HttpStatus.OK);
+        if (buscar != null) return new ResponseEntity<>(ejercicioGlobalService.search(buscar), HttpStatus.OK);
+        return new ResponseEntity<>(ejercicioGlobalService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EjercicioGlobalDTO> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(service.findById(id));
+        return new ResponseEntity<>(ejercicioGlobalService.findById(id), HttpStatus.OK);
     }
 
     @PutMapping("/actualizar/{id}")
-    public ResponseEntity<EjercicioGlobalDTO> update(@PathVariable Integer id, @RequestBody EjercicioGlobalDTO dto) {
-        return ResponseEntity.ok(service.update(id, dto));
+    public ResponseEntity<EjercicioGlobalDTO> update(@PathVariable Integer id, @RequestBody EjercicioGlobalDTO ejercicioGlobalDTO) {
+        return new ResponseEntity<>(ejercicioGlobalService.update(id, ejercicioGlobalDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        service.deleteById(id);
-        return ResponseEntity.ok("Ejercicio global con ID " + id + " eliminado");
+        ejercicioGlobalService.deleteById(id);
+        return new ResponseEntity<>("Ejercicio global con ID " + id + " eliminado exitosamente", HttpStatus.OK);
     }
 }

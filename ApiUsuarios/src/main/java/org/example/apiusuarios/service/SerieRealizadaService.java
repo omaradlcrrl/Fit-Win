@@ -20,8 +20,11 @@ public class SerieRealizadaService {
     @Autowired private SerieRealizadaRepository repo;
     @Autowired private SesionEntrenamientoRepository sesionRepo;
     @Autowired private EjercicioRepository ejercicioRepository;
+    @Autowired private RecordPersonalService recordPersonalService;
 
     public SerieRealizadaDTO save(SerieRealizadaDTO dto) {
+        if (dto.getSesionId() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "sesionId es obligatorio");
         SesionEntrenamiento sesion = sesionRepo.findById(dto.getSesionId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sesión no encontrada"));
         SerieRealizada s = new SerieRealizada();
@@ -34,6 +37,13 @@ public class SerieRealizadaService {
             Ejercicio ejercicio = ejercicioRepository.findById(dto.getEjercicioId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejercicio no encontrado"));
             s.setEjercicio(ejercicio);
+            if (Boolean.TRUE.equals(dto.getCompletado()) && ejercicio.getEjercicioGlobal() != null) {
+                recordPersonalService.actualizarSiMejora(
+                        sesion.getUsuario(),
+                        ejercicio.getEjercicioGlobal(),
+                        dto.getPesoKg(),
+                        dto.getRepeticionesRealizadas());
+            }
         }
         return new SerieRealizadaDTO(repo.save(s));
     }

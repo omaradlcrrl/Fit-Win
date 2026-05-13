@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface SerieRealizadaRepository extends JpaRepository<SerieRealizada, Integer> {
     List<SerieRealizada> findBySesion_SesionIdOrderByOrdenAsc(Integer sesionId);
+    List<SerieRealizada> findByEjercicio_EjercicioId(Integer ejercicioId);
 }

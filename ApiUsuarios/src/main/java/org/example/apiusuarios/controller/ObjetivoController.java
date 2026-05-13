@@ -18,12 +18,11 @@ public class ObjetivoController {
 
 
     @PostMapping("/save")
-    public ResponseEntity<ObjetivoDTO> save(@RequestBody ObjetivoDTO dto) {
-        if (dto.getUsuarioId() == null) {
+    public ResponseEntity<ObjetivoDTO> save(@RequestBody ObjetivoDTO objetivoDTO) {
+        if (objetivoDTO.getUsuarioId() == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        ObjetivoDTO generado = objetivoService.generarAutomatico(dto.getUsuarioId());
-        return new ResponseEntity<>(generado, HttpStatus.CREATED);
+        return new ResponseEntity<>(objetivoService.generarAutomatico(objetivoDTO.getUsuarioId()), HttpStatus.CREATED);
     }
 
     @PostMapping("/generar/{usuarioId}")
@@ -33,29 +32,29 @@ public class ObjetivoController {
 
     @GetMapping("/actual/{usuarioId}")
     public ResponseEntity<ObjetivoDTO> getActual(@PathVariable Integer usuarioId) {
-        return ResponseEntity.ok(objetivoService.getObjetivoActual(usuarioId));
+        return new ResponseEntity<>(objetivoService.getObjetivoActual(usuarioId), HttpStatus.OK);
     }
 
     @GetMapping("/hoy/{usuarioId}")
     public ResponseEntity<ObjetivoDTO> getHoy(@PathVariable Integer usuarioId) {
-        return ResponseEntity.ok(objetivoService.getObjetivoDeHoy(usuarioId));
+        return new ResponseEntity<>(objetivoService.getObjetivoDeHoy(usuarioId), HttpStatus.OK);
     }
 
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<ObjetivoDTO>> getByUsuario(@PathVariable Integer usuarioId) {
-        return ResponseEntity.ok(objetivoService.findAllByUsuario(usuarioId));
+        return new ResponseEntity<>(objetivoService.findAllByUsuario(usuarioId), HttpStatus.OK);
     }
 
     @GetMapping("/range/{usuarioId}")
     public ResponseEntity<List<ObjetivoDTO>> getByRange(@PathVariable Integer usuarioId,
-                                                        @RequestParam LocalDate from,
-                                                        @RequestParam LocalDate to) {
-        return ResponseEntity.ok(objetivoService.getByUsuarioAndFechaBetween(usuarioId, from, to));
+                                                        @RequestParam LocalDate desde,
+                                                        @RequestParam LocalDate hasta) {
+        return new ResponseEntity<>(objetivoService.getByUsuarioAndFechaBetween(usuarioId, desde, hasta), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ObjetivoDTO> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(objetivoService.findById(id));
+        return new ResponseEntity<>(objetivoService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

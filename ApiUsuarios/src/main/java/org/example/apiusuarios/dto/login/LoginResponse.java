@@ -8,4 +8,7 @@ public class LoginResponse {
     private String token;
     private String refreshToken;
     private Integer usuarioId;
+    private String nombre;
+    private String correoElectronico;
+    private Boolean onboardingCompleto;
 }

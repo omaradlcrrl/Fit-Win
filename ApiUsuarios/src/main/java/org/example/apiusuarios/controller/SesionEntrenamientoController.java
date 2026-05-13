@@ -16,29 +16,29 @@ public class SesionEntrenamientoController {
     private SesionEntrenamientoService sesionService;
 
     @PostMapping("/iniciar")
-    public ResponseEntity<SesionEntrenamientoDTO> iniciar(@RequestBody SesionEntrenamientoDTO dto) {
-        return new ResponseEntity<>(sesionService.iniciar(dto), HttpStatus.CREATED);
+    public ResponseEntity<SesionEntrenamientoDTO> iniciar(@RequestBody SesionEntrenamientoDTO sesionEntrenamientoDTO) {
+        return new ResponseEntity<>(sesionService.iniciar(sesionEntrenamientoDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/finalizar/{id}")
     public ResponseEntity<SesionEntrenamientoDTO> finalizar(@PathVariable Integer id,
-                                                             @RequestBody SesionEntrenamientoDTO dto) {
-        return ResponseEntity.ok(sesionService.finalizar(id, dto));
+                                                             @RequestBody SesionEntrenamientoDTO sesionEntrenamientoDTO) {
+        return new ResponseEntity<>(sesionService.finalizar(id, sesionEntrenamientoDTO), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<SesionEntrenamientoDTO>> findByUsuario(@RequestParam Integer usuarioId) {
-        return ResponseEntity.ok(sesionService.findByUsuario(usuarioId));
+        return new ResponseEntity<>(sesionService.findByUsuario(usuarioId), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<SesionEntrenamientoDTO> findById(@PathVariable Integer id) {
-        return ResponseEntity.ok(sesionService.findById(id));
+        return new ResponseEntity<>(sesionService.findById(id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         sesionService.deleteById(id);
-        return ResponseEntity.ok("Sesión con ID " + id + " eliminada");
+        return new ResponseEntity<>("Sesión con ID " + id + " eliminada exitosamente", HttpStatus.OK);
     }
 }

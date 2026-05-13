@@ -22,6 +22,9 @@ public class SesionEntrenamiento {
     private Integer nivelIntensidad;
     private Integer nivelRecuperacion;
 
+    @Column(columnDefinition = "TEXT")
+    private String notasUsuario;
+
     @ManyToOne
     @JoinColumn(name = "rutina_id")
     private Rutina rutina;

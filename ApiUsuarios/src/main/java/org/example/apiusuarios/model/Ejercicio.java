@@ -34,4 +34,6 @@ public class Ejercicio {
     private Integer descansoSegundos;
     private Double pesoKg;
     private Integer posicion;
+    
+    private String nombrePersonalizado;
 }
