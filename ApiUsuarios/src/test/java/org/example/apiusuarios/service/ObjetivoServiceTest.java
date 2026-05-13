@@ -37,7 +37,7 @@ class ObjetivoServiceTest {
         usuario.setUsuarioId(1);
         usuario.setNombre("Test");
         usuario.setCorreoElectronico("test@example.com");
-        usuario.setAltura(1.75);
+        usuario.setAltura(175.0);
         usuario.setPesoActual(80.0);
         usuario.setFechaNacimiento(LocalDate.of(1995, 6, 15));
         usuario.setGenero("MASCULINO");
