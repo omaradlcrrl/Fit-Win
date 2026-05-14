@@ -228,6 +228,28 @@ class ObjetivoServiceTest {
                 .isInstanceOf(ResponseStatusException.class);
     }
 
+    // ── guard fisiológico ────────────────────────────────────────────────────
+
+    @Test
+    void generarAutomatico_pesoInvalido_throws400() {
+        usuario.setPesoActual(80000.0);
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+
+        assertThatThrownBy(() -> objetivoService.generarAutomatico(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("peso");
+    }
+
+    @Test
+    void generarAutomatico_alturaInvalida_throws400() {
+        usuario.setAltura(1750.0);
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+
+        assertThatThrownBy(() -> objetivoService.generarAutomatico(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("altura");
+    }
+
     // ── helpers ───────────────────────────────────────────────────────────────
 
     private Objetivo buildObjetivoMock(Usuario u) {

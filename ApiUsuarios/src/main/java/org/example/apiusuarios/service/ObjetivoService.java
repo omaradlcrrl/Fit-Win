@@ -37,7 +37,20 @@ public class ObjetivoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Falta peso actual del usuario");
         }
 
-        double imc = peso / (altura * altura);
+        // Guard fisiológico: detecta unidades incorrectas antes de aplicar la fórmula
+        if (altura < 100.0 || altura > 250.0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "La altura del usuario tiene un valor inválido (" + altura +
+                    "). Actualiza tu perfil usando centímetros (ej: 175).");
+        }
+        if (peso < 30.0 || peso > 300.0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "El peso del usuario tiene un valor inválido (" + peso +
+                    "). Actualiza tu perfil usando kilogramos (ej: 75).");
+        }
+
+        double alturaMetros = altura / 100.0;
+        double imc = peso / (alturaMetros * alturaMetros);
 
         int edad = 25;
         if (usuario.getFechaNacimiento() != null) {
@@ -48,9 +61,9 @@ public class ObjetivoService {
         double tmb;
         String gen = (usuario.getGenero() != null) ? usuario.getGenero().toUpperCase() : "MASCULINO";
         if (gen.equals("FEMENINO")) {
-            tmb = 10 * peso + 6.25 * (altura * 100) - 5 * edad - 161;
+            tmb = 10 * peso + 6.25 * altura - 5 * edad - 161;
         } else {
-            tmb = 10 * peso + 6.25 * (altura * 100) - 5 * edad + 5;
+            tmb = 10 * peso + 6.25 * altura - 5 * edad + 5;
         }
 
         // Mapear String NivelActividad a valor double
