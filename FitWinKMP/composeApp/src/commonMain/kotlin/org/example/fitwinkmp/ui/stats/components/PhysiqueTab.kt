@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.example.fitwinkmp.core.localization.LocalStrings
 import org.example.fitwinkmp.features.stats.data.dto.ChartMetrica
 import org.example.fitwinkmp.features.stats.data.dto.MedicionCorporalDTO
 import org.example.fitwinkmp.features.stats.data.dto.PhysiqueData
@@ -32,13 +33,14 @@ import kotlin.math.roundToInt
 
 @Composable
 fun PhysiqueTab(data: PhysiqueData, pesoActual: Double?, onOpenChart: (ChartMetrica) -> Unit = {}) {
+    val s = LocalStrings.current
 
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
         // ─── Header ────────────────────────────────────────────────────────
         Column {
             Text(
-                text = "BODY",
+                text = s.statsBody,
                 color = FitwinColors.OnSurface,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Black,
@@ -46,7 +48,7 @@ fun PhysiqueTab(data: PhysiqueData, pesoActual: Double?, onOpenChart: (ChartMetr
                 lineHeight = 36.sp
             )
             Text(
-                text = "COMPOSITION",
+                text = s.statsComposition,
                 color = FitwinColors.PrimaryContainer,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Black,
@@ -56,10 +58,10 @@ fun PhysiqueTab(data: PhysiqueData, pesoActual: Double?, onOpenChart: (ChartMetr
         }
 
         if (data.ultimaMedicion == null) {
-            EmptyMedicionCard()
+            EmptyMedicionCard(s)
         } else {
             // ─── Body Composition Card ──────────────────────────────────────
-            BodyCompositionCard(data = data)
+            BodyCompositionCard(data = data, s = s)
 
             // ─── Métricas Derivadas ─────────────────────────────────────────
             Row(
@@ -96,20 +98,21 @@ fun PhysiqueTab(data: PhysiqueData, pesoActual: Double?, onOpenChart: (ChartMetr
             }
 
             // ─── Muscle Measurements ────────────────────────────────────────
-            SectionHeader("MUSCLE MEASUREMENTS")
-            MeasurementsCard(medicion = data.ultimaMedicion, onOpenChart = onOpenChart)
+            SectionHeader(s.statsMedidasMusculares)
+            MeasurementsCard(medicion = data.ultimaMedicion, s = s, onOpenChart = onOpenChart)
 
             // ─── Growth Trends ──────────────────────────────────────────────
             if (data.historialMediciones.size >= 2) {
-                SectionHeader("GROWTH TRENDS · ÚLTIMO MES")
-                GrowthTrendsCard(data = data)
+                SectionHeader(s.statsTendenciasUltimoMes)
+                GrowthTrendsCard(data = data, s = s)
             }
 
             // ─── Historial de Peso ──────────────────────────────────────────
             if (data.historialMediciones.size >= 2) {
-                SectionHeader("EVOLUCIÓN DE PESO")
+                SectionHeader(s.statsEvolucionPeso)
                 WeightHistoryBars(
                     mediciones = data.historialMediciones,
+                    s = s,
                     onVerGrafica = { onOpenChart(ChartMetrica.PESO) }
                 )
             }
@@ -120,7 +123,7 @@ fun PhysiqueTab(data: PhysiqueData, pesoActual: Double?, onOpenChart: (ChartMetr
 }
 
 @Composable
-private fun EmptyMedicionCard() {
+private fun EmptyMedicionCard(s: org.example.fitwinkmp.core.localization.AppStrings) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -140,13 +143,13 @@ private fun EmptyMedicionCard() {
                 modifier = Modifier.size(32.dp)
             )
             Text(
-                text = "SIN MEDICIONES AÚN",
+                text = s.statsSinMedicionesAun,
                 color = FitwinColors.OnSurface,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Black
             )
             Text(
-                text = "Pulsa el banner de arriba para registrar\ntu primera medición corporal",
+                text = s.statsPulsaBannerRegistrar,
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 10.sp,
                 lineHeight = 14.sp
@@ -156,7 +159,7 @@ private fun EmptyMedicionCard() {
 }
 
 @Composable
-private fun BodyCompositionCard(data: PhysiqueData) {
+private fun BodyCompositionCard(data: PhysiqueData, s: org.example.fitwinkmp.core.localization.AppStrings) {
     val m = data.ultimaMedicion!!
     Box(
         modifier = Modifier
@@ -204,16 +207,16 @@ private fun BodyCompositionCard(data: PhysiqueData) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 m.peso?.let {
-                    BodyMetricItem("${it}kg", "PESO ACTUAL")
+                    BodyMetricItem("${it}kg", s.statsPesoActual)
                 }
                 m.masaMagra?.let {
-                    BodyMetricItem("${it}kg", "MASA MAGRA")
+                    BodyMetricItem("${it}kg", s.statsMasaMagra)
                 }
                 data.tendenciaPeso?.let {
                     val isPositive = it >= 0
                     BodyMetricItem(
                         value = "${if (isPositive) "+" else ""}${"%.1f".format(it)}%",
-                        label = "TENDENCIA",
+                        label = s.statsTendencia,
                         valueColor = if (isPositive) FitwinColors.Error else FitwinColors.PrimaryContainer
                     )
                 }
@@ -255,6 +258,7 @@ private fun DerivedMetricCard(
 @Composable
 private fun MeasurementsCard(
     medicion: org.example.fitwinkmp.features.stats.data.dto.MedicionCorporalDTO,
+    s: org.example.fitwinkmp.core.localization.AppStrings,
     onOpenChart: (ChartMetrica) -> Unit = {}
 ) {
     Box(
@@ -266,17 +270,17 @@ private fun MeasurementsCard(
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             val measurements = listOf(
-                Triple("PECHO", medicion.pecho, ChartMetrica.PECHO),
-                Triple("ESPALDA", medicion.espalda, ChartMetrica.ESPALDA),
-                Triple("HOMBRO", medicion.hombro, ChartMetrica.HOMBRO),
-                Triple("BRAZO", medicion.brazo, ChartMetrica.BRAZO),
-                Triple("MUSLO", medicion.muslo, ChartMetrica.MUSLO),
-                Triple("CINTURA", medicion.cintura, ChartMetrica.CINTURA)
+                Triple(s.statsMetricaPecho.uppercase(), medicion.pecho, ChartMetrica.PECHO),
+                Triple(s.statsMetricaEspalda.uppercase(), medicion.espalda, ChartMetrica.ESPALDA),
+                Triple(s.statsMetricaHombro.uppercase(), medicion.hombro, ChartMetrica.HOMBRO),
+                Triple(s.statsMetricaBrazo.uppercase(), medicion.brazo, ChartMetrica.BRAZO),
+                Triple(s.statsMetricaMuslo.uppercase(), medicion.muslo, ChartMetrica.MUSLO),
+                Triple(s.statsMetricaCintura.uppercase(), medicion.cintura, ChartMetrica.CINTURA)
             ).filter { it.second != null }
 
             if (measurements.isEmpty()) {
                 Text(
-                    text = "Sin medidas musculares registradas",
+                    text = s.statsSinMedidasMusculares,
                     color = FitwinColors.OnSurfaceVariant,
                     fontSize = 10.sp
                 )
@@ -340,7 +344,7 @@ private fun MeasurementRow(name: String, valueCm: Double, maxValue: Double, onCl
 }
 
 @Composable
-private fun GrowthTrendsCard(data: PhysiqueData) {
+private fun GrowthTrendsCard(data: PhysiqueData, s: org.example.fitwinkmp.core.localization.AppStrings) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -350,14 +354,14 @@ private fun GrowthTrendsCard(data: PhysiqueData) {
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             data.tendenciaPeso?.let { t ->
-                TrendRow("PESO", t)
+                TrendRow("PESO", t, s)
             }
             data.tendenciaGrasa?.let { t ->
-                TrendRow("% GRASA", t)
+                TrendRow("% GRASA", t, s)
             }
             if (data.tendenciaPeso == null && data.tendenciaGrasa == null) {
                 Text(
-                    text = "Necesitas al menos 2 mediciones para ver tendencias",
+                    text = s.statsNecesitas2Mediciones,
                     color = FitwinColors.OnSurfaceVariant,
                     fontSize = 10.sp
                 )
@@ -367,7 +371,7 @@ private fun GrowthTrendsCard(data: PhysiqueData) {
 }
 
 @Composable
-private fun TrendRow(label: String, percent: Double) {
+private fun TrendRow(label: String, percent: Double, s: org.example.fitwinkmp.core.localization.AppStrings) {
     val isPositive = percent >= 0
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -386,7 +390,7 @@ private fun TrendRow(label: String, percent: Double) {
                 modifier = Modifier.size(14.dp)
             )
             Text(
-                text = "${if (isPositive) "+" else ""}${"%.1f".format(percent)}% este mes",
+                text = "${if (isPositive) "+" else ""}${"%.1f".format(percent)}% ${s.statsEsteMes}",
                 color = if (isPositive) FitwinColors.Error else FitwinColors.PrimaryContainer,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Black
@@ -398,6 +402,7 @@ private fun TrendRow(label: String, percent: Double) {
 @Composable
 private fun WeightHistoryBars(
     mediciones: List<org.example.fitwinkmp.features.stats.data.dto.MedicionCorporalDTO>,
+    s: org.example.fitwinkmp.core.localization.AppStrings,
     onVerGrafica: () -> Unit = {}
 ) {
     val weights = mediciones.mapNotNull { it.peso }
@@ -450,7 +455,7 @@ private fun WeightHistoryBars(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "▶ VER GRÁFICA COMPLETA",
+                    text = "▶ ${s.statsVerGraficaCompleta}",
                     color = FitwinColors.PrimaryContainer,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Black,

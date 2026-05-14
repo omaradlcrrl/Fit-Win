@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.example.fitwinkmp.core.localization.LocalStrings
 import org.example.fitwinkmp.features.stats.data.dto.*
 import org.example.fitwinkmp.features.stats.presentation.ChartUiState
 import org.example.fitwinkmp.features.stats.presentation.StatsViewModel
@@ -38,6 +39,7 @@ fun MetricChartSheet(
     viewModel: StatsViewModel,
     onDismiss: () -> Unit
 ) {
+    val s = LocalStrings.current
     val chartState by viewModel.chartState.collectAsState()
     val selectedMetrica by viewModel.selectedMetrica.collectAsState()
     val selectedRango by viewModel.selectedRango.collectAsState()
@@ -68,7 +70,7 @@ fun MetricChartSheet(
             ) {
                 Column {
                     Text(
-                        text = "PROGRESO",
+                        text = s.statsProgreso,
                         color = FitwinColors.OnSurface,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Black,
@@ -76,7 +78,7 @@ fun MetricChartSheet(
                         lineHeight = 28.sp
                     )
                     Text(
-                        text = selectedMetrica.label.uppercase(),
+                        text = selectedMetrica.getLabel(s).uppercase(),
                         color = FitwinColors.PrimaryContainer,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Black,
@@ -134,6 +136,7 @@ fun MetricChartSheet(
             // ─── Selector de Métrica (chips scrollables) ──────────────────────
             MetricaChipsRow(
                 selectedMetrica = selectedMetrica,
+                s = s,
                 onSelect = { viewModel.setMetrica(it) }
             )
 
@@ -192,7 +195,7 @@ fun MetricChartSheet(
 
                     // ─── Estadísticas ─────────────────────────────────────────
                     if (data.puntos.isNotEmpty()) {
-                        ChartStatsCard(data = data)
+                        ChartStatsCard(data = data, s = s)
                     }
                 }
             }
@@ -205,6 +208,7 @@ fun MetricChartSheet(
 @Composable
 private fun MetricaChipsRow(
     selectedMetrica: ChartMetrica,
+    s: org.example.fitwinkmp.core.localization.AppStrings,
     onSelect: (ChartMetrica) -> Unit
 ) {
     // Dos filas de chips
@@ -219,6 +223,7 @@ private fun MetricaChipsRow(
             row1.forEach { m ->
                 MetricaChip(
                     metrica = m,
+                    s = s,
                     isSelected = selectedMetrica == m,
                     onClick = { onSelect(m) },
                     modifier = Modifier.weight(1f)
@@ -232,6 +237,7 @@ private fun MetricaChipsRow(
             row2.forEach { m ->
                 MetricaChip(
                     metrica = m,
+                    s = s,
                     isSelected = selectedMetrica == m,
                     onClick = { onSelect(m) },
                     modifier = Modifier.weight(1f)
@@ -244,6 +250,7 @@ private fun MetricaChipsRow(
 @Composable
 private fun MetricaChip(
     metrica: ChartMetrica,
+    s: org.example.fitwinkmp.core.localization.AppStrings,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -265,7 +272,7 @@ private fun MetricaChip(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = metrica.label.uppercase(),
+            text = metrica.getLabel(s).uppercase(),
             color = if (isSelected) FitwinColors.OnPrimary else FitwinColors.OnSurfaceVariant,
             fontSize = 8.sp,
             fontWeight = FontWeight.Black,
@@ -275,7 +282,7 @@ private fun MetricaChip(
 }
 
 @Composable
-private fun ChartStatsCard(data: ChartData) {
+private fun ChartStatsCard(data: ChartData, s: org.example.fitwinkmp.core.localization.AppStrings) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -285,7 +292,7 @@ private fun ChartStatsCard(data: ChartData) {
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(
-                text = "RESUMEN DEL PERÍODO",
+                text = s.statsResumenPeriodo,
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Black,
@@ -299,13 +306,13 @@ private fun ChartStatsCard(data: ChartData) {
             ) {
                 StatSummaryItem(
                     modifier = Modifier.weight(1f),
-                    label = "INICIO",
+                    label = s.statsInicio,
                     value = "${"%.1f".format(data.primero ?: 0.0)} ${data.metrica.unidad}",
                     color = FitwinColors.OnSurface
                 )
                 StatSummaryItem(
                     modifier = Modifier.weight(1f),
-                    label = "ACTUAL",
+                    label = s.statsActual,
                     value = "${"%.1f".format(data.ultimo ?: 0.0)} ${data.metrica.unidad}",
                     color = FitwinColors.PrimaryContainer
                 )
@@ -315,7 +322,7 @@ private fun ChartStatsCard(data: ChartData) {
                     val color = colorForCambio(data.metrica, isPositive)
                     StatSummaryItem(
                         modifier = Modifier.weight(1f),
-                        label = "CAMBIO",
+                        label = s.statsCambio,
                         value = "$sign${"%.1f".format(cambio)} ${data.metrica.unidad}",
                         color = color
                     )
@@ -331,19 +338,19 @@ private fun ChartStatsCard(data: ChartData) {
             ) {
                 StatSummaryItem(
                     modifier = Modifier.weight(1f),
-                    label = "MIN",
+                    label = s.statsMin,
                     value = "${"%.1f".format(data.min)} ${data.metrica.unidad}",
                     color = FitwinColors.OnSurface
                 )
                 StatSummaryItem(
                     modifier = Modifier.weight(1f),
-                    label = "MAX",
+                    label = s.statsMax,
                     value = "${"%.1f".format(data.max)} ${data.metrica.unidad}",
                     color = FitwinColors.OnSurface
                 )
                 StatSummaryItem(
                     modifier = Modifier.weight(1f),
-                    label = "MEDIA",
+                    label = s.statsMedia,
                     value = "${"%.1f".format(data.media)} ${data.metrica.unidad}",
                     color = FitwinColors.OnSurface
                 )
@@ -364,7 +371,7 @@ private fun ChartStatsCard(data: ChartData) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = cambioTexto(data.metrica, pct),
+                        text = cambioTexto(data.metrica, pct, s),
                         color = FitwinColors.OnSurface,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold
@@ -379,7 +386,7 @@ private fun ChartStatsCard(data: ChartData) {
             }
 
             Text(
-                text = "${data.puntos.size} mediciones registradas",
+                text = "${data.puntos.size} ${s.statsMedicionesRegistradas}",
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 9.sp
             )
@@ -414,11 +421,23 @@ private fun colorForCambio(metrica: ChartMetrica, isPositive: Boolean): Color {
     }
 }
 
-private fun cambioTexto(metrica: ChartMetrica, pct: Double): String {
+private fun cambioTexto(metrica: ChartMetrica, pct: Double, s: org.example.fitwinkmp.core.localization.AppStrings): String {
     val bajarEsBueno = metrica == ChartMetrica.CINTURA || metrica == ChartMetrica.PORCENTAJE_GRASA
     return when {
-        pct > 0 -> if (bajarEsBueno) "Ha subido en este período" else "Ha mejorado en este período"
-        pct < 0 -> if (bajarEsBueno) "Ha mejorado en este período" else "Ha bajado en este período"
-        else -> "Sin cambios en este período"
+        pct > 0 -> if (bajarEsBueno) s.statsHaSubido else s.statsHaMejorado
+        pct < 0 -> if (bajarEsBueno) s.statsHaMejorado else s.statsHaBajado
+        else -> s.statsSinCambios
     }
+}
+
+private fun ChartMetrica.getLabel(s: org.example.fitwinkmp.core.localization.AppStrings): String = when (this) {
+    ChartMetrica.PESO -> s.statsMetricaPeso
+    ChartMetrica.PORCENTAJE_GRASA -> s.statsMetricaGrasa
+    ChartMetrica.MASA_MAGRA -> s.statsMetricaMasaMagra
+    ChartMetrica.PECHO -> s.statsMetricaPecho
+    ChartMetrica.ESPALDA -> s.statsMetricaEspalda
+    ChartMetrica.HOMBRO -> s.statsMetricaHombro
+    ChartMetrica.BRAZO -> s.statsMetricaBrazo
+    ChartMetrica.MUSLO -> s.statsMetricaMuslo
+    ChartMetrica.CINTURA -> s.statsMetricaCintura
 }

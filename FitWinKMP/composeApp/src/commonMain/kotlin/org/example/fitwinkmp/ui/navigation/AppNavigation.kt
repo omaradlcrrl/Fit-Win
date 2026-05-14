@@ -23,6 +23,7 @@ fun AppNavigation(languageViewModel: LanguageViewModel) {
         composable(ROUTE_LOGIN) {
             LoginScreen(
                 viewModel = authViewModel,
+                languageViewModel = languageViewModel,
                 onSignUpClick = { navController.navigate(ROUTE_REGISTER) },
                 onLoginSuccess = {
                     navController.navigate(ROUTE_MAIN) {
@@ -34,6 +35,7 @@ fun AppNavigation(languageViewModel: LanguageViewModel) {
         composable(ROUTE_REGISTER) {
             RegisterScreen(
                 viewModel = authViewModel,
+                languageViewModel = languageViewModel,
                 onLoginClick = {
                     navController.navigate(ROUTE_LOGIN) {
                         popUpTo(ROUTE_LOGIN) { inclusive = true }

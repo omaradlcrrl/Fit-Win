@@ -32,10 +32,13 @@ import org.example.fitwinkmp.features.auth.presentation.AuthViewModel
 import org.example.fitwinkmp.features.auth.presentation.state.RegisterUiState
 import org.example.fitwinkmp.ui.theme.FitwinColors
 
+import org.example.fitwinkmp.core.localization.LanguageViewModel
+
 @Composable
 fun RegisterScreen(
     onLoginClick: () -> Unit = {},
     viewModel: AuthViewModel = viewModel(),
+    languageViewModel: LanguageViewModel,
 ) {
     var nombre by remember { mutableStateOf("") }
     var apellidos by remember { mutableStateOf("") }
@@ -50,8 +53,10 @@ fun RegisterScreen(
     var altura by remember { mutableStateOf("") }
     var fechaNacimiento by remember { mutableStateOf("") }
     var objetivo by remember { mutableStateOf("MANTENIMIENTO") }
+    val s = org.example.fitwinkmp.core.localization.LocalStrings.current
 
     val registerState by viewModel.registerState.collectAsStateWithLifecycle()
+    val currentLang by languageViewModel.language.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(registerState) {
@@ -105,6 +110,31 @@ fun RegisterScreen(
                     .padding(padding)
                     .padding(horizontal = 24.dp, vertical = 48.dp)
             ) {
+                // Language Toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(FitwinColors.SurfaceContainerHighest)
+                            .border(1.dp, FitwinColors.OutlineVariant, RoundedCornerShape(16.dp))
+                            .clickable {
+                                languageViewModel.setLanguage(if (currentLang == "es") "en" else "es")
+                            }
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = if (currentLang == "es") "ESPAÑOL" else "ENGLISH",
+                            color = FitwinColors.OnSurface,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
@@ -114,7 +144,7 @@ fun RegisterScreen(
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = "JOIN THE ELITE",
+                        text = s.authJoinElite,
                         color = FitwinColors.OnPrimary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
@@ -146,7 +176,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "High-performance engineering\nfor your physical evolution.",
+                    text = s.authSubtitle,
                     color = FitwinColors.OnSurfaceVariant,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Light,
@@ -164,7 +194,7 @@ fun RegisterScreen(
                 ) {
                     Column {
                         Text(
-                            text = "Create Account",
+                            text = s.authCreateAccount,
                             color = FitwinColors.OnSurface,
                             fontSize = 26.sp,
                             fontWeight = FontWeight.Bold,
@@ -172,7 +202,7 @@ fun RegisterScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Enter your details to power up.",
+                            text = s.authCreateAccountDesc,
                             color = FitwinColors.OnSurfaceVariant,
                             fontSize = 13.sp
                         )
@@ -182,7 +212,7 @@ fun RegisterScreen(
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             Box(modifier = Modifier.weight(1f)) {
                                 FitwinInputField(
-                                    label = "NOMBRE",
+                                    label = s.authName,
                                     value = nombre,
                                     onValueChange = { nombre = it },
                                     placeholder = "Aiden"
@@ -190,7 +220,7 @@ fun RegisterScreen(
                             }
                             Box(modifier = Modifier.weight(1f)) {
                                 FitwinInputField(
-                                    label = "APELLIDOS",
+                                    label = s.authSurname,
                                     value = apellidos,
                                     onValueChange = { apellidos = it },
                                     placeholder = "Cross"
@@ -201,7 +231,7 @@ fun RegisterScreen(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         FitwinInputField(
-                            label = "EMAIL ADDRESS",
+                            label = s.authEmail,
                             value = email,
                             onValueChange = { email = it },
                             placeholder = "aiden@fitwin.io",
@@ -212,7 +242,7 @@ fun RegisterScreen(
 
                         Column {
                             Text(
-                                text = "PASSWORD",
+                                text = s.authPassword,
                                 color = FitwinColors.PrimaryContainer,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
@@ -262,7 +292,7 @@ fun RegisterScreen(
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                             Box(modifier = Modifier.weight(1f)) {
                                 FitwinInputField(
-                                    label = "WEIGHT (KG)",
+                                    label = s.authWeight,
                                     value = pesoActual,
                                     onValueChange = { pesoActual = it },
                                     placeholder = "75.0",
@@ -271,7 +301,7 @@ fun RegisterScreen(
                             }
                             Box(modifier = Modifier.weight(1f)) {
                                 FitwinInputField(
-                                    label = "HEIGHT (CM)",
+                                    label = s.authHeight,
                                     value = altura,
                                     onValueChange = { altura = it },
                                     placeholder = "180",
@@ -283,7 +313,7 @@ fun RegisterScreen(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         FitwinInputField(
-                            label = "DATE OF BIRTH (YYYY-MM-DD)",
+                            label = s.authDob,
                             value = fechaNacimiento,
                             onValueChange = { fechaNacimiento = it },
                             placeholder = "2000-01-01"
@@ -293,7 +323,7 @@ fun RegisterScreen(
 
                         // GENDER
                         Text(
-                            text = "GENDER",
+                            text = s.authGender,
                             color = FitwinColors.PrimaryContainer,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
@@ -326,7 +356,7 @@ fun RegisterScreen(
 
                         // ACTIVITY LEVEL
                         Text(
-                            text = "ACTIVITY LEVEL",
+                            text = s.authActivityLevel,
                             color = FitwinColors.PrimaryContainer,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
@@ -371,7 +401,7 @@ fun RegisterScreen(
 
                         // OBJECTIVE
                         Text(
-                            text = "OBJECTIVE",
+                            text = s.authObjective,
                             color = FitwinColors.PrimaryContainer,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
@@ -445,7 +475,7 @@ fun RegisterScreen(
                             }
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "I agree to the Terms of Service and Privacy Policy",
+                                text = s.authTerms,
                                 color = FitwinColors.OnSurfaceVariant.copy(alpha = 0.7f),
                                 fontSize = 12.sp,
                                 lineHeight = 18.sp
@@ -494,7 +524,7 @@ fun RegisterScreen(
                                 )
                             } else {
                                 Text(
-                                    text = "INITIALIZE TRAINING",
+                                    text = s.authInitialize,
                                     color = FitwinColors.OnPrimary,
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Black,
@@ -506,49 +536,16 @@ fun RegisterScreen(
                         Spacer(modifier = Modifier.height(24.dp))
 
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            HorizontalDivider(
-                                modifier = Modifier.weight(1f),
-                                color = FitwinColors.OutlineVariant.copy(alpha = 0.3f)
-                            )
-                            Text(
-                                text = "  OR CONNECT VIA  ",
-                                color = FitwinColors.OnSurfaceVariant.copy(alpha = 0.5f),
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 2.sp
-                            )
-                            HorizontalDivider(
-                                modifier = Modifier.weight(1f),
-                                color = FitwinColors.OutlineVariant.copy(alpha = 0.3f)
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            FitwinSocialButton(label = "Google", modifier = Modifier.weight(1f))
-                            FitwinSocialButton(label = "Apple", modifier = Modifier.weight(1f))
-                        }
-
-                        Spacer(modifier = Modifier.height(20.dp))
-
-                        Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "Already part of the squad? ",
+                                text = s.authAlreadySquad,
                                 color = FitwinColors.OnSurfaceVariant.copy(alpha = 0.6f),
                                 fontSize = 12.sp
                             )
                             Text(
-                                text = "Log In",
+                                text = s.authLogIn,
                                 color = FitwinColors.PrimaryContainer,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -561,7 +558,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "© 2024 FIT-WIN PERFORMANCE TECHNOLOGIES",
+                    text = s.authCopyright,
                     color = FitwinColors.OnSurfaceVariant.copy(alpha = 0.4f),
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Bold,

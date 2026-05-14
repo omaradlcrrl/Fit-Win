@@ -156,12 +156,12 @@ fun AddFoodDialog(
                                 comidaId = comidaToEdit?.comidaId,
                                 usuarioId = usuarioId,
                                 nombre = nombre,
-                                calorias = calorias.toDoubleOrNull() ?: 0.0,
-                                proteinas = proteinas.toDoubleOrNull() ?: 0.0,
-                                carbohidratos = carbohidratos.toDoubleOrNull() ?: 0.0,
-                                grasasSaturadas = grasas.toDoubleOrNull() ?: 0.0,
+                                calorias = (calorias.toDoubleOrNull() ?: 0.0).coerceIn(0.0, 15000.0),
+                                proteinas = (proteinas.toDoubleOrNull() ?: 0.0).coerceIn(0.0, 1000.0),
+                                carbohidratos = (carbohidratos.toDoubleOrNull() ?: 0.0).coerceIn(0.0, 2000.0),
+                                grasasSaturadas = (grasas.toDoubleOrNull() ?: 0.0).coerceIn(0.0, 1000.0),
                                 tipoComida = tipoComida,
-                                cantidad = cantidad.toDoubleOrNull() ?: 1.0,
+                                cantidad = (cantidad.toDoubleOrNull() ?: 1.0).coerceIn(0.1, 10000.0),
                                 unidad = unidad,
                                 fecha = fecha.toString()
                             )

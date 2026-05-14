@@ -180,7 +180,8 @@ fun StatsScreen(viewModel: StatsViewModel) {
 
 @Composable
 private fun StatsTabSelector(selectedTab: Int, onTabSelected: (Int) -> Unit) {
-    val tabs = listOf("PERFORMANCE", "PHYSIQUE")
+    val s = LocalStrings.current
+    val tabs = listOf(s.statsTabPerformance, s.statsTabPhysique)
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -213,6 +214,7 @@ private fun StatsTabSelector(selectedTab: Int, onTabSelected: (Int) -> Unit) {
 
 @Composable
 private fun CheckInBanner(onClick: () -> Unit) {
+    val s = LocalStrings.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -226,13 +228,13 @@ private fun CheckInBanner(onClick: () -> Unit) {
     ) {
         Column {
             Text(
-                text = "REGISTRA TU PROGRESO DE HOY",
+                text = s.statsRegistraProgresoHoy,
                 color = FitwinColors.PrimaryContainer,
                 fontSize = 11.sp,
                 fontWeight = FontWeight.Black,
                 letterSpacing = 1.sp
             )
-            Text(text = "Sin datos de hoy aún", color = FitwinColors.OnSurfaceVariant, fontSize = 10.sp)
+            Text(text = s.statsSinDatosHoy, color = FitwinColors.OnSurfaceVariant, fontSize = 10.sp)
         }
         Box(
             modifier = Modifier
@@ -248,6 +250,7 @@ private fun CheckInBanner(onClick: () -> Unit) {
 
 @Composable
 private fun EditCheckInBanner(onClick: () -> Unit) {
+    val s = LocalStrings.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -260,13 +263,13 @@ private fun EditCheckInBanner(onClick: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "✓ Progreso de hoy registrado — toca para editar",
+            text = s.statsProgresoRegistrado,
             color = FitwinColors.OnSurfaceVariant,
             fontSize = 10.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
-            text = "EDITAR",
+            text = s.statsEditar,
             color = FitwinColors.PrimaryContainer,
             fontSize = 9.sp,
             fontWeight = FontWeight.Black,

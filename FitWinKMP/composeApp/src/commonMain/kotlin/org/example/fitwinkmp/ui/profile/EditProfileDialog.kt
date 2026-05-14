@@ -45,6 +45,7 @@ fun EditProfileDialog(
     var generoExpanded by remember { mutableStateOf(false) }
     var nivelExpanded by remember { mutableStateOf(false) }
     var objetivoExpanded by remember { mutableStateOf(false) }
+    val s = org.example.fitwinkmp.core.localization.LocalStrings.current
 
     Dialog(
         onDismissRequest = onDismiss,
@@ -70,14 +71,14 @@ fun EditProfileDialog(
                 ) {
                     Column {
                         Text(
-                            text = "EDITAR",
+                            text = s.editPerfilTitulo1,
                             color = FitwinColors.PrimaryContainer,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Black,
                             fontStyle = FontStyle.Italic
                         )
                         Text(
-                            text = "PERFIL",
+                            text = s.editPerfilTitulo2,
                             color = FitwinColors.OnSurface,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Black,
@@ -85,41 +86,41 @@ fun EditProfileDialog(
                         )
                     }
                     TextButton(onClick = onDismiss) {
-                        Text("CANCELAR", color = FitwinColors.OnSurfaceVariant, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                        Text(s.editPerfilCancelar, color = FitwinColors.OnSurfaceVariant, fontSize = 11.sp, fontWeight = FontWeight.Bold)
                     }
                 }
 
                 HorizontalDivider(color = FitwinColors.OutlineVariant)
 
                 // Personal data
-                SectionLabel("DATOS PERSONALES")
+                SectionLabel(s.editPerfilDatosPersonales)
 
-                ProfileTextField(value = nombre, onValueChange = { nombre = it }, label = "Nombre")
-                ProfileTextField(value = apellidos, onValueChange = { apellidos = it }, label = "Apellidos")
-                ProfileTextField(value = email, onValueChange = { email = it }, label = "Email", keyboardType = KeyboardType.Email)
+                ProfileTextField(value = nombre, onValueChange = { nombre = it }, label = s.editPerfilNombre)
+                ProfileTextField(value = apellidos, onValueChange = { apellidos = it }, label = s.editPerfilApellidos)
+                ProfileTextField(value = email, onValueChange = { email = it }, label = s.editPerfilEmail, keyboardType = KeyboardType.Email)
 
                 // Physical data
-                SectionLabel("DATOS FÍSICOS")
+                SectionLabel(s.editPerfilDatosFisicos)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     ProfileTextField(
                         value = peso,
                         onValueChange = { peso = it },
-                        label = "Peso (kg)",
+                        label = s.editPerfilPeso,
                         keyboardType = KeyboardType.Decimal,
                         modifier = Modifier.weight(1f)
                     )
                     ProfileTextField(
                         value = altura,
                         onValueChange = { altura = it },
-                        label = "Altura (cm)",
+                        label = s.editPerfilAltura,
                         keyboardType = KeyboardType.Decimal,
                         modifier = Modifier.weight(1f)
                     )
                 }
 
                 // Género
-                SectionLabel("GÉNERO")
+                SectionLabel(s.editPerfilGenero)
                 ProfileDropdown(
                     selected = genero,
                     options = GENEROS,
@@ -129,7 +130,7 @@ fun EditProfileDialog(
                 )
 
                 // Nivel actividad
-                SectionLabel("NIVEL DE ACTIVIDAD")
+                SectionLabel(s.editPerfilNivelActividad)
                 ProfileDropdown(
                     selected = nivelActividad,
                     options = NIVELES_ACTIVIDAD,
@@ -139,7 +140,7 @@ fun EditProfileDialog(
                 )
 
                 // Objetivo
-                SectionLabel("OBJETIVO")
+                SectionLabel(s.editPerfilObjetivo)
                 ProfileDropdown(
                     selected = objetivo,
                     options = OBJETIVOS,
@@ -172,7 +173,7 @@ fun EditProfileDialog(
                     colors = ButtonDefaults.buttonColors(containerColor = FitwinColors.PrimaryContainer)
                 ) {
                     Text(
-                        text = "GUARDAR CAMBIOS",
+                        text = s.editPerfilGuardar,
                         color = FitwinColors.OnPrimary,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Black,

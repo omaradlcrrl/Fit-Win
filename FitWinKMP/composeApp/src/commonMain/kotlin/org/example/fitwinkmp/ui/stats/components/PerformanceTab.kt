@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.example.fitwinkmp.core.localization.LocalStrings
 import org.example.fitwinkmp.features.stats.data.dto.NutritionData
 import org.example.fitwinkmp.features.stats.data.dto.PerformanceData
 import org.example.fitwinkmp.features.stats.data.dto.RecordConRm
@@ -32,12 +33,14 @@ import kotlin.math.roundToInt
 
 @Composable
 fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
+    val s = LocalStrings.current
+
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
 
         // ─── Header ────────────────────────────────────────────────────────
         Column {
             Text(
-                text = "KINETIC",
+                text = s.statsKinetic,
                 color = FitwinColors.OnSurface,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Black,
@@ -45,7 +48,7 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
                 lineHeight = 36.sp
             )
             Text(
-                text = "VELOCITY",
+                text = s.statsVelocity,
                 color = FitwinColors.PrimaryContainer,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Black,
@@ -53,7 +56,7 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
                 lineHeight = 36.sp
             )
             Text(
-                text = "Análisis de rendimiento · último mes",
+                text = s.statsAnalisisRendimiento,
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 10.sp,
                 fontWeight = FontWeight.Bold,
@@ -63,7 +66,7 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
         }
 
         // ─── Tonelaje Total ────────────────────────────────────────────────
-        TonelajeCard(tonelaje = data.tonelajeMensual)
+        TonelajeCard(tonelaje = data.tonelajeMensual, s = s)
 
         // ─── Stats Grid ────────────────────────────────────────────────────
         Row(
@@ -74,21 +77,21 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.FitnessCenter,
                 value = "${data.frecuenciaUltimaSemana}",
-                label = "SESIONES\n7 DÍAS",
+                label = s.statsSesiones7Dias,
                 accent = FitwinColors.PrimaryContainer
             )
             StatMiniCard(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.Timer,
                 value = "${data.duracionMediaMin.roundToInt()}min",
-                label = "DURACIÓN\nMEDIA",
+                label = s.statsDuracionMedia,
                 accent = FitwinColors.MacroCarbs
             )
             StatMiniCard(
                 modifier = Modifier.weight(1f),
                 icon = Icons.Default.LocalFireDepartment,
                 value = "${data.rachaActual}",
-                label = "DÍAS DE\nRACHA",
+                label = s.statsDiasRacha,
                 accent = FitwinColors.Error
             )
         }
@@ -101,14 +104,14 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
             ) {
                 FeelingBar(
                     modifier = Modifier.weight(1f),
-                    label = "INTENSIDAD",
+                    label = s.statsIntensidad,
                     value = data.intensidadMedia,
                     max = 10.0,
                     color = FitwinColors.PrimaryContainer
                 )
                 FeelingBar(
                     modifier = Modifier.weight(1f),
-                    label = "RECUPERACIÓN",
+                    label = s.statsRecuperacion,
                     value = data.recuperacionMedia,
                     max = 10.0,
                     color = FitwinColors.MacroCarbs
@@ -118,19 +121,19 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
 
         // ─── Personal Bests ────────────────────────────────────────────────
         if (data.mejoresRecords.isNotEmpty()) {
-            SectionHeader("PERSONAL BESTS")
+            SectionHeader(s.statsRecordsPersonales)
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 data.mejoresRecords.take(5).forEachIndexed { index, record ->
-                    PersonalBestCard(record = record, position = index + 1)
+                    PersonalBestCard(record = record, position = index + 1, s = s)
                 }
             }
         }
 
         // ─── 1RM Estimados (top 3) ─────────────────────────────────────────
         if (data.mejoresRecords.isNotEmpty()) {
-            SectionHeader("1RM ESTIMADOS")
+            SectionHeader(s.stats1RmEstimados)
             Text(
-                text = "Calculado con la fórmula de Epley (peso × (1 + reps/30))",
+                text = s.statsEpleyFormula,
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 9.sp,
                 modifier = Modifier.padding(bottom = 4.dp)
@@ -143,15 +146,15 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
         }
 
         // ─── Adherencia Nutricional ────────────────────────────────────────
-        SectionHeader("ADHERENCIA NUTRICIONAL · HOY")
-        NutritionAdherenceCard(nutritionData = nutritionData)
+        SectionHeader(s.statsAdherenciaNutricional)
+        NutritionAdherenceCard(nutritionData = nutritionData, s = s)
 
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
 @Composable
-private fun TonelajeCard(tonelaje: Double) {
+private fun TonelajeCard(tonelaje: Double, s: org.example.fitwinkmp.core.localization.AppStrings) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -161,7 +164,7 @@ private fun TonelajeCard(tonelaje: Double) {
     ) {
         Column {
             Text(
-                text = "ACHIEVEMENT PRIMARIO",
+                text = s.statsLogroPrincipal,
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Bold,
@@ -184,7 +187,7 @@ private fun TonelajeCard(tonelaje: Double) {
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "TONELAJE LEVANTADO · ÚLTIMO MES",
+                text = s.statsTonelajeLevantado,
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 9.sp,
                 fontWeight = FontWeight.Bold,
@@ -283,7 +286,7 @@ fun SectionHeader(title: String) {
 }
 
 @Composable
-private fun PersonalBestCard(record: RecordConRm, position: Int) {
+private fun PersonalBestCard(record: RecordConRm, position: Int, s: org.example.fitwinkmp.core.localization.AppStrings) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -320,7 +323,7 @@ private fun PersonalBestCard(record: RecordConRm, position: Int) {
             )
             record.fecha?.take(10)?.let { fecha ->
                 Text(
-                    text = "BEST LIFT · $fecha",
+                    text = "${s.statsMejorMarca} · $fecha",
                     color = FitwinColors.OnSurfaceVariant,
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Bold
@@ -376,7 +379,7 @@ private fun OneRmCard(record: RecordConRm) {
 }
 
 @Composable
-private fun NutritionAdherenceCard(nutritionData: NutritionData) {
+private fun NutritionAdherenceCard(nutritionData: NutritionData, s: org.example.fitwinkmp.core.localization.AppStrings) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -388,7 +391,7 @@ private fun NutritionAdherenceCard(nutritionData: NutritionData) {
             nutritionData.adherenciaCaloricaHoy?.let {
                 AdherenceBar("CALORÍAS", it, FitwinColors.PrimaryContainer)
             } ?: Text(
-                text = "Sin datos nutricionales para hoy",
+                text = s.statsSinDatosNutricionales,
                 color = FitwinColors.OnSurfaceVariant,
                 fontSize = 10.sp
             )
@@ -407,7 +410,7 @@ private fun NutritionAdherenceCard(nutritionData: NutritionData) {
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("PROTEÍNA / KG CORPORAL", color = FitwinColors.OnSurfaceVariant, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+                    Text(s.statsProteinaPorKg, color = FitwinColors.OnSurfaceVariant, fontSize = 9.sp, fontWeight = FontWeight.Bold)
                     Text(
                         "${"%.1f".format(nutritionData.proteinaPorKg)}g/kg",
                         color = if (nutritionData.proteinaPorKg >= 1.6) FitwinColors.PrimaryContainer else FitwinColors.OnSurface,

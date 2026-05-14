@@ -115,7 +115,7 @@ fun FoodScreen(viewModel: FoodViewModel) {
                             onClick = { viewModel.loadComidas() },
                             colors = ButtonDefaults.buttonColors(containerColor = FitwinColors.PrimaryContainer)
                         ) {
-                            Text("REINTENTAR", color = FitwinColors.OnPrimary)
+                            Text(org.example.fitwinkmp.core.localization.LocalStrings.current.profileReintentar, color = FitwinColors.OnPrimary)
                         }
                     }
                 }
@@ -159,10 +159,15 @@ fun FoodContent(
     val totalFats = comidas.sumOf { it.grasasSaturadas }.roundToInt()
 
     // Usar metas dinámicas del objetivo o fallback sensato
-    val goalCal = objetivo?.caloriasObjetivo?.toInt() ?: 2500
-    val goalProt = objetivo?.proteinasObjetivo?.toInt() ?: 150
-    val goalCarbs = objetivo?.carbohidratosObjetivo?.toInt() ?: 250
-    val goalFats = objetivo?.grasasObjetivo?.toInt() ?: 60
+    // Clamp a rango razonable para evitar valores absurdos de la API
+    val rawGoalCal = objetivo?.caloriasObjetivo?.toInt() ?: 2500
+    val goalCal = rawGoalCal.coerceIn(800, 10000)
+    val rawGoalProt = objetivo?.proteinasObjetivo?.toInt() ?: 150
+    val goalProt = rawGoalProt.coerceIn(30, 500)
+    val rawGoalCarbs = objetivo?.carbohidratosObjetivo?.toInt() ?: 250
+    val goalCarbs = rawGoalCarbs.coerceIn(30, 1000)
+    val rawGoalFats = objetivo?.grasasObjetivo?.toInt() ?: 60
+    val goalFats = rawGoalFats.coerceIn(10, 300)
 
     val isToday = selectedDate == LocalDate.now()
     val dateLabel = if (isToday) s.foodHoy else {
@@ -238,16 +243,18 @@ fun FoodContent(
                             .border(1.dp, FitwinColors.PrimaryContainer, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomStart = 16.dp, bottomEnd = 4.dp))
                             .padding(horizontal = 20.dp, vertical = 12.dp)
                     ) {
+                        val caloriasRestantes = goalCal - totalCal
+                        val excesoCaloriaco = caloriasRestantes < 0
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "${goalCal - totalCal}",
-                                color = FitwinColors.PrimaryContainer,
+                                text = "${caloriasRestantes.coerceAtLeast(0)}",
+                                color = if (excesoCaloriaco) FitwinColors.Error else FitwinColors.PrimaryContainer,
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Black
                             )
                             Text(
-                                text = s.foodCaloriasRest,
-                                color = FitwinColors.OnSurfaceVariant,
+                                text = if (excesoCaloriaco) "EXCEDIDO" else s.foodCaloriasRest,
+                                color = if (excesoCaloriaco) FitwinColors.Error.copy(alpha = 0.7f) else FitwinColors.OnSurfaceVariant,
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp

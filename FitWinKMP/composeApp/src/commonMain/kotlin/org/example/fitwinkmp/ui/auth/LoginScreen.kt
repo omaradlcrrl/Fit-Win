@@ -1,6 +1,7 @@
 package org.example.fitwinkmp.ui.auth
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -30,18 +31,23 @@ import org.example.fitwinkmp.features.auth.presentation.AuthViewModel
 import org.example.fitwinkmp.features.auth.presentation.state.LoginUiState
 import org.example.fitwinkmp.ui.theme.FitwinColors
 
+import org.example.fitwinkmp.core.localization.LanguageViewModel
+
 @Composable
 fun LoginScreen(
     onSignUpClick: () -> Unit = {},
     onLoginSuccess: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
     viewModel: AuthViewModel = viewModel(),
+    languageViewModel: LanguageViewModel,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val s = org.example.fitwinkmp.core.localization.LocalStrings.current
 
     val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+    val currentLang by languageViewModel.language.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(loginState) {
@@ -99,6 +105,31 @@ fun LoginScreen(
                     .padding(padding)
                     .padding(horizontal = 24.dp, vertical = 48.dp)
             ) {
+                // Language Toggle
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(FitwinColors.SurfaceContainerHighest)
+                            .border(1.dp, FitwinColors.OutlineVariant, RoundedCornerShape(16.dp))
+                            .clickable {
+                                languageViewModel.setLanguage(if (currentLang == "es") "en" else "es")
+                            }
+                            .padding(horizontal = 12.dp, vertical = 6.dp)
+                    ) {
+                        Text(
+                            text = if (currentLang == "es") "ESPAÑOL" else "ENGLISH",
+                            color = FitwinColors.OnSurface,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 1.sp
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Box(
@@ -108,7 +139,7 @@ fun LoginScreen(
                         .padding(horizontal = 16.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = "WELCOME BACK",
+                        text = s.authWelcomeBack,
                         color = FitwinColors.OnPrimary,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
@@ -140,7 +171,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "High-performance engineering\nfor your physical evolution.",
+                    text = s.authSubtitle,
                     color = FitwinColors.OnSurfaceVariant,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Light,
@@ -158,7 +189,7 @@ fun LoginScreen(
                 ) {
                     Column {
                         Text(
-                            text = "Sign In",
+                            text = s.authSignIn,
                             color = FitwinColors.OnSurface,
                             fontSize = 26.sp,
                             fontWeight = FontWeight.Bold,
@@ -166,7 +197,7 @@ fun LoginScreen(
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Enter your credentials to continue.",
+                            text = s.authSignInDesc,
                             color = FitwinColors.OnSurfaceVariant,
                             fontSize = 13.sp
                         )
@@ -174,7 +205,7 @@ fun LoginScreen(
                         Spacer(modifier = Modifier.height(24.dp))
 
                         FitwinInputField(
-                            label = "EMAIL ADDRESS",
+                            label = s.authEmail,
                             value = email,
                             onValueChange = { email = it },
                             placeholder = "aiden@fitwin.io",
@@ -185,7 +216,7 @@ fun LoginScreen(
 
                         Column {
                             Text(
-                                text = "PASSWORD",
+                                text = s.authPassword,
                                 color = FitwinColors.PrimaryContainer,
                                 fontSize = 10.sp,
                                 fontWeight = FontWeight.Bold,
@@ -233,7 +264,7 @@ fun LoginScreen(
 
                         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                             Text(
-                                text = "Forgot password?",
+                                text = s.authForgotPassword,
                                 color = FitwinColors.PrimaryContainer,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -272,7 +303,7 @@ fun LoginScreen(
                                 )
                             } else {
                                 Text(
-                                    text = "ENTER THE ARENA",
+                                    text = s.authEnterArena,
                                     color = FitwinColors.OnPrimary,
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Black,
@@ -281,52 +312,19 @@ fun LoginScreen(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            HorizontalDivider(
-                                modifier = Modifier.weight(1f),
-                                color = FitwinColors.OutlineVariant.copy(alpha = 0.3f)
-                            )
-                            Text(
-                                text = "  OR CONNECT VIA  ",
-                                color = FitwinColors.OnSurfaceVariant.copy(alpha = 0.5f),
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 2.sp
-                            )
-                            HorizontalDivider(
-                                modifier = Modifier.weight(1f),
-                                color = FitwinColors.OutlineVariant.copy(alpha = 0.3f)
-                            )
-                        }
-
                         Spacer(modifier = Modifier.height(16.dp))
-
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            FitwinSocialButton(label = "Google", modifier = Modifier.weight(1f))
-                            FitwinSocialButton(label = "Apple", modifier = Modifier.weight(1f))
-                        }
-
-                        Spacer(modifier = Modifier.height(20.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Text(
-                                text = "New to the squad? ",
+                                text = s.authNewToSquad,
                                 color = FitwinColors.OnSurfaceVariant.copy(alpha = 0.6f),
                                 fontSize = 12.sp
                             )
                             Text(
-                                text = "Create Account",
+                                text = s.authCreateAccount,
                                 color = FitwinColors.PrimaryContainer,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
@@ -339,7 +337,7 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "© 2024 FIT-WIN PERFORMANCE TECHNOLOGIES",
+                    text = s.authCopyright,
                     color = FitwinColors.OnSurfaceVariant.copy(alpha = 0.4f),
                     fontSize = 9.sp,
                     fontWeight = FontWeight.Bold,
@@ -400,22 +398,4 @@ internal fun FitwinInputField(
     }
 }
 
-@Composable
-internal fun FitwinSocialButton(label: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .height(48.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(FitwinColors.SurfaceContainerHigh)
-            .clickable { },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = label.uppercase(),
-            color = FitwinColors.OnSurface.copy(alpha = 0.7f),
-            fontSize = 11.sp,
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 2.sp
-        )
-    }
-}
+

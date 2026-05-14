@@ -58,6 +58,7 @@ fun CheckInSheet(
     var muslo by remember { mutableStateOf(medicionHoy?.muslo?.toString() ?: "") }
     var cintura by remember { mutableStateOf(medicionHoy?.cintura?.toString() ?: "") }
     var showDetailed by remember { mutableStateOf(hasDetailedValues(medicionHoy)) }
+    val s = org.example.fitwinkmp.core.localization.LocalStrings.current
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -84,14 +85,14 @@ fun CheckInSheet(
             // ─── Header ──────────────────────────────────────────────────────
             Column {
                 Text(
-                    text = if (isUpdate) "ACTUALIZAR" else "CHECK-IN",
+                    text = if (isUpdate) s.statsActualizar else s.statsCheckIn,
                     color = FitwinColors.PrimaryContainer,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Black,
                     fontStyle = FontStyle.Italic
                 )
                 Text(
-                    text = if (isUpdate) "MEDICIÓN DE HOY" else "DIARIO",
+                    text = if (isUpdate) s.statsMedicionDeHoy else s.statsDiario,
                     color = FitwinColors.OnSurface,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Black,
@@ -99,9 +100,9 @@ fun CheckInSheet(
                 )
                 Text(
                     text = if (isUpdate)
-                        "Ya registraste hoy — actualizando tu medición existente"
+                        s.statsYaRegistrasteHoy
                     else
-                        "Registra tu progreso de hoy",
+                        s.statsRegistraProgreso,
                     color = FitwinColors.OnSurfaceVariant,
                     fontSize = 10.sp,
                     modifier = Modifier.padding(top = 4.dp)
@@ -132,7 +133,7 @@ fun CheckInSheet(
                     )
                     Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "REPETIR ÚLTIMA MEDICIÓN",
+                        text = s.statsRepetirUltima,
                         color = FitwinColors.PrimaryContainer,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Black,
@@ -143,7 +144,7 @@ fun CheckInSheet(
 
             // ─── Peso (obligatorio) ──────────────────────────────────────────
             CheckInField(
-                label = "PESO (kg)*",
+                label = s.statsPesoInput,
                 value = peso,
                 onValueChange = { peso = it },
                 placeholder = "Ej. 82.5"
@@ -151,7 +152,7 @@ fun CheckInSheet(
 
             // ─── % Grasa (opcional) ──────────────────────────────────────────
             CheckInField(
-                label = "% GRASA CORPORAL (opcional)",
+                label = s.statsGrasaInput,
                 value = porcentajeGrasa,
                 onValueChange = { porcentajeGrasa = it },
                 placeholder = "Ej. 18.5"
@@ -163,7 +164,7 @@ fun CheckInSheet(
                 contentPadding = PaddingValues(0.dp)
             ) {
                 Text(
-                    text = if (showDetailed) "▲ OCULTAR MEDIDAS DETALLADAS" else "▼ AÑADIR MEDIDAS DETALLADAS",
+                    text = if (showDetailed) s.statsOcultarMedidas else s.statsAnadirMedidas,
                     color = FitwinColors.PrimaryContainer,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Black,
@@ -181,7 +182,7 @@ fun CheckInSheet(
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(
-                            text = "MEDIDAS MUSCULARES (cm)",
+                            text = s.statsMedidasMuscularesCm,
                             color = FitwinColors.OnSurfaceVariant,
                             fontSize = 9.sp,
                             fontWeight = FontWeight.Bold,
@@ -223,7 +224,7 @@ fun CheckInSheet(
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = FitwinColors.OnSurfaceVariant),
                     border = androidx.compose.foundation.BorderStroke(1.dp, FitwinColors.OutlineVariant)
                 ) {
-                    Text("CANCELAR", fontSize = 11.sp, fontWeight = FontWeight.Black)
+                    Text(s.statsCancelar, fontSize = 11.sp, fontWeight = FontWeight.Black)
                 }
                 Button(
                     onClick = {
@@ -246,7 +247,7 @@ fun CheckInSheet(
                     )
                 ) {
                     Text(
-                        if (isUpdate) "ACTUALIZAR" else "GUARDAR",
+                        if (isUpdate) s.statsActualizar else s.statsGuardar,
                         color = if (peso.toDoubleOrNull() != null) FitwinColors.OnPrimary else FitwinColors.OnSurfaceVariant,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Black

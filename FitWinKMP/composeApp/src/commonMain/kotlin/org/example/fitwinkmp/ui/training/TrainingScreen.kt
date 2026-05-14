@@ -74,7 +74,7 @@ fun TrainingScreen(viewModel: TrainingViewModel) {
                                 onClick = { viewModel.loadTodaysWorkout() },
                                 colors = ButtonDefaults.buttonColors(containerColor = FitwinColors.PrimaryContainer)
                             ) {
-                                Text("REINTENTAR", color = FitwinColors.OnPrimary)
+                                Text(s.profileReintentar, color = FitwinColors.OnPrimary)
                             }
                         }
                     }
@@ -472,7 +472,7 @@ fun ActiveWorkoutView(
                                     }
                                     .padding(horizontal = 16.dp, vertical = 14.dp)
                             ) {
-                                Text("LOG", color = FitwinColors.OnPrimary, fontWeight = FontWeight.Bold)
+                                Text(s.trainingRegistrar, color = FitwinColors.OnPrimary, fontWeight = FontWeight.Bold)
                             }
                         }
                     } else {
@@ -566,7 +566,7 @@ fun RoutineBuilderView(
         }
         Spacer(modifier = Modifier.height(24.dp))
         
-        Text("$selectedDay WORKOUT", color = FitwinColors.Secondary, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
+        Text("$selectedDay ${s.trainingTitle}", color = FitwinColors.Secondary, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
         Spacer(modifier = Modifier.height(8.dp))
 
         // Lista de ejercicios para el día seleccionado
