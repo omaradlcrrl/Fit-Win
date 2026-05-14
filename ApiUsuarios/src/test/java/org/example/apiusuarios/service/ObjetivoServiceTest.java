@@ -198,6 +198,46 @@ class ObjetivoServiceTest {
                 .hasMessageContaining("objetivo");
     }
 
+    // ── getObjetivoDeHoy ─────────────────────────────────────────────────────
+
+    @Test
+    void getObjetivoDeHoy_existe_retornaDTO() {
+        Objetivo obj = buildObjetivoMock(usuario);
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(objetivoRepository.findFirstByUsuarioAndFechaInicioOrderByObjetivoIdDesc(eq(usuario), any(LocalDate.class)))
+                .thenReturn(Optional.of(obj));
+
+        ObjetivoDTO result = objetivoService.getObjetivoDeHoy(1);
+        assertThat(result).isNotNull();
+    }
+
+    @Test
+    void getObjetivoDeHoy_sinObjetivoHoy_throws404() {
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(objetivoRepository.findFirstByUsuarioAndFechaInicioOrderByObjetivoIdDesc(eq(usuario), any(LocalDate.class)))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> objetivoService.getObjetivoDeHoy(1))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("objetivo");
+    }
+
+    // ── getByUsuarioAndFechaBetween ───────────────────────────────────────────
+
+    @Test
+    void getByUsuarioAndFechaBetween_retornaLista() {
+        Objetivo o1 = buildObjetivoMock(usuario);
+        LocalDate desde = LocalDate.now().minusDays(7);
+        LocalDate hasta = LocalDate.now();
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(objetivoRepository.findByUsuarioAndFechaInicioBetween(usuario, desde, hasta))
+                .thenReturn(List.of(o1));
+
+        List<ObjetivoDTO> result = objetivoService.getByUsuarioAndFechaBetween(1, desde, hasta);
+        assertThat(result).hasSize(1);
+    }
+
     // ── findAllByUsuario ──────────────────────────────────────────────────────
 
     @Test

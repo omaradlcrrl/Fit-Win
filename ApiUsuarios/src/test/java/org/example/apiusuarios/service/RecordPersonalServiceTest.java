@@ -116,12 +116,133 @@ class RecordPersonalServiceTest {
                 .hasMessageContaining("fecha");
     }
 
+    @Test
+    void save_soloRepeticiones_sinPesoKg_retornaDTO() {
+        RecordPersonalDTO dto = new RecordPersonalDTO();
+        dto.setUsuarioId(1);
+        dto.setEjercicioGlobalId(1);
+        dto.setRepeticiones(20);
+        dto.setFecha(LocalDate.now());
+
+        RecordPersonal soloReps = new RecordPersonal();
+        soloReps.setRecordId(2);
+        soloReps.setUsuario(usuario);
+        soloReps.setEjercicioGlobal(global);
+        soloReps.setRepeticiones(20);
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(ejercicioGlobalRepository.findById(1)).thenReturn(Optional.of(global));
+        when(repo.save(any())).thenReturn(soloReps);
+
+        RecordPersonalDTO result = service.save(dto);
+        assertThat(result.getRepeticiones()).isEqualTo(20);
+    }
+
     // ── findByUsuario ─────────────────────────────────────────────────────────
 
     @Test
     void findByUsuario_retornaOrdenadosPorFecha() {
         when(repo.findByUsuario_UsuarioIdOrderByFechaDesc(1)).thenReturn(List.of(record));
         assertThat(service.findByUsuario(1)).hasSize(1);
+    }
+
+    // ── findByUsuarioAndEjercicio ─────────────────────────────────────────────
+
+    @Test
+    void findByUsuarioAndEjercicio_retornaFiltrado() {
+        when(repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(1, 1))
+                .thenReturn(List.of(record));
+
+        List<RecordPersonalDTO> result = service.findByUsuarioAndEjercicio(1, 1);
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getPesoKg()).isEqualTo(140.0);
+    }
+
+    // ── findMaxByUsuarioAndEjercicio ──────────────────────────────────────────
+
+    @Test
+    void findMaxByUsuarioAndEjercicio_retornaElDeMayorPeso() {
+        RecordPersonal menor = new RecordPersonal();
+        menor.setRecordId(2);
+        menor.setUsuario(usuario);
+        menor.setEjercicioGlobal(global);
+        menor.setPesoKg(100.0);
+
+        when(repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(1, 1))
+                .thenReturn(List.of(menor, record));
+
+        RecordPersonalDTO result = service.findMaxByUsuarioAndEjercicio(1, 1);
+        assertThat(result.getPesoKg()).isEqualTo(140.0);
+    }
+
+    @Test
+    void findMaxByUsuarioAndEjercicio_sinRecords_throws404() {
+        when(repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(1, 1))
+                .thenReturn(List.of());
+
+        assertThatThrownBy(() -> service.findMaxByUsuarioAndEjercicio(1, 1))
+                .isInstanceOf(Exception.class);
+    }
+
+    // ── actualizarSiMejora ────────────────────────────────────────────────────
+
+    @Test
+    void actualizarSiMejora_ambosNull_retornaNull() {
+        RecordPersonalDTO result = service.actualizarSiMejora(usuario, global, null, null);
+        assertThat(result).isNull();
+        verifyNoInteractions(repo);
+    }
+
+    @Test
+    void actualizarSiMejora_sinRecordsPrevios_creaRecord() {
+        when(repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(1, 1))
+                .thenReturn(List.of());
+        when(repo.save(any())).thenReturn(record);
+
+        RecordPersonalDTO result = service.actualizarSiMejora(usuario, global, 140.0, null);
+        assertThat(result).isNotNull();
+        verify(repo).save(any(RecordPersonal.class));
+    }
+
+    @Test
+    void actualizarSiMejora_pesoMejor_creaRecord() {
+        RecordPersonal existente = new RecordPersonal();
+        existente.setPesoKg(100.0);
+
+        when(repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(1, 1))
+                .thenReturn(List.of(existente));
+        when(repo.save(any())).thenReturn(record);
+
+        RecordPersonalDTO result = service.actualizarSiMejora(usuario, global, 140.0, null);
+        assertThat(result).isNotNull();
+        verify(repo).save(any(RecordPersonal.class));
+    }
+
+    @Test
+    void actualizarSiMejora_pesoIgualOMenor_noGuarda() {
+        RecordPersonal existente = new RecordPersonal();
+        existente.setPesoKg(140.0);
+
+        when(repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(1, 1))
+                .thenReturn(List.of(existente));
+
+        RecordPersonalDTO result = service.actualizarSiMejora(usuario, global, 100.0, null);
+        assertThat(result).isNull();
+        verify(repo, never()).save(any());
+    }
+
+    @Test
+    void actualizarSiMejora_soloRepeticionesMejora_creaRecord() {
+        RecordPersonal existente = new RecordPersonal();
+        existente.setRepeticiones(10);
+
+        when(repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(1, 1))
+                .thenReturn(List.of(existente));
+        when(repo.save(any())).thenReturn(record);
+
+        RecordPersonalDTO result = service.actualizarSiMejora(usuario, global, null, 15);
+        assertThat(result).isNotNull();
+        verify(repo).save(any(RecordPersonal.class));
     }
 
     // ── findById ──────────────────────────────────────────────────────────────

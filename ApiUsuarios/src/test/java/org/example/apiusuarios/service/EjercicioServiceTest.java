@@ -86,12 +86,22 @@ class EjercicioServiceTest {
     }
 
     @Test
-    void save_sinEjercicioGlobalId_throws400() {
+    void save_sinEjercicioGlobalId_guardaConNombrePersonalizado() {
         EjercicioDTO dto = new EjercicioDTO();
         dto.setUsuarioId(1);
-        assertThatThrownBy(() -> service.save(dto))
-                .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("ejercicioGlobalId");
+        dto.setNombreEjercicio("Curl de bíceps casero");
+
+        Ejercicio sinGlobal = new Ejercicio();
+        sinGlobal.setEjercicioId(2);
+        sinGlobal.setUsuario(usuario);
+        sinGlobal.setNombrePersonalizado("Curl de bíceps casero");
+
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(usuario));
+        when(ejercicioRepository.save(any())).thenReturn(sinGlobal);
+
+        EjercicioDTO result = service.save(dto);
+        assertThat(result.getEjercicioId()).isEqualTo(2);
+        verify(ejercicioGlobalRepository, never()).findById(any());
     }
 
     @Test

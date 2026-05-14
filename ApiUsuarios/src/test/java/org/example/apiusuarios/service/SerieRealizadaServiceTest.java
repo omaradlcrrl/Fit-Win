@@ -3,6 +3,7 @@ package org.example.apiusuarios.service;
 import org.example.apiusuarios.dto.SerieRealizadaDTO;
 import org.example.apiusuarios.model.*;
 import org.example.apiusuarios.repository.*;
+import org.example.apiusuarios.service.RecordPersonalService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,17 +25,23 @@ class SerieRealizadaServiceTest {
     @Mock SerieRealizadaRepository repo;
     @Mock SesionEntrenamientoRepository sesionRepo;
     @Mock EjercicioRepository ejercicioRepository;
+    @Mock RecordPersonalService recordPersonalService;
 
     @InjectMocks SerieRealizadaService service;
 
     private SesionEntrenamiento sesion;
     private Ejercicio ejercicio;
     private SerieRealizada serie;
+    private Usuario usuario;
 
     @BeforeEach
     void setUp() {
+        usuario = new Usuario();
+        usuario.setUsuarioId(1);
+
         sesion = new SesionEntrenamiento();
         sesion.setSesionId(1);
+        sesion.setUsuario(usuario);
 
         ejercicio = new Ejercicio();
         ejercicio.setEjercicioId(1);
@@ -99,6 +106,82 @@ class SerieRealizadaServiceTest {
         });
 
         service.save(dto);
+    }
+
+    @Test
+    void save_ejercicioNoExiste_throws404() {
+        SerieRealizadaDTO dto = new SerieRealizadaDTO();
+        dto.setSesionId(1);
+        dto.setEjercicioId(99);
+
+        when(sesionRepo.findById(1)).thenReturn(Optional.of(sesion));
+        when(ejercicioRepository.findById(99)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> service.save(dto))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Ejercicio");
+    }
+
+    @Test
+    void save_completadoTrue_conEjercicioGlobal_disparaActualizarRecord() {
+        EjercicioGlobal global = new EjercicioGlobal();
+        global.setEjercicioGlobalId(1);
+        ejercicio.setEjercicioGlobal(global);
+
+        SerieRealizadaDTO dto = new SerieRealizadaDTO();
+        dto.setSesionId(1);
+        dto.setEjercicioId(1);
+        dto.setCompletado(true);
+        dto.setPesoKg(100.0);
+        dto.setRepeticionesRealizadas(8);
+
+        when(sesionRepo.findById(1)).thenReturn(Optional.of(sesion));
+        when(ejercicioRepository.findById(1)).thenReturn(Optional.of(ejercicio));
+        when(repo.save(any())).thenReturn(serie);
+
+        service.save(dto);
+
+        verify(recordPersonalService).actualizarSiMejora(usuario, global, 100.0, 8);
+    }
+
+    @Test
+    void save_completadoTrue_sinEjercicioGlobal_noDisparaRecord() {
+        ejercicio.setEjercicioGlobal(null);
+
+        SerieRealizadaDTO dto = new SerieRealizadaDTO();
+        dto.setSesionId(1);
+        dto.setEjercicioId(1);
+        dto.setCompletado(true);
+        dto.setPesoKg(100.0);
+
+        when(sesionRepo.findById(1)).thenReturn(Optional.of(sesion));
+        when(ejercicioRepository.findById(1)).thenReturn(Optional.of(ejercicio));
+        when(repo.save(any())).thenReturn(serie);
+
+        service.save(dto);
+
+        verifyNoInteractions(recordPersonalService);
+    }
+
+    @Test
+    void save_completadoFalse_conEjercicioGlobal_noDisparaRecord() {
+        EjercicioGlobal global = new EjercicioGlobal();
+        global.setEjercicioGlobalId(1);
+        ejercicio.setEjercicioGlobal(global);
+
+        SerieRealizadaDTO dto = new SerieRealizadaDTO();
+        dto.setSesionId(1);
+        dto.setEjercicioId(1);
+        dto.setCompletado(false);
+        dto.setPesoKg(100.0);
+
+        when(sesionRepo.findById(1)).thenReturn(Optional.of(sesion));
+        when(ejercicioRepository.findById(1)).thenReturn(Optional.of(ejercicio));
+        when(repo.save(any())).thenReturn(serie);
+
+        service.save(dto);
+
+        verifyNoInteractions(recordPersonalService);
     }
 
     // ── findBySesion ──────────────────────────────────────────────────────────
