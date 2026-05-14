@@ -243,4 +243,90 @@ class UsuarioServiceTest {
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("contraseña");
     }
+
+    // ── Validación peso y altura ──────────────────────────────────────────────
+
+    @Test
+    void save_pesoFueraDeRangoAlto_throws400() {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setCorreoElectronico("nuevo@test.com");
+        dto.setPassword("password123");
+        dto.setGenero("MASCULINO");
+        dto.setNivelActividad("MODERADO");
+        dto.setEstrategia("MANTENIMIENTO");
+        dto.setAjusteCalorico(10);
+        dto.setPesoActual(8000.0);
+
+        when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> usuarioService.save(dto))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("peso");
+    }
+
+    @Test
+    void save_pesoFueraDeRangoBajo_throws400() {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setCorreoElectronico("nuevo@test.com");
+        dto.setPassword("password123");
+        dto.setGenero("MASCULINO");
+        dto.setNivelActividad("MODERADO");
+        dto.setEstrategia("MANTENIMIENTO");
+        dto.setAjusteCalorico(10);
+        dto.setPesoActual(5.0);
+
+        when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> usuarioService.save(dto))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("peso");
+    }
+
+    @Test
+    void save_alturaFueraDeRango_throws400() {
+        UsuarioDTO dto = new UsuarioDTO();
+        dto.setCorreoElectronico("nuevo@test.com");
+        dto.setPassword("password123");
+        dto.setGenero("MASCULINO");
+        dto.setNivelActividad("MODERADO");
+        dto.setEstrategia("MANTENIMIENTO");
+        dto.setAjusteCalorico(10);
+        dto.setAltura(1750.0);
+
+        when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> usuarioService.save(dto))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("altura");
+    }
+
+    @Test
+    void update_pesoFueraDeRango_throws400() {
+        Usuario existente = new Usuario();
+        existente.setUsuarioId(1);
+        existente.setCorreoElectronico("test@test.com");
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(existente));
+
+        UsuarioDTO updates = new UsuarioDTO();
+        updates.setPesoActual(80000.0);
+
+        assertThatThrownBy(() -> usuarioService.update(1, updates))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("peso");
+    }
+
+    @Test
+    void update_alturaFueraDeRango_throws400() {
+        Usuario existente = new Usuario();
+        existente.setUsuarioId(1);
+        existente.setCorreoElectronico("test@test.com");
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(existente));
+
+        UsuarioDTO updates = new UsuarioDTO();
+        updates.setAltura(1750.0);
+
+        assertThatThrownBy(() -> usuarioService.update(1, updates))
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("altura");
+    }
 }

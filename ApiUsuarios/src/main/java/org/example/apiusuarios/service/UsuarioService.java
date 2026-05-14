@@ -78,6 +78,20 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ajusteCalorico debe estar entre 0 y 50");
         usuarioDTO.setAjusteCalorico(ajuste);
 
+        if (usuarioDTO.getPesoActual() != null) {
+            double peso = usuarioDTO.getPesoActual();
+            if (peso < 30.0 || peso > 300.0)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "El peso debe estar entre 30 y 300 kg (recibido: " + peso + ")");
+        }
+
+        if (usuarioDTO.getAltura() != null) {
+            double alt = usuarioDTO.getAltura();
+            if (alt < 100.0 || alt > 250.0)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "La altura debe estar entre 100 y 250 cm (recibido: " + alt + ")");
+        }
+
         usuarioDTO.setCorreoElectronico(correo);
 
         if (usuarioDTO.getGenero() == null || usuarioDTO.getGenero().trim().isEmpty()) {
@@ -187,7 +201,11 @@ public class UsuarioService {
         }
 
         if (updates.getAltura() != null) {
-            usuario.setAltura(updates.getAltura());
+            double alt = updates.getAltura();
+            if (alt < 100.0 || alt > 250.0)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "La altura debe estar entre 100 y 250 cm (recibido: " + alt + ")");
+            usuario.setAltura(alt);
         }
 
         if (updates.getPassword() != null && !updates.getPassword().trim().isEmpty()) {
@@ -222,7 +240,11 @@ public class UsuarioService {
         }
 
         if (updates.getPesoActual() != null) {
-            usuario.setPesoActual(updates.getPesoActual());
+            double peso = updates.getPesoActual();
+            if (peso < 30.0 || peso > 300.0)
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "El peso debe estar entre 30 y 300 kg (recibido: " + peso + ")");
+            usuario.setPesoActual(peso);
         }
 
         if (updates.getOnboardingCompleto() != null) {
