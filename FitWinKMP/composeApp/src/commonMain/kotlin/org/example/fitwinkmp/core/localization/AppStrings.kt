@@ -62,6 +62,22 @@ data class AppStrings(
     val trainingDescanso: String, // "REST" in reps label
     val trainingRegistrar: String, // "LOG" button
     val trainingEditarRutina: String,
+    // Días de la semana (display) — los valores de API siguen siendo MONDAY/TUESDAY etc.
+    val dayLunes: String,
+    val dayMartes: String,
+    val dayMiercoles: String,
+    val dayJueves: String,
+    val dayViernes: String,
+    val daySabado: String,
+    val dayDomingo: String,
+    // Iniciales para el selector de días en el constructor de rutinas
+    val dayInicialLunes: String,
+    val dayInicialMartes: String,
+    val dayInicialMiercoles: String,
+    val dayInicialJueves: String,
+    val dayInicialViernes: String,
+    val dayInicialSabado: String,
+    val dayInicialDomingo: String,
 
     // Profile
     val profilePesoActual: String,

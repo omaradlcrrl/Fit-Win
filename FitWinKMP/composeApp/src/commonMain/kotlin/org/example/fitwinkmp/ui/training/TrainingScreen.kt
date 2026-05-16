@@ -31,8 +31,20 @@ import org.example.fitwinkmp.features.training.data.dto.EjercicioGlobalDTO
 import org.example.fitwinkmp.features.training.data.dto.SerieRealizadaDTO
 import org.example.fitwinkmp.features.training.presentation.TrainingUiState
 import org.example.fitwinkmp.features.training.presentation.TrainingViewModel
+import org.example.fitwinkmp.core.localization.AppStrings
 import org.example.fitwinkmp.core.localization.LocalStrings
 import org.example.fitwinkmp.ui.theme.FitwinColors
+
+private fun AppStrings.localizedDay(englishDay: String): String = when (englishDay) {
+    "MONDAY"    -> dayLunes
+    "TUESDAY"   -> dayMartes
+    "WEDNESDAY" -> dayMiercoles
+    "THURSDAY"  -> dayJueves
+    "FRIDAY"    -> dayViernes
+    "SATURDAY"  -> daySabado
+    "SUNDAY"    -> dayDomingo
+    else        -> englishDay
+}
 
 @Composable
 fun TrainingScreen(viewModel: TrainingViewModel) {
@@ -126,7 +138,8 @@ fun DailyWorkoutView(
     onDeleteEjercicio: (Int) -> Unit
 ) {
     val s = LocalStrings.current
-    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.name
+    val todayKey = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.name
+    val today = s.localizedDay(todayKey)
     var expanded by remember { mutableStateOf(false) }
     var showEditDialog by remember { mutableStateOf(false) }
 
@@ -523,7 +536,10 @@ fun RoutineBuilderView(
     val ejerciciosPlanificados = remember { mutableStateListOf<EjercicioDTO>() }
     
     val daysOfWeek = listOf("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY")
-    val daysInitials = listOf("M", "T", "W", "T", "F", "S", "S")
+    val daysInitials = listOf(
+        s.dayInicialLunes, s.dayInicialMartes, s.dayInicialMiercoles,
+        s.dayInicialJueves, s.dayInicialViernes, s.dayInicialSabado, s.dayInicialDomingo
+    )
 
     Column(modifier = Modifier.fillMaxSize()) {
         Text(s.trainingCrearRutina, color = FitwinColors.PrimaryContainer, fontSize = 24.sp, fontWeight = FontWeight.Black, fontStyle = FontStyle.Italic)
@@ -566,7 +582,7 @@ fun RoutineBuilderView(
         }
         Spacer(modifier = Modifier.height(24.dp))
         
-        Text("$selectedDay ${s.trainingTitle}", color = FitwinColors.Secondary, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
+        Text("${s.localizedDay(selectedDay)} ${s.trainingTitle}", color = FitwinColors.Secondary, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 2.sp)
         Spacer(modifier = Modifier.height(8.dp))
 
         // Lista de ejercicios para el día seleccionado
@@ -685,7 +701,7 @@ fun AddExerciseDialog(
         onDismissRequest = onDismiss,
         containerColor = FitwinColors.SurfaceContainer,
         title = {
-            Text("${s.trainingAnadir} — $diaSeleccionado", color = FitwinColors.OnSurface, fontWeight = FontWeight.Black)
+            Text("${s.trainingAnadir} — ${s.localizedDay(diaSeleccionado)}", color = FitwinColors.OnSurface, fontWeight = FontWeight.Black)
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
