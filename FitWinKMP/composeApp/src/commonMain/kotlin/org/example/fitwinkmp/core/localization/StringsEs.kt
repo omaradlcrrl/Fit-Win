@@ -149,11 +149,11 @@ val stringsEs = AppStrings(
     statsVerGraficaCompleta = "VER GRÁFICA COMPLETA",
 
     // Performance Tab
-    statsKinetic = "CINÉTICA",
-    statsVelocity = "VELOCIDAD",
+    statsKinetic = "RENDIMIENTO",
+    statsVelocity = "EXPLOSIVO",
     statsAnalisisRendimiento = "Análisis de rendimiento · último mes",
-    statsLogroPrincipal = "LOGRO PRINCIPAL",
-    statsTonelajeLevantado = "TONELAJE LEVANTADO · ÚLTIMO MES",
+    statsLogroPrincipal = "CONSTANCIA",
+    statsTonelajeLevantado = "SESIONES · ÚLTIMO MES",
     statsSesiones7Dias = "SESIONES\n7 DÍAS",
     statsDuracionMedia = "DURACIÓN\nMEDIA",
     statsDiasRacha = "DÍAS DE\nRACHA",

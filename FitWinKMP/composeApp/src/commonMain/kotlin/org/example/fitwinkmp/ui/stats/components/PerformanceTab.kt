@@ -66,7 +66,7 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
         }
 
         // ─── Tonelaje Total ────────────────────────────────────────────────
-        TonelajeCard(tonelaje = data.tonelajeMensual, s = s)
+        TonelajeCard(sesionesMes = data.frecuenciaUltimoMes, s = s)
 
         // ─── Stats Grid ────────────────────────────────────────────────────
         Row(
@@ -154,7 +154,7 @@ fun PerformanceTab(data: PerformanceData, nutritionData: NutritionData) {
 }
 
 @Composable
-private fun TonelajeCard(tonelaje: Double, s: org.example.fitwinkmp.core.localization.AppStrings) {
+private fun TonelajeCard(sesionesMes: Int, s: org.example.fitwinkmp.core.localization.AppStrings) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -178,7 +178,7 @@ private fun TonelajeCard(tonelaje: Double, s: org.example.fitwinkmp.core.localiz
                     .padding(horizontal = 20.dp, vertical = 10.dp)
             ) {
                 Text(
-                    text = "${(tonelaje / 1000.0).let { if (it >= 1) "%.1f TONS".format(it) else "${tonelaje.roundToInt()} KG" }}",
+                    text = "$sesionesMes",
                     color = FitwinColors.OnPrimary,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Black,
