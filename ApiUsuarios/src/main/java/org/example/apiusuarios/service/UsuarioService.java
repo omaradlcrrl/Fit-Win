@@ -66,11 +66,17 @@ public class UsuarioService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "La contraseña debe tener entre 6 y 60 caracteres");
 
-        String est = (usuarioDTO.getEstrategia() != null)
-                ? usuarioDTO.getEstrategia().trim().toUpperCase()
-                : "MANTENIMIENTO";
-        if (!est.equals("MANTENIMIENTO") && !est.equals("SUPERAVIT") && !est.equals("DEFICIT"))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Estrategia inválida");
+        String estDerivada = derivarEstrategiaDesdeObjetivo(usuarioDTO.getObjetivo());
+        String est;
+        if (estDerivada != null) {
+            est = estDerivada;
+        } else {
+            est = (usuarioDTO.getEstrategia() != null)
+                    ? usuarioDTO.getEstrategia().trim().toUpperCase()
+                    : "MANTENIMIENTO";
+            if (!est.equals("MANTENIMIENTO") && !est.equals("SUPERAVIT") && !est.equals("DEFICIT"))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Estrategia inválida");
+        }
         usuarioDTO.setEstrategia(est);
 
         Integer ajuste = (usuarioDTO.getAjusteCalorico() != null) ? usuarioDTO.getAjusteCalorico() : 10;
@@ -253,10 +259,27 @@ public class UsuarioService {
 
         if (updates.getObjetivo() != null) {
             usuario.setObjetivo(updates.getObjetivo());
+            String estDerivada = derivarEstrategiaDesdeObjetivo(updates.getObjetivo());
+            if (estDerivada != null) {
+                usuario.setEstrategia(estDerivada);
+            }
         }
 
         Usuario actualizado = usuarioRepository.save(usuario);
         return new UsuarioDTO(actualizado);
+    }
+
+    // Deriva estrategia (DEFICIT/MANTENIMIENTO/SUPERAVIT) a partir del objetivo del onboarding.
+    // Garantiza que ambos campos no se desincronicen al editar el perfil.
+    private String derivarEstrategiaDesdeObjetivo(String objetivo) {
+        if (objetivo == null) return null;
+        String o = objetivo.trim().toUpperCase();
+        return switch (o) {
+            case "PERDIDA_PESO" -> "DEFICIT";
+            case "GANANCIA_MUSCULAR" -> "SUPERAVIT";
+            case "MANTENIMIENTO" -> "MANTENIMIENTO";
+            default -> null;
+        };
     }
 
     // Método privado para mapear DTO -> Entidad (Antes estaba en la Fábrica)

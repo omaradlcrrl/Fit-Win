@@ -38,7 +38,37 @@ FitWin/
 
 ## 📱 La App Móvil (KMP)
 
-`[CAPTURAS DE PANTALLA PENDIENTES — añadir GIFs o screenshots del emulador]`
+<div align="center">
+
+**Login & Registro**
+
+<img src="docs/Screenshot_20260516_180314.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180333.png" width="220"/>
+
+---
+
+**Nutrición — Registro diario de macros**
+
+<img src="docs/Screenshot_20260518_210138.png" width="220"/>
+
+---
+
+**Entrenamiento — Plan del día y sesión activa**
+
+<img src="docs/Screenshot_20260519_162002.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260519_170233.png" width="220"/>
+
+---
+
+**Estadísticas — Rendimiento, medidas y gráficas**
+
+<img src="docs/Screenshot_20260519_170152.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180204.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180150.png" width="220"/>
+
+---
+
+**Perfil y ajustes de idioma**
+
+<img src="docs/Screenshot_20260516_180231.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180259.png" width="220"/>
+
+</div>
 
 ### Qué hace
 
@@ -133,7 +163,7 @@ Se queda en el repo como referencia del punto de partida. La gracia está en com
 Solo necesitas [Docker](https://docs.docker.com/get-docker/) instalado. Un solo comando levanta la API + la base de datos:
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 La API estará lista en `http://localhost:3036/api/v1/FWBBD/`.

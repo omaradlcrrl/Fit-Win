@@ -329,4 +329,69 @@ class UsuarioServiceTest {
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("altura");
     }
+
+    // ── Auto-sync objetivo → estrategia ───────────────────────────────────────
+
+    @Test
+    void save_objetivoGananciaMuscular_derivaEstrategiaSuperavit() {
+        dtoBase.setObjetivo("GANANCIA_MUSCULAR");
+        dtoBase.setEstrategia("MANTENIMIENTO");
+        when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(any())).thenReturn("encoded");
+        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        usuarioService.save(dtoBase);
+
+        verify(usuarioRepository).save(argThat(u -> "SUPERAVIT".equals(u.getEstrategia())));
+    }
+
+    @Test
+    void save_objetivoPerdidaPeso_derivaEstrategiaDeficit() {
+        dtoBase.setObjetivo("PERDIDA_PESO");
+        dtoBase.setEstrategia("MANTENIMIENTO");
+        when(usuarioRepository.findByCorreoElectronico(anyString())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(any())).thenReturn("encoded");
+        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        usuarioService.save(dtoBase);
+
+        verify(usuarioRepository).save(argThat(u -> "DEFICIT".equals(u.getEstrategia())));
+    }
+
+    @Test
+    void update_cambioDeObjetivo_actualizaEstrategiaAuto() {
+        Usuario existente = new Usuario();
+        existente.setUsuarioId(1);
+        existente.setCorreoElectronico("test@test.com");
+        existente.setObjetivo("MANTENIMIENTO");
+        existente.setEstrategia("MANTENIMIENTO");
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(existente));
+        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        UsuarioDTO updates = new UsuarioDTO();
+        updates.setObjetivo("GANANCIA_MUSCULAR");
+
+        usuarioService.update(1, updates);
+
+        assertThat(existente.getEstrategia()).isEqualTo("SUPERAVIT");
+        assertThat(existente.getObjetivo()).isEqualTo("GANANCIA_MUSCULAR");
+    }
+
+    @Test
+    void update_objetivoDesconocido_noTocaEstrategia() {
+        Usuario existente = new Usuario();
+        existente.setUsuarioId(1);
+        existente.setCorreoElectronico("test@test.com");
+        existente.setObjetivo("MANTENIMIENTO");
+        existente.setEstrategia("DEFICIT");
+        when(usuarioRepository.findById(1)).thenReturn(Optional.of(existente));
+        when(usuarioRepository.save(any(Usuario.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        UsuarioDTO updates = new UsuarioDTO();
+        updates.setObjetivo("ALGO_RARO");
+
+        usuarioService.update(1, updates);
+
+        assertThat(existente.getEstrategia()).isEqualTo("DEFICIT");
+    }
 }
