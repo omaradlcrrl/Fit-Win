@@ -160,17 +160,42 @@ Se queda en el repo como referencia del punto de partida. La gracia está en com
 
 ### Opción 1: Docker Compose (recomendado)
 
-Solo necesitas [Docker](https://docs.docker.com/get-docker/) instalado. Un solo comando levanta la API + la base de datos:
+Solo necesitas [Docker](https://docs.docker.com/get-docker/) instalado.
 
 ```bash
-docker compose up --build
+docker-compose up -d --build
 ```
 
-La API estará lista en `http://localhost:3036/api/v1/FWBBD/`.
+Esto levanta tres servicios en orden:
+1. **MariaDB** — base de datos limpia
+2. **API Spring Boot** — compila y arranca (~60s la primera vez)
+3. **Seeder** — crea automáticamente un usuario de prueba con datos completos y se para
 
-Para la app móvil, abre la carpeta `FitWinKMP` en **Android Studio**, selecciona un emulador y dale a Run. La app ya viene configurada para conectar al `localhost` del host a través del emulador (`10.0.2.2:3036`).
+Cuando el seeder termina, la API está en `http://localhost:3036/api/v1/FWBBD/` con estos datos listos:
 
-### Opción 2: Manual (sin Docker)
+> **Email:** `prueba@fitwin.com` · **Password:** `fitwin123`
+>
+> Incluye: 20 ejercicios globales, rutina PPL, 2 sesiones de entrenamiento con records automáticos, comidas del día, medición corporal y objetivo calórico calculado.
+
+Para ver los logs del proceso de seed:
+```bash
+docker logs fitwin-seeder
+```
+
+---
+
+### Opción 2: App Android (APK precompilada)
+
+1. Descarga `FitWin-debug.apk` desde [Releases](https://github.com/omaradlcrrl/Fit-Win/releases/latest)
+2. Instala la APK en un dispositivo Android o emulador
+3. Levanta el backend con Docker Compose (Opción 1)
+4. Inicia sesión con `prueba@fitwin.com` / `fitwin123`
+
+> La app conecta a `10.0.2.2:3036` por defecto — dirección del host desde el emulador Android. En dispositivo físico necesita la IP local del host en la red.
+
+---
+
+### Opción 3: Manual (sin Docker)
 
 1. Tener MariaDB instalado con una base de datos llamada `fit_win`.
 2. Arrancar la API:
@@ -197,4 +222,4 @@ Para la app móvil, abre la carpeta `FitWinKMP` en **Android Studio**, seleccion
 
 ## Autor
 
-Desarrollado por **Omar** — primero como PFC y después refactorizado y ampliado por cuenta propia.
+Desarrollado por **Omar** — empezó como proyecto de escritorio y fue refactorizado y ampliado por cuenta propia.

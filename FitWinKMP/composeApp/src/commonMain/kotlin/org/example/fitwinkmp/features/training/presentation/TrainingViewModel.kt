@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 import kotlinx.datetime.Clock
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -61,9 +62,8 @@ class TrainingViewModel : ViewModel() {
         }
         viewModelScope.launch {
             _uiState.value = TrainingUiState.Loading
-            val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.name
-            
-            // 1. Fetch user's routines
+            val diaActual = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.name
+
             repository.getRutinas(uid).fold(
                 onSuccess = { rutinas ->
                     val savedActiveId = tokenStorage.getActiveRutinaId()
@@ -76,7 +76,7 @@ class TrainingViewModel : ViewModel() {
                         val actId = activeRutina.rutinaId ?: 0
                         repository.getEjerciciosPorRutina(actId).fold(
                             onSuccess = { ejercicios ->
-                                val ejerciciosHoy = ejercicios.filter { it.diaSemana.equals(today, ignoreCase = true) }
+                                val ejerciciosHoy = ejercicios.filter { it.diaSemana.equals(diaActual, ignoreCase = true) }
                                 _uiState.value = TrainingUiState.DailyWorkoutView(ejerciciosHoy, activeRutina, rutinas)
                             },
                             onFailure = {
@@ -141,12 +141,12 @@ class TrainingViewModel : ViewModel() {
         viewModelScope.launch {
             _uiState.value = TrainingUiState.Loading
             repository.getEjerciciosGlobales().fold(
-                onSuccess = {
-                    val list = if (it.isEmpty()) MOCK_GLOBAL_EXERCISES else it
-                    _uiState.value = TrainingUiState.RoutineBuilder(list)
+                onSuccess = { lista ->
+                    val ejercicios = if (lista.isEmpty()) EJERCICIOS_BASE else lista
+                    _uiState.value = TrainingUiState.RoutineBuilder(ejercicios)
                 },
                 onFailure = {
-                    _uiState.value = TrainingUiState.RoutineBuilder(MOCK_GLOBAL_EXERCISES)
+                    _uiState.value = TrainingUiState.RoutineBuilder(EJERCICIOS_BASE)
                 }
             )
         }
@@ -161,26 +161,23 @@ class TrainingViewModel : ViewModel() {
             val rutina = RutinaDTO(nombre = nombre, diasActivos = diasActivos, usuarioId = uid)
             
             repository.saveRutina(rutina).fold(
-                onSuccess = { savedRutina ->
-                    val rutinaId = savedRutina.rutinaId ?: 999
+                onSuccess = { rutinaGuardada ->
+                    val rutinaId = rutinaGuardada.rutinaId ?: ID_RUTINA_LOCAL
                     ejercicios.forEach { ej ->
-                        // Ignoramos el resultado para no bloquear la UI si el EjercicioGlobal no existe en BD
                         repository.saveEjercicio(ej.copy(rutinaId = rutinaId, usuarioId = uid))
                     }
-                    // Set newly created routine as active
                     tokenStorage.saveActiveRutinaId(rutinaId)
-                    loadTodaysWorkout() // Let loadTodaysWorkout fetch everything freshly
+                    loadTodaysWorkout()
                 },
                 onFailure = {
-                    // Fallback puramente local si la API falla por completo
-                    val ejerciciosConNombre = ejercicios.mapIndexed { index, ej ->
-                        val globalName = ej.nombreEjercicio ?: "Ejercicio ${index+1}"
-                        ej.copy(rutinaId = 999, nombreEjercicio = globalName)
+                    val ejerciciosConNombre = ejercicios.mapIndexed { i, ej ->
+                        val nombreEj = ej.nombreEjercicio ?: "Ejercicio ${i + 1}"
+                        ej.copy(rutinaId = ID_RUTINA_LOCAL, nombreEjercicio = nombreEj)
                     }
-                    val dummyRutina = RutinaDTO(rutinaId = 999, nombre = nombre, diasActivos = diasActivos, usuarioId = uid)
-                    val today = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.name
-                    val ejerciciosHoy = ejerciciosConNombre.filter { it.diaSemana.equals(today, ignoreCase = true) }
-                    _uiState.value = TrainingUiState.DailyWorkoutView(ejerciciosHoy, dummyRutina, listOf(dummyRutina))
+                    val rutinaLocal = RutinaDTO(rutinaId = ID_RUTINA_LOCAL, nombre = nombre, diasActivos = diasActivos, usuarioId = uid)
+                    val diaActual = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).dayOfWeek.name
+                    val ejerciciosHoy = ejerciciosConNombre.filter { it.diaSemana.equals(diaActual, ignoreCase = true) }
+                    _uiState.value = TrainingUiState.DailyWorkoutView(ejerciciosHoy, rutinaLocal, listOf(rutinaLocal))
                 }
             )
         }
@@ -201,9 +198,9 @@ class TrainingViewModel : ViewModel() {
                         )
                     },
                     onFailure = {
-                        val mockSesion = SesionEntrenamientoDTO(sesionId = 999, usuarioId = uid, rutinaId = rutinaId)
+                        val sesionLocal = SesionEntrenamientoDTO(sesionId = ID_SESION_LOCAL, usuarioId = uid, rutinaId = rutinaId)
                         _uiState.value = TrainingUiState.ActiveWorkoutSession(
-                            sesion = mockSesion,
+                            sesion = sesionLocal,
                             ejercicios = currentState.ejercicios
                         )
                     }
@@ -215,7 +212,7 @@ class TrainingViewModel : ViewModel() {
     fun logSet(ejercicioId: Int, peso: Double, reps: Int, orden: Int) {
         val currentState = _uiState.value
         if (currentState is TrainingUiState.ActiveWorkoutSession) {
-            val sesionId = currentState.sesion.sesionId ?: 999
+            val sesionId = currentState.sesion.sesionId ?: ID_SESION_LOCAL
             val serie = SerieRealizadaDTO(
                 sesionId = sesionId,
                 ejercicioId = ejercicioId,
@@ -232,9 +229,8 @@ class TrainingViewModel : ViewModel() {
                         )
                     },
                     onFailure = {
-                        // Fallback local
                         _uiState.value = currentState.copy(
-                            seriesRealizadas = currentState.seriesRealizadas + serie.copy(serieId = (0..1000).random())
+                            seriesRealizadas = currentState.seriesRealizadas + serie.copy(serieId = Random.nextInt(0, 1001))
                         )
                     }
                 )
@@ -245,7 +241,7 @@ class TrainingViewModel : ViewModel() {
     fun finalizarSesion(intensidad: Int, recuperacion: Int, notas: String) {
         val currentState = _uiState.value
         if (currentState is TrainingUiState.ActiveWorkoutSession) {
-            val sesionId = currentState.sesion.sesionId ?: 999
+            val sesionId = currentState.sesion.sesionId ?: ID_SESION_LOCAL
             viewModelScope.launch {
                 _uiState.value = TrainingUiState.Loading
                 repository.finalizarSesion(sesionId, intensidad, recuperacion, notas).fold(
@@ -266,7 +262,7 @@ class TrainingViewModel : ViewModel() {
                             seriesRealizadas = currentState.seriesRealizadas.filter { it.serieId != serieId }
                         )
                     },
-                    onFailure = { /* keep current state */ }
+                    onFailure = { /* se mantiene el estado actual */ }
                 )
             }
         }
@@ -279,7 +275,10 @@ class TrainingViewModel : ViewModel() {
     }
 
     companion object {
-        val MOCK_GLOBAL_EXERCISES = listOf(
+        private const val ID_RUTINA_LOCAL = 999
+        private const val ID_SESION_LOCAL = 999
+
+        val EJERCICIOS_BASE = listOf(
             EjercicioGlobalDTO(ejercicioGlobalId = 1, nombre = "Press Banca", categoria = "FUERZA", musculoPrimario = "Pecho", equipamiento = "Barra"),
             EjercicioGlobalDTO(ejercicioGlobalId = 2, nombre = "Sentadilla", categoria = "FUERZA", musculoPrimario = "Piernas", equipamiento = "Barra"),
             EjercicioGlobalDTO(ejercicioGlobalId = 3, nombre = "Dominadas", categoria = "FUERZA", musculoPrimario = "Espalda", equipamiento = "Peso Corporal")

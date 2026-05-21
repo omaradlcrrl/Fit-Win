@@ -208,7 +208,7 @@ fun LoginScreen(
                             label = s.authEmail,
                             value = email,
                             onValueChange = { email = it },
-                            placeholder = "aiden@fitwin.io",
+                            placeholder = "correo@ejemplo.com",
                             keyboardType = KeyboardType.Email
                         )
 

@@ -1,12 +1,14 @@
 package org.example.fitwinkmp.features.stats.data
 
+import io.ktor.client.plugins.ResponseException
+import io.ktor.http.HttpStatusCode
 import kotlinx.datetime.*
 import org.example.fitwinkmp.features.stats.data.api.StatsApi
 import org.example.fitwinkmp.features.stats.data.dto.*
 
 class StatsRepository(private val api: StatsApi) {
 
-    // ─── Physique ────────────────────────────────────────────────────────────
+    // Fisionomía
 
     suspend fun getPhysiqueData(usuarioId: Int): Result<PhysiqueData> = runCatching {
         val usuario = api.getUsuario(usuarioId)
@@ -66,18 +68,14 @@ class StatsRepository(private val api: StatsApi) {
         )
     }
 
-    /**
-     * Save-or-Update: intenta guardar. Si la API devuelve 409 (ya existe hoy),
-     * obtiene el ID de la medición de hoy y hace PUT /actualizar/{id}.
-     * Devuelve el estado resultante.
-     */
+    /** Si ya existe medición de hoy (409), hace PUT en su lugar. */
     suspend fun saveOrUpdateMedicion(dto: MedicionCorporalDTO): Result<MedicionCorporalDTO> = runCatching {
         try {
             api.saveMedicion(dto)
-        } catch (e: Exception) {
-            // 409 Conflict → buscar la medición de hoy y actualizar
-            if (e.message?.contains("409") == true || e.message?.contains("CONFLICT") == true) {
-                val medicionHoy = getMedicionDeHoy(dto.usuarioId ?: return@runCatching throw e)
+        } catch (e: ResponseException) {
+            if (e.response.status == HttpStatusCode.Conflict) {
+                val usuarioId = dto.usuarioId ?: throw e
+                val medicionHoy = getMedicionDeHoy(usuarioId)
                     ?: throw Exception("No se pudo localizar la medición de hoy para actualizar")
                 api.updateMedicion(medicionHoy.medicionId!!, dto)
             } else {
@@ -110,12 +108,9 @@ class StatsRepository(private val api: StatsApi) {
         Unit
     }
 
-    // ─── Gráficas ────────────────────────────────────────────────────────────
+    // Gráficas
 
-    /**
-     * Carga todas las mediciones del usuario y las filtra por rango temporal,
-     * luego construye un ChartData con estadísticas para la métrica seleccionada.
-     */
+    /** Carga las mediciones filtradas por rango y construye estadísticas para la métrica. */
     suspend fun getChartData(
         usuarioId: Int,
         metrica: ChartMetrica,
@@ -124,7 +119,6 @@ class StatsRepository(private val api: StatsApi) {
         val todasMediciones = runCatching {
             api.getAllMediciones(usuarioId)
         }.getOrElse {
-            // Fallback: usar rango amplio si el endpoint no está disponible
             val hace365 = getDateMinusDaysString(365)
             api.getMedicionesByRange(usuarioId, hace365, getCurrentDateString())
         }
@@ -180,7 +174,7 @@ class StatsRepository(private val api: StatsApi) {
         )
     }
 
-    // ─── Fotos de Progreso ───────────────────────────────────────────────────
+    // Fotos de progreso
 
     suspend fun getFotosProgreso(usuarioId: Int): Result<List<FotoProgresoDTO>> =
         runCatching { api.getFotosProgreso(usuarioId) }
@@ -194,7 +188,7 @@ class StatsRepository(private val api: StatsApi) {
         runCatching { api.saveRecord(dto) }
 
 
-    // ─── Performance ─────────────────────────────────────────────────────────
+    // Rendimiento
 
     suspend fun getPerformanceData(usuarioId: Int): Result<PerformanceData> = runCatching {
         val sesiones = runCatching { api.getSesiones(usuarioId) }.getOrElse { emptyList() }
@@ -282,7 +276,7 @@ class StatsRepository(private val api: StatsApi) {
         )
     }
 
-    // ─── Nutrition ───────────────────────────────────────────────────────────
+    // Nutrición
 
     suspend fun getNutritionData(usuarioId: Int, pesoActual: Double?): Result<NutritionData> = runCatching {
         val objetivo = runCatching { api.getObjetivoActual(usuarioId) }.getOrNull()
@@ -330,7 +324,7 @@ class StatsRepository(private val api: StatsApi) {
         )
     }
 
-    // ─── Helpers de fecha ────────────────────────────────────────────────────
+    // Helpers de fecha
 
     private fun getCurrentDateString(): String {
         return Clock.System.todayIn(TimeZone.currentSystemDefault()).toString()
@@ -350,24 +344,16 @@ class StatsRepository(private val api: StatsApi) {
     }
 
     private fun calcularRacha(sesiones: List<SesionStatsDTO>): Int {
-        if (sesiones.isEmpty()) return 0
-        val fechasUnicas = sesiones
-            .mapNotNull { it.fechaInicio?.take(10) }
-            .toSortedSet(reverseOrder())
-            .toList()
+        val diasConSesion = sesiones
+            .mapNotNull { it.fechaInicio?.take(10)?.let(LocalDate::parse) }
+            .toSet()
+        if (diasConSesion.isEmpty()) return 0
 
-        if (fechasUnicas.isEmpty()) return 0
-
+        var dia = Clock.System.todayIn(TimeZone.currentSystemDefault())
         var racha = 0
-        val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
-
-        for (i in fechasUnicas.indices) {
-            val expected = today.minus(DatePeriod(days = i)).toString()
-            if (fechasUnicas[i] == expected) {
-                racha++
-            } else {
-                break
-            }
+        while (dia in diasConSesion) {
+            racha++
+            dia = dia.minus(1, DateTimeUnit.DAY)
         }
         return racha
     }

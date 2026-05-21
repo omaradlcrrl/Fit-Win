@@ -12,7 +12,6 @@ class FoodApi(private val httpClient: HttpClient) {
         httpClient.post("comidas/save") {
             setBody(comidaDTO)
         }
-        // No parseamos el body — la fecha viene como array de Jackson (LocalDate)
     }
 
     suspend fun getComidasHoy(usuarioId: Int): List<ComidaDTO> {

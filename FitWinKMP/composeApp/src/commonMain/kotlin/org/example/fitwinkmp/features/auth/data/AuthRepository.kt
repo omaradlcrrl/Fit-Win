@@ -39,8 +39,7 @@ class AuthRepository(
             val error = response.body<ApiError>()
             throw ApiException(response.status.value, error.message ?: "Error desconocido")
         }
-        // No parseamos el body del usuario — las fechas vienen como arrays de Jackson
-        // y no es necesario: con 201 nos basta para saber que el registro fue bien.
+        // Con un 2xx basta; no leemos el cuerpo.
     }
 
     suspend fun logout(): Result<Unit> = runCatching {

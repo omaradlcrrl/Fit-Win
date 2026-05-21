@@ -78,7 +78,7 @@ class ProfileViewModel : ViewModel() {
                     _updateSuccess.value = true
                 },
                 onFailure = {
-                    // Keep current state, error could be shown via snackbar
+                    // Mantenemos el estado actual; el error se mostraría con un snackbar.
                 }
             )
         }
@@ -100,7 +100,7 @@ class ProfileViewModel : ViewModel() {
         viewModelScope.launch {
             profileRepository.generarObjetivo(userId).fold(
                 onSuccess = { loadProfile() },
-                onFailure = { /* silent fail — objetivo opcional */ }
+                onFailure = { /* el objetivo es opcional, no rompemos el flujo */ }
             )
         }
     }
