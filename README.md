@@ -186,7 +186,7 @@ docker logs fitwin-seeder
 
 ### Opción 2: App Android (APK precompilada)
 
-1. Descarga `FitWin-debug.apk` desde [Releases](https://github.com/omaradlcrrl/Fit-Win/releases/latest)
+1. Descarga `FitWin-debug.apk` desde [Google Drive](https://drive.google.com/file/d/1P4V2i3sp2HEdp0LFTBK7-iCz5zR2x0El/view?usp=drive_link)
 2. Instala la APK en un dispositivo Android o emulador
 3. Levanta el backend con Docker Compose (Opción 1)
 4. Inicia sesión con `prueba@fitwin.com` / `fitwin123`
