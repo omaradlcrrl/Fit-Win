@@ -2,7 +2,7 @@
 
 # 🏋️ FitWin
 
-**De un TFG de escritorio a una app móvil moderna con API segura.**
+**De un TFG de escritorio en JavaFX a una app móvil moderna con API segura y bien estructurada.**
 
 [![Kotlin](https://img.shields.io/badge/Kotlin-Multiplatform-7F52FF?logo=kotlin&logoColor=white)](https://kotlinlang.org/)
 [![Compose](https://img.shields.io/badge/UI-Jetpack_Compose-4285F4?logo=jetpackcompose&logoColor=white)](https://developer.android.com/jetpack/compose)
@@ -14,24 +14,24 @@
 
 ---
 
-## La Historia
+## 📖 La historia detrás del proyecto
 
-FitWin empezó como mi Proyecto de Fin de Ciclo. En su primera versión era una app de escritorio hecha con **JavaFX** que se conectaba a una API REST en **Spring Boot**. Funcionaba, pero era una interfaz de escritorio antigua que no tenía nada que ver con lo que se usa hoy en día en el mercado.
+FitWin nació originalmente como mi Proyecto de Fin de Ciclo (PFC). Al principio era una aplicación de escritorio clásica en **JavaFX** conectada a un backend de **Spring Boot**. El sistema cumplía su función, pero la interfaz se sentía anticuada y poco práctica para el día a día en un gimnasio.
 
-Decidí rehacer el cliente desde cero usando **Kotlin Multiplatform (KMP)** y **Jetpack Compose** para demostrar que puedo saltar de stack, aprender por mi cuenta y llevar un proyecto real a un nivel profesional. El backend lo mantuve (porque la API estaba bien diseñada), pero lo refactoricé para mejorar la seguridad y añadir funcionalidades que faltaban.
+Para demostrarme que podía adaptarme a tecnologías modernas y aprender por mi cuenta, decidí rehacer toda la parte cliente desde cero usando **Kotlin Multiplatform (KMP)** y **Jetpack Compose**. Aproveché para mantener el backend en Spring Boot, pero le metí un buen repaso: refactoricé el código para estructurarlo mejor y solucioné varios problemas de seguridad graves que tenía la versión inicial (como IDORs, almacenamiento inseguro de tokens y posibles fugas de memoria).
 
-El resultado es un ecosistema completo: una app móvil moderna con una estética brutalista que consume una API REST segura, todo dockerizado para que cualquiera pueda levantarlo y probarlo.
+El resultado final es este ecosistema: una aplicación móvil nativa con una estética brutalista muy cuidada y un backend robusto y seguro, todo listo para levantarse con Docker en un par de minutos.
 
 ---
 
-## Qué Hay en el Repo
+## 📁 Qué hay en el repositorio
 
 ```
 FitWin/
-├── FitWinKMP/        → App móvil (Kotlin Multiplatform + Jetpack Compose)
-├── ApiUsuarios/      → API REST (Spring Boot 3.2 + JWT + Rate Limiting)
-├── fitwin-javafx/    → App de escritorio original (JavaFX 21 — legacy)
-└── docker-compose.yml → Levanta API + MariaDB con un solo comando
+├── FitWinKMP/        → Aplicación móvil (Kotlin Multiplatform + Jetpack Compose)
+├── ApiUsuarios/      → API REST (Spring Boot 3.2 + JWT + Seguridad mejorada)
+├── fitwin-javafx/    → Cliente de escritorio original (JavaFX 21 — versión legacy)
+└── docker-compose.yml → Orquestador para levantar la API y MariaDB juntas
 ```
 
 ---
@@ -40,238 +40,150 @@ FitWin/
 
 <div align="center">
 
-**Login & Registro**
+**Login y Registro**
 
 <img src="docs/Screenshot_20260516_180314.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180333.png" width="220"/>
 
 ---
 
-**Nutrición — Registro diario de macros**
+**Nutrición — Macros y comidas diarias**
 
 <img src="docs/Screenshot_20260518_210138.png" width="220"/>
 
 ---
 
-**Entrenamiento — Plan del día y sesión activa**
+**Entrenamiento — Rutina del día y sesión activa**
 
 <img src="docs/Screenshot_20260519_162002.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260519_170233.png" width="220"/>
 
 ---
 
-**Estadísticas — Rendimiento, medidas y gráficas**
+**Estadísticas — Gráficas y medidas corporales**
 
 <img src="docs/Screenshot_20260519_170152.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180204.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180150.png" width="220"/>
 
 ---
 
-**Perfil y ajustes de idioma**
+**Ajustes e idioma en vivo**
 
 <img src="docs/Screenshot_20260516_180231.png" width="220"/> &nbsp; <img src="docs/Screenshot_20260516_180259.png" width="220"/>
 
 </div>
 
-### Qué hace
+### ¿Qué funciones tiene?
 
-- **Nutrición:** Registro diario de comidas por tipo (desayuno, almuerzo, cena, snack), con barras de progreso de macros que se calculan contra el objetivo calórico real del usuario. Navegación entre fechas, edición y eliminación de comidas.
-- **Entrenamiento:** Creador de rutinas con días activos, catálogo de ejercicios, sesiones de entrenamiento en vivo con tracking de series y pesos en tiempo real. Detección automática de records personales.
-- **Estadísticas:** Gráficas de progreso interactivas dibujadas desde cero sobre el Canvas de Compose (sin librerías). Historial de mediciones corporales y check-ins.
-- **Perfil:** Datos del usuario, peso actual vs inicial, IMC calculado, objetivo nutricional con desglose de macros, generación automática de objetivos y cambio de idioma en tiempo real (ES/EN).
-- **Autenticación:** Login, registro, gestión de sesión con refresh token automático y logout.
+*   **Nutrición:** Registro diario de comidas (desayunos, almuerzos, cenas y snacks). Calcula las barras de macros dinámicamente en base al objetivo calórico real del usuario. Permite navegar entre fechas anteriores, editar porciones y eliminar alimentos.
+*   **Entrenamiento:** Creador de rutinas personalizadas, catálogo de ejercicios y un modo "sesión activa" para ir anotando las series, repeticiones y pesos en tiempo real. Si superas tu peso máximo anterior, la app te notifica que has batido un récord personal.
+*   **Estadísticas y Medidas:** Gráficas visuales para ver el progreso del peso y las medidas corporales a lo largo del tiempo.
+*   **Perfil y Objetivos:** Cálculo automático de IMC, objetivos calóricos y reparto de macros según tus metas de peso. Soporte para cambio de idioma al instante (Español/Inglés) sin recargar la pantalla.
 
-### Con qué está hecho
+### Tecnologías principales
+*   **Kotlin Multiplatform (KMP):** Para compartir toda la lógica de negocio, modelos y llamadas de red entre plataformas.
+*   **Jetpack Compose:** Para diseñar una interfaz de usuario declarativa y moderna (Material 3).
+*   **Ktor Client:** Para la comunicación HTTP, con un motor de interceptores que gestiona la autenticación automáticamente.
+*   **Coroutines & StateFlow:** Para un manejo reactivo del estado de las pantallas (MVVM unidireccional).
 
-| Tecnología | Para qué |
-|:---|:---|
-| **Kotlin Multiplatform** | Compartir lógica de negocio entre plataformas |
-| **Jetpack Compose** | UI declarativa y reactiva (Material 3) |
-| **Ktor Client** | Llamadas HTTP con interceptor de auth automático |
-| **Coroutines + StateFlow** | Estado reactivo (MVVM con flujo unidireccional) |
-| **Multiplatform Settings** | Persistencia local de tokens y sesión |
-| **Canvas nativo** | Gráficas custom sin dependencias externas |
+### Detalles interesantes de la implementación
 
-### Cómo está organizado el código
-
-El código del cliente sigue **Clean Architecture orientada a Features**. Nada de carpetas genéricas con 50 archivos. Cada módulo del dominio está aislado:
-
-```
-features/
-├── auth/       → data/ (DTOs, API, Repository) + presentation/ (ViewModel)
-├── food/       → data/ (DTOs, API, Repository) + presentation/ (ViewModel)
-├── training/   → data/ (DTOs, API, Repository) + presentation/ (ViewModel)
-├── stats/      → data/ (DTOs, API, Repository) + presentation/ (ViewModel)
-└── profile/    → data/ (DTOs, API, Repository) + presentation/ (ViewModel)
-```
-
-La UI está separada en `ui/` con una carpeta por pantalla. Los ViewModels exponen un `StateFlow<UiState>` sellado (sealed class) y los Composables solo leen ese estado y emiten eventos. Cero lógica en la vista.
-
-### Cosas que me parecen interesantes de lo que he implementado
-
-**Refresh Token invisible:** El `ApiClient` usa el plugin `Auth` de Ktor. Si una petición devuelve 401, el interceptor automáticamente pide un nuevo token, lo guarda y reintenta la petición original. La UI ni se entera. El usuario nunca ve un "sesión expirada".
-
-**Gráficas a mano en Canvas:** En vez de meter una librería pesada para las gráficas de progreso, las dibujo directamente sobre el Canvas de Compose con curvas de Bézier, gradientes y detección de toques. Es más trabajo, pero demuestra que entiendo cómo funciona el renderizado por debajo.
-
-**Fallbacks locales:** Si el backend falla, la app no se queda bloqueada. Los ViewModels tienen lógica de fallback: si no pueden cargar ejercicios globales usan una lista mock, si no pueden iniciar sesión de entrenamiento crean una local, etc.
-
-**Internacionalización sin reiniciar:** El cambio de idioma (ES/EN) funciona en tiempo real usando `CompositionLocalProvider`. Sin reiniciar la activity, sin recargar nada.
+*   **Refresco de sesión transparente:** Usando el plugin `Auth` de Ktor, el cliente detecta de forma silenciosa si un token de acceso ha expirado (error 401). Intercepta la petición, solicita un nuevo token con el `RefreshToken`, actualiza la persistencia y reintenta la llamada original. El usuario no nota absolutamente nada.
+*   **Gráficas a medida en Canvas:** En lugar de meter dependencias pesadas que limitaran el diseño brutalista, decidí dibujar las gráficas desde cero sobre el Canvas de Compose usando curvas de Bézier, gradientes manuales y detección de coordenadas para los toques.
+*   **Internacionalización instantánea:** El cambio de idioma (ES/EN) se propaga al momento en todo el árbol de componentes mediante `CompositionLocalProvider`, sin tener que reiniciar la actividad ni recrear pantallas.
 
 ---
 
 ## ⚙️ La API (Spring Boot)
 
-### Qué hace
+La API cuenta con 12 controladores REST para gestionar todo el ciclo: usuarios, autenticación, comidas, ejercicios, rutinas, sesiones de entrenamiento, medidas corporales y récords.
 
-12 controladores REST que cubren todo el dominio: usuarios, autenticación, rutinas, ejercicios, sesiones de entrenamiento, series, comidas, mediciones corporales, objetivos, records personales, fotos de progreso y catálogo de ejercicios.
+### Mejoras clave de seguridad implementadas
 
-### Seguridad
+Hice una limpieza profunda en la seguridad del backend para solucionar varios fallos comunes pero peligrosos:
 
-La API tiene una cadena de seguridad de dos capas:
-
-1. **Rate Limiting (Bucket4j):** Cada IP tiene un límite de 50 peticiones por minuto. Si lo excede → `429 Too Many Requests`. Esto protege contra fuerza bruta y DDoS antes de que la petición llegue a tocar la base de datos.
-
-2. **JWT Stateless:** Sin sesiones en memoria. El servidor valida la firma criptográfica del token en cada petición. Sistema dual de Access Token (24h) + Refresh Token (30 días) con rotación automática.
-
-Los secretos (contraseña de BD, clave JWT) se inyectan por variables de entorno. Nunca están hardcodeados en el código.
-
-### Comportamientos automáticos
-
-- Cuando registras una serie con `completado: true` y el peso supera tu record anterior → el backend **crea o actualiza el record personal automáticamente**. No hay que llamar a otro endpoint.
-- Cuando finalizas una sesión de entrenamiento → el backend **calcula la duración automáticamente** a partir de las timestamps de inicio y fin.
-
-### Stack
-
-- Spring Boot 3.2 (Java 21)
-- Spring Security + jjwt 0.12.5
-- Spring Data JPA + Hibernate
-- MariaDB
-- Bucket4j 8.9.0
-- Lombok
+1.  **Protección contra accesos cruzados (Vulnerabilidad IDOR):**
+    Antes, cualquier usuario logueado podía modificar o borrar la información de otros (dietas, entrenamientos) si averiguaba el ID numérico en la URL. Para solucionarlo, creé un componente `SecurityUtils` que se conecta a Spring Security y valida en cada operación CRUD que el usuario autenticado sea el dueño real de esos datos (o un administrador). Si no lo es, le rebota un 403.
+2.  **Criptografía en Refresh Tokens:**
+    Los tokens de refresco (que duran 30 días) se guardaban antes en texto plano en la base de datos. Si alguien vulneraba la base de datos, podía suplantar a cualquier usuario. Ahora, solo se guarda el hash SHA-256 en base de datos. El token real solo lo tiene el dispositivo del cliente.
+3.  **Control de peticiones (Rate Limiting) sin fugas de memoria:**
+    Para evitar que un atacante sature el backend o intente adivinar contraseñas por fuerza bruta, implementé límites de peticiones con Bucket4j por IP (5 peticiones/min para login y 50 para el resto). Los buckets se gestionan con una caché Caffeine con expiración automática de 30 minutos por inactividad. Esto soluciona un problema de fuga de memoria que tenía el backend anterior al usar un `ConcurrentHashMap` que crecía indefinidamente con cada nueva IP de red.
+4.  **Endurecimiento del entorno:**
+    Se eliminaron las contraseñas JWT por defecto en el código (ahora exige configurarla en producción como variable de entorno) y se capó la visualización de trazas internas de error al exterior (`include-message=never`) para no dar pistas del diseño de la base de datos a atacantes.
 
 ---
 
-## 🖥️ La App de Escritorio (Legacy)
+## 🚀 Cómo ponerlo en marcha paso a paso
 
-La primera versión del proyecto. JavaFX 21 con FXML, TilesFX para los dashboards, ControlsFX para los controles avanzados e Ikonli para iconos vectoriales. Arquitectura MVC clásica.
+### Opción A: Despliegue automático con Docker (La más rápida)
 
-Se queda en el repo como referencia del punto de partida. La gracia está en comparar el código de JavaFX con el de Compose y ver cuánto ha cambiado la forma de hacer interfaces.
+Si solo quieres ver el sistema funcionando con datos reales precargados, esta es tu opción. Solo necesitas tener [Docker Desktop](https://www.docker.com/products/docker-desktop/) abierto.
 
----
-
-## 🚀 Cómo Probarlo (Guía para Ejecución Externa)
-
-Esta sección detalla cómo poner en marcha todo el ecosistema (Base de Datos, API Backend y Aplicación Móvil) desde cero.
-
-### Opción 1: Despliegue Rápido con Docker Compose (Recomendado)
-
-Esta opción levanta automáticamente la base de datos MariaDB, compila y despliega el backend, y ejecuta el script seeder que precarga datos reales de prueba. Solo necesitas tener instalado [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-
-1. **Clonar e iniciar contenedores**:
-   ```bash
-   docker-compose up -d --build
-   ```
-
-2. **¿Qué ocurre por debajo?**
-   - **MariaDB** (`fitwin-db`): Arranca con el volumen persistente de base de datos.
-   - **API Spring Boot** (`fitwin-api`): Compila el código, descarga dependencias, gestiona las migraciones JPA y expone el puerto `3036` en `http://localhost:3036/api/v1/FWBBD/`.
-   - **Seeder** (`fitwin-seeder`): Espera a que la API esté lista (healthcheck activo) e inyecta un set completo de datos iniciales.
-
-3. **Datos de prueba listos para iniciar sesión**:
-   Una vez que el contenedor `fitwin-seeder` se apague correctamente (puedes verificarlo con `docker ps -a`), tendrás este usuario disponible:
-   > **Usuario:** `prueba@fitwin.com`
-   > **Contraseña:** `fitwin123`
-   >
-   > *Datos precargados:* 20 ejercicios en catálogo global, rutina preestablecida PPL, histórico de 2 sesiones de entrenamiento completas con records personales autodetectados, mediciones físicas iniciales, objetivos calóricos y comidas registradas del día de hoy.
-
-4. **Verificar estado de carga**:
-   ```bash
-   docker logs fitwin-seeder
-   ```
+1.  **Levanta el entorno**:
+    ```bash
+    docker-compose up -d --build
+    ```
+2.  **¿Qué ocurre ahora?**
+    Docker levantará MariaDB, compilará y arrancará la API de Spring Boot, y finalmente ejecutará un contenedor `seeder` que introduce automáticamente un usuario de prueba completo para que no tengas que registrarte y crear todo de cero.
+3.  **Credenciales para probar la app**:
+    Una vez que el proceso termine (puedes verificarlo con `docker logs fitwin-seeder`), abre la aplicación móvil e inicia sesión con estos datos:
+    > 📧 **Usuario:** `prueba@fitwin.com`
+    > 🔑 **Contraseña:** `fitwin123`
+    >
+    > *(Este usuario ya tiene cargados 20 ejercicios, una rutina PPL activa, historial de entrenamientos, macros del día y marcas registradas)*
 
 ---
 
-### Opción 2: Compilar y Ejecutar la Aplicación Móvil (KMP)
+### Opción B: Instalar la App Móvil directamente (Recomendado para probar en emulador)
 
-El frontend es un desarrollo de **Kotlin Multiplatform**. Puedes compilar e instalar la aplicación móvil directamente desde el código fuente para probarla en tu propio dispositivo o emulador.
+Si no quieres liarte a configurar Android Studio ni compilar código fuente, he dejado la APK actualizada y lista para usar:
 
-#### Requisitos Previos:
-- Java JDK 17 o superior.
-- [Android Studio Koala](https://developer.android.com/studio) o superior con Android SDK configurado.
+1.  **Descarga la APK**: Descarga el archivo de instalación desde mi enlace público de [Google Drive](https://drive.google.com/file/d/1QKFHD6PVfSdMvYYs6gHoOzJBDt9RPxFg/view?usp=drive_link).
+2.  **Instálala**: Arrastra el archivo `.apk` descargado directamente dentro de un emulador Android (por ejemplo, el de Android Studio).
+3.  **Conexión automática**: La APK viene preconfigurada para buscar la API en la dirección `10.0.2.2:3036` (que es el puente que usan los emuladores Android para conectar con el localhost del ordenador). Si tienes la API de Spring Boot corriendo en tu máquina (con Docker o manual), **la aplicación móvil se conectará de inmediato al arrancar**.
 
-#### Pasos para Compilar la APK desde la terminal:
-1. Navega al directorio del cliente móvil:
-   ```bash
-   cd FitWinKMP
-   ```
-2. Ejecuta el empaquetado de Gradle para generar la APK de depuración:
-   - **En Windows (CMD / PowerShell)**:
-     ```powershell
-     .\gradlew.bat assembleDebug
-     ```
-   - **En macOS / Linux**:
-     ```bash
-     ./gradlew assembleDebug
-     ```
-3. **Localizar e Instalar la APK**:
-   Una vez completada con éxito la compilación, el archivo APK generado se encontrará en la ruta:
-   `FitWinKMP/composeApp/build/outputs/apk/debug/composeApp-debug.apk`
-   Puedes arrastrar esta APK a un emulador Android abierto o instalarla en un terminal físico mediante `adb install composeApp-debug.apk`.
-
-> 💡 **Nota de Conectividad**:
-> - Si ejecutas la app en un **emulador Android**, conectará al host automáticamente mediante la dirección IP puente `10.0.2.2:3036`.
-> - Si la ejecutas en un **dispositivo móvil real**, asegúrate de que el terminal móvil y tu ordenador estén en la misma red local (Wi-Fi), y configura la IP local de tu máquina en el archivo de configuración `ApiClient.kt` de la app móvil.
+> ⚠️ **Nota para móviles físicos:** Los dispositivos físicos no entienden la dirección `10.0.2.2`. Si vas a instalar la APK en tu teléfono real, necesitarás descargar el código fuente, cambiar la dirección IP por la IP local de tu Wi-Fi en `ApiClient.kt` y compilarla tú mismo (siguiente opción).
 
 ---
 
-### Opción 3: Ejecución Manual y Local (Sin Docker)
+### Opción C: Compilar la App Móvil desde el código fuente
 
-Si prefieres ejecutar los servicios de manera nativa sin el aislamiento de Docker, sigue estos pasos:
+Si quieres curiosear en el código o probarlo en tu propio teléfono:
 
-#### 1. Preparar la Base de Datos
-- Levanta una instancia local de **MariaDB** o MySQL.
-- Crea un esquema de base de datos vacío llamado `fit_win`:
-  ```sql
-  CREATE DATABASE fit_win CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-  ```
-
-#### 2. Configurar y Arrancar el Backend (API)
-Debido a las directivas de seguridad robustas de la API, **es obligatorio** pasar la clave secreta JWT como variable de entorno, ya que no se permiten fallbacks por defecto en producción:
-
-- **En Windows (PowerShell)**:
-  ```powershell
-  $env:JWT_SECRET="una_clave_secreta_super_larga_y_segura_de_al_menos_32_bytes_12345"
-  $env:DB_PASSWORD="tu_password_de_mariadb" # Opcional si no es 'root'
-  cd ApiUsuarios
-  .\mvnw.cmd spring-boot:run
-  ```
-- **En macOS / Linux**:
-  ```bash
-  export JWT_SECRET="una_clave_secreta_super_larga_y_segura_de_al_menos_32_bytes_12345"
-  export DB_PASSWORD="tu_password_de_mariadb" # Opcional si no es 'root'
-  cd ApiUsuarios
-  ./mvnw spring-boot:run
-  ```
-
-El servidor web de Spring Boot se iniciará en el puerto `3036`. Las tablas se auto-generarán gracias a Hibernate DDL en la primera ejecución.
-
-#### 3. Ejecutar el Frontend
-- Abre la carpeta raíz `FitWinKMP` utilizando **Android Studio**.
-- Espera a que finalice la sincronización del proyecto con Gradle.
-- Selecciona el dispositivo/emulador objetivo en la barra de herramientas superior y pulsa el botón **Run** (ícono de play).
+1.  **Requisitos:** Tener instalado Java JDK 17 (o superior) y Android Studio.
+2.  **Compilar desde terminal:**
+    Navega a la carpeta de la app móvil:
+    ```bash
+    cd FitWinKMP
+    ```
+    Y compila el proyecto usando el wrapper de Gradle:
+    - **En Windows**: `.\gradlew.bat assembleDebug`
+    - **En macOS / Linux**: `./gradlew assembleDebug`
+3.  **Localizar la APK:** Una vez termine, encontrarás el archivo instalable en:
+    `FitWinKMP/composeApp/build/outputs/apk/debug/composeApp-debug.apk`
 
 ---
 
-## Lo que he aprendido con este proyecto
+### Opción D: Ejecución manual (Sin Docker)
 
-- A migrar un proyecto completo de un stack (JavaFX) a otro (KMP + Compose) sin tirar el backend.
-- A implementar un sistema de autenticación real con Access/Refresh Tokens y renovación silenciosa.
-- A dibujar interfaces custom sobre Canvas cuando las librerías de terceros no encajan con lo que necesitas.
-- A diseñar una arquitectura de código que escala: cada feature es un módulo aislado que puedes tocar sin romper el resto.
-- A proteger una API con rate limiting y JWT stateless.
-- A dockerizar un backend para que cualquiera pueda levantarlo sin configurar nada.
-- A gestionar estado reactivo con StateFlow y flujo unidireccional de datos.
-- A internacionalizar una app en tiempo real sin reinicios.
+Si prefieres no usar contenedores y levantar todo de forma nativa en tu ordenador:
+
+1.  **Base de Datos:** Crea una base de datos vacía en tu MariaDB/MySQL local llamada `fit_win`.
+2.  **Lanzar la API:**
+    La API exige que configures una variable de entorno para firmar los tokens JWT por seguridad. Ejecuta en tu consola:
+    - **Windows (PowerShell):**
+      ```powershell
+      $env:JWT_SECRET="escribe_aqui_una_clave_secreta_muy_larga_de_mas_de_32_bytes_de_ejemplo"
+      cd ApiUsuarios
+      .\mvnw.cmd spring-boot:run
+      ```
+    - **macOS / Linux:**
+      ```bash
+      export JWT_SECRET="escribe_aqui_una_clave_secreta_muy_larga_de_mas_de_32_bytes_de_ejemplo"
+      cd ApiUsuarios
+      ./mvnw spring-boot:run
+      ```
+3.  **Lanzar el Cliente:** Abre la carpeta `FitWinKMP` en Android Studio y ejecútala en tu emulador o móvil conectado.
 
 ---
 
-## Autor
+## 👨‍💻 Autor
 
-Desarrollado por **Omar** — empezó como proyecto de escritorio y fue refactorizado y ampliado por cuenta propia.
+Desarrollado por **Omar** — Diseñado con dedicación para llevar un proyecto académico a un nivel técnico real, profesional y pulido.
