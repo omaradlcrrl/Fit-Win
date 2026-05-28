@@ -1,5 +1,7 @@
 package org.example.fitwinkmp.core.api
 
+import org.example.fitwinkmp.core.session.SessionEvent
+import org.example.fitwinkmp.core.session.SessionEvents
 import org.example.fitwinkmp.core.storage.TokenStorage
 import org.example.fitwinkmp.features.auth.data.dto.RefreshRequest
 import org.example.fitwinkmp.features.auth.data.dto.RefreshResponse
@@ -46,13 +48,19 @@ fun buildAuthClient(tokenStorage: TokenStorage): HttpClient = HttpClient {
             }
             refreshTokens {
                 val refreshToken = tokenStorage.getRefreshToken() ?: return@refreshTokens null
-                val response: RefreshResponse = client.post("auth/refresh") {
-                    markAsRefreshTokenRequest()
-                    setBody(RefreshRequest(refreshToken))
-                }.body()
-                tokenStorage.saveJwt(response.token)
-                tokenStorage.saveRefreshToken(response.refreshToken)
-                BearerTokens(response.token, response.refreshToken)
+                try {
+                    val response: RefreshResponse = client.post("auth/refresh") {
+                        markAsRefreshTokenRequest()
+                        setBody(RefreshRequest(refreshToken))
+                    }.body()
+                    tokenStorage.saveJwt(response.token)
+                    tokenStorage.saveRefreshToken(response.refreshToken)
+                    BearerTokens(response.token, response.refreshToken)
+                } catch (_: Exception) {
+                    tokenStorage.clear()
+                    SessionEvents.emit(SessionEvent.Expired)
+                    null
+                }
             }
             sendWithoutRequest { request ->
                 val segments = request.url.pathSegments

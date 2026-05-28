@@ -7,6 +7,7 @@ import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.EjercicioGlobalRepository;
 import org.example.apiusuarios.repository.RecordPersonalRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,7 @@ class RecordPersonalServiceTest {
     @Mock RecordPersonalRepository repo;
     @Mock UsuarioRepository usuarioRepository;
     @Mock EjercicioGlobalRepository ejercicioGlobalRepository;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks RecordPersonalService service;
 
@@ -264,14 +266,14 @@ class RecordPersonalServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(repo.existsById(1)).thenReturn(true);
+        when(repo.findById(1)).thenReturn(Optional.of(record));
         service.deleteById(1);
-        verify(repo).deleteById(1);
+        verify(repo).delete(record);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(repo.existsById(99)).thenReturn(false);
+        when(repo.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

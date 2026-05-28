@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.example.fitwinkmp.core.session.SessionEvent
+import org.example.fitwinkmp.core.session.SessionEvents
 import org.example.fitwinkmp.features.auth.presentation.AuthViewModel
 import org.example.fitwinkmp.features.auth.presentation.state.LoginUiState
 import org.example.fitwinkmp.ui.theme.FitwinColors
@@ -48,7 +50,15 @@ fun LoginScreen(
 
     val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val currentLang by languageViewModel.language.collectAsStateWithLifecycle()
+    val pendingSession by SessionEvents.pending.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(pendingSession) {
+        if (pendingSession is SessionEvent.Expired) {
+            snackbarHostState.showSnackbar(s.sessionExpiredOtherDevice)
+            SessionEvents.consume()
+        }
+    }
 
     LaunchedEffect(loginState) {
         when (val state = loginState) {

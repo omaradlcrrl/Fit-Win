@@ -32,8 +32,8 @@ class AuthViewModel : ViewModel() {
             _loginState.value = LoginUiState.Error("Introduce un email válido")
             return
         }
-        if (password.length < 6) {
-            _loginState.value = LoginUiState.Error("La contraseña debe tener al menos 6 caracteres")
+        if (password.length < 8) {
+            _loginState.value = LoginUiState.Error("La contraseña debe tener al menos 8 caracteres")
             return
         }
         viewModelScope.launch {
@@ -43,6 +43,7 @@ class AuthViewModel : ViewModel() {
                 onFailure = { e ->
                     val msg = when (e) {
                         is ApiException -> when (e.statusCode) {
+                            400 -> "Datos inválidos"
                             401 -> "Email o contraseña incorrectos"
                             429 -> "Demasiados intentos, espera un momento"
                             else -> e.message
@@ -79,8 +80,8 @@ class AuthViewModel : ViewModel() {
             _registerState.value = RegisterUiState.Error("Introduce un email válido")
             return
         }
-        if (password.length < 6) {
-            _registerState.value = RegisterUiState.Error("La contraseña debe tener al menos 6 caracteres")
+        if (password.length < 8) {
+            _registerState.value = RegisterUiState.Error("La contraseña debe tener al menos 8 caracteres")
             return
         }
         if (genero.isBlank() || nivelActividad.isBlank() || objetivo.isBlank()) {

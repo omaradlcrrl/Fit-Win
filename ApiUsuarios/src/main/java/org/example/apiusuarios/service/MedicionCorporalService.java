@@ -5,6 +5,7 @@ import org.example.apiusuarios.model.MedicionCorporal;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.MedicionCorporalRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,14 @@ public class MedicionCorporalService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     public MedicionCorporalDTO save(MedicionCorporalDTO dto) {
         if (dto.getUsuarioId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
         }
+        securityUtils.assertEsDuenoOAdmin(dto.getUsuarioId());
 
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
@@ -50,8 +55,12 @@ public class MedicionCorporalService {
     public MedicionCorporalDTO update(Integer id, MedicionCorporalDTO dto) {
         MedicionCorporal m = medicionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medición no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(m.getUsuario().getUsuarioId());
 
-        if (dto.getUsuarioId() != null) {
+        if (dto.getUsuarioId() != null && !dto.getUsuarioId().equals(m.getUsuario().getUsuarioId())) {
+            if (!securityUtils.esAdmin()) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes reasignar el dueño");
+            }
             Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
             m.setUsuario(usuario);
@@ -85,6 +94,7 @@ public class MedicionCorporalService {
     }
 
     public List<MedicionCorporalDTO> findAll() {
+        securityUtils.assertEsDuenoOAdmin(-1);
         return medicionRepository.findAll().stream()
                 .map(MedicionCorporalDTO::new)
                 .collect(Collectors.toList());
@@ -93,23 +103,26 @@ public class MedicionCorporalService {
     public MedicionCorporalDTO findById(Integer id) {
         MedicionCorporal m = medicionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medición no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(m.getUsuario().getUsuarioId());
         return new MedicionCorporalDTO(m);
     }
 
     public void deleteById(Integer id) {
-        if (!medicionRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Medición no encontrada");
-        }
-        medicionRepository.deleteById(id);
+        MedicionCorporal m = medicionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Medición no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(m.getUsuario().getUsuarioId());
+        medicionRepository.delete(m);
     }
 
     public List<MedicionCorporalDTO> findByUsuario(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return medicionRepository.findByUsuario_UsuarioIdOrderByFechaDesc(usuarioId).stream()
                 .map(MedicionCorporalDTO::new)
                 .collect(Collectors.toList());
     }
 
     public MedicionCorporalDTO findUltima(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         MedicionCorporal ultima = medicionRepository.findFirstByUsuario_UsuarioIdOrderByFechaDesc(usuarioId)
                 .orElseThrow(
                         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sin mediciones para este usuario"));
@@ -117,6 +130,7 @@ public class MedicionCorporalService {
     }
 
     public List<MedicionCorporalDTO> findByUsuarioAndRango(Integer usuarioId, LocalDate from, LocalDate to) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return medicionRepository.findByUsuario_UsuarioIdAndFechaBetweenOrderByFechaAsc(usuarioId, from, to).stream()
                 .map(MedicionCorporalDTO::new)
                 .collect(Collectors.toList());
@@ -126,6 +140,7 @@ public class MedicionCorporalService {
         if (usuarioId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
         }
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         LocalDate hoy = LocalDate.now();
         return medicionRepository.findByUsuario_UsuarioIdAndFecha(usuarioId, hoy)
                 .map(m -> {

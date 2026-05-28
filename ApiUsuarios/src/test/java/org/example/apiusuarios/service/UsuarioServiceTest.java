@@ -10,6 +10,7 @@ import org.example.apiusuarios.model.Role;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.UsuarioRepository;
 import org.example.apiusuarios.security.JwtService;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,6 +40,7 @@ class UsuarioServiceTest {
     @Mock JwtService jwtService;
     @Mock UserDetailsService userDetailsService;
     @Mock RefreshTokenService refreshTokenService;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks UsuarioService usuarioService;
 

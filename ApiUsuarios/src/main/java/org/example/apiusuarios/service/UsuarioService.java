@@ -9,10 +9,9 @@ import org.example.apiusuarios.model.RefreshToken;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.UsuarioRepository;
 import org.example.apiusuarios.security.JwtService;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -44,6 +43,9 @@ public class UsuarioService {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     public UsuarioDTO save(UsuarioDTO usuarioDTO) {
 
         String correo = usuarioDTO.getCorreoElectronico() != null
@@ -62,9 +64,9 @@ public class UsuarioService {
         String pass = usuarioDTO.getPassword();
         if (pass == null || pass.trim().isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La contraseña es obligatoria");
-        if (pass.length() < 6 || pass.length() > 60)
+        if (pass.length() < 8 || pass.length() > 60)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "La contraseña debe tener entre 6 y 60 caracteres");
+                    "La contraseña debe tener entre 8 y 60 caracteres");
 
         String estDerivada = derivarEstrategiaDesdeObjetivo(usuarioDTO.getObjetivo());
         String est;
@@ -124,6 +126,7 @@ public class UsuarioService {
     }
 
     public UsuarioDTO findById(Integer id) {
+        securityUtils.assertEsDuenoOAdmin(id);
         Usuario u = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
         return new UsuarioDTO(u);
@@ -132,19 +135,7 @@ public class UsuarioService {
     public void deleteById(Integer id) {
         if (!usuarioRepository.existsById(id))
             throw new RecursoNoEncontradoException("Usuario no encontrado");
-
-        // Seguridad: Verificar si quien borra es ADMIN o el propio usuario
-        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario currentUser = usuarioRepository.findByCorreoElectronico(currentEmail)
-                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario actual no encontrado"));
-
-        boolean isAdmin = (currentUser.getRole() != null) && currentUser.getRole().name().equals("ADMIN");
-        boolean isSelf = currentUser.getUsuarioId().equals(id);
-
-        if (!isAdmin && !isSelf) {
-            throw new AccessDeniedException("No tienes permiso para eliminar este usuario");
-        }
-
+        securityUtils.assertEsDuenoOAdmin(id);
         usuarioRepository.deleteById(id);
     }
 
@@ -166,6 +157,8 @@ public class UsuarioService {
         UserDetails userDetails = userDetailsService.loadUserByUsername(usuario.getCorreoElectronico());
         String jwtToken = jwtService.generateToken(userDetails);
 
+        // Revocar refresh tokens previos del usuario (sesión única por login).
+        refreshTokenService.revocarPorUsuario(usuario.getUsuarioId());
         RefreshToken refreshToken = refreshTokenService.crear(usuario.getUsuarioId());
 
         LoginResponse response = new LoginResponse();
@@ -181,6 +174,7 @@ public class UsuarioService {
     }
 
     public UsuarioDTO update(Integer id, UsuarioDTO updates) {
+        securityUtils.assertEsDuenoOAdmin(id);
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
 
@@ -216,9 +210,9 @@ public class UsuarioService {
 
         if (updates.getPassword() != null && !updates.getPassword().trim().isEmpty()) {
             String nuevaPass = updates.getPassword().trim();
-            if (nuevaPass.length() < 6 || nuevaPass.length() > 60)
+            if (nuevaPass.length() < 8 || nuevaPass.length() > 60)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "La contraseña debe tener entre 6 y 60 caracteres");
+                        "La contraseña debe tener entre 8 y 60 caracteres");
             // CAMBIO: Usar passwordEncoder
             usuario.setPassword(passwordEncoder.encode(nuevaPass));
         }

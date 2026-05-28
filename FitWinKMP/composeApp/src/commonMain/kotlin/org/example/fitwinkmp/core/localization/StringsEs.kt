@@ -234,5 +234,6 @@ val stringsEs = AppStrings(
     authActivityLevel = "NIVEL DE ACTIVIDAD",
     authObjective = "OBJETIVO",
     authTerms = "Acepto los Términos de Servicio y la Política de Privacidad",
-    authInitialize = "INICIALIZAR ENTRENAMIENTO"
+    authInitialize = "INICIALIZAR ENTRENAMIENTO",
+    sessionExpiredOtherDevice = "Tu sesión se cerró porque iniciaste sesión en otro dispositivo"
 )

@@ -7,6 +7,7 @@ import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.RutinaRepository;
 import org.example.apiusuarios.repository.SesionEntrenamientoRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,8 +23,12 @@ public class SesionEntrenamientoService {
     @Autowired private SesionEntrenamientoRepository repo;
     @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private RutinaRepository rutinaRepository;
+    @Autowired private SecurityUtils securityUtils;
 
     public SesionEntrenamientoDTO iniciar(SesionEntrenamientoDTO dto) {
+        if (dto.getUsuarioId() == null)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
+        securityUtils.assertEsDuenoOAdmin(dto.getUsuarioId());
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         SesionEntrenamiento s = new SesionEntrenamiento();
@@ -43,6 +48,7 @@ public class SesionEntrenamientoService {
     public SesionEntrenamientoDTO finalizar(Integer sesionId, SesionEntrenamientoDTO dto) {
         SesionEntrenamiento s = repo.findById(sesionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sesión no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(s.getUsuario().getUsuarioId());
         LocalDateTime fin = LocalDateTime.now();
         s.setFechaFin(fin);
         s.setDuracionMinutos((int) ChronoUnit.MINUTES.between(s.getFechaInicio(), fin));
@@ -53,18 +59,22 @@ public class SesionEntrenamientoService {
     }
 
     public List<SesionEntrenamientoDTO> findByUsuario(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return repo.findByUsuario_UsuarioIdOrderByFechaInicioDesc(usuarioId)
                 .stream().map(SesionEntrenamientoDTO::new).collect(Collectors.toList());
     }
 
     public SesionEntrenamientoDTO findById(Integer id) {
-        return new SesionEntrenamientoDTO(repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sesión no encontrada")));
+        SesionEntrenamiento s = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sesión no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(s.getUsuario().getUsuarioId());
+        return new SesionEntrenamientoDTO(s);
     }
 
     public void deleteById(Integer id) {
-        if (!repo.existsById(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Sesión no encontrada");
-        repo.deleteById(id);
+        SesionEntrenamiento s = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sesión no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(s.getUsuario().getUsuarioId());
+        repo.delete(s);
     }
 }

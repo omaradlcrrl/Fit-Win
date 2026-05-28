@@ -1,11 +1,16 @@
 package org.example.fitwinkmp.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.example.fitwinkmp.core.localization.LanguageViewModel
+import org.example.fitwinkmp.core.session.SessionEvent
+import org.example.fitwinkmp.core.session.SessionEvents
 import org.example.fitwinkmp.features.auth.presentation.AuthViewModel
 import org.example.fitwinkmp.ui.auth.LoginScreen
 import org.example.fitwinkmp.ui.auth.RegisterScreen
@@ -18,6 +23,15 @@ private const val ROUTE_MAIN = "main"
 fun AppNavigation(languageViewModel: LanguageViewModel) {
     val navController = rememberNavController()
     val authViewModel: AuthViewModel = viewModel()
+    val pendingSession by SessionEvents.pending.collectAsState()
+
+    LaunchedEffect(pendingSession) {
+        if (pendingSession is SessionEvent.Expired) {
+            navController.navigate(ROUTE_LOGIN) {
+                popUpTo(0) { inclusive = true }
+            }
+        }
+    }
 
     NavHost(navController = navController, startDestination = ROUTE_LOGIN) {
         composable(ROUTE_LOGIN) {

@@ -3,6 +3,7 @@ package org.example.apiusuarios.service;
 import org.example.apiusuarios.dto.SerieRealizadaDTO;
 import org.example.apiusuarios.model.*;
 import org.example.apiusuarios.repository.*;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.example.apiusuarios.service.RecordPersonalService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ class SerieRealizadaServiceTest {
     @Mock SesionEntrenamientoRepository sesionRepo;
     @Mock EjercicioRepository ejercicioRepository;
     @Mock RecordPersonalService recordPersonalService;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks SerieRealizadaService service;
 
@@ -188,6 +190,7 @@ class SerieRealizadaServiceTest {
 
     @Test
     void findBySesion_retornaOrdenadas() {
+        when(sesionRepo.findById(1)).thenReturn(Optional.of(sesion));
         when(repo.findBySesion_SesionIdOrderByOrdenAsc(1)).thenReturn(List.of(serie));
         assertThat(service.findBySesion(1)).hasSize(1);
     }
@@ -219,14 +222,14 @@ class SerieRealizadaServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(repo.existsById(1)).thenReturn(true);
+        when(repo.findById(1)).thenReturn(Optional.of(serie));
         service.deleteById(1);
-        verify(repo).deleteById(1);
+        verify(repo).delete(serie);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(repo.existsById(99)).thenReturn(false);
+        when(repo.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

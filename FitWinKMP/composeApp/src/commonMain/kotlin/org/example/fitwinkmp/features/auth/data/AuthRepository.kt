@@ -43,10 +43,8 @@ class AuthRepository(
     }
 
     suspend fun logout(): Result<Unit> = runCatching {
-        val usuarioId = tokenStorage.getUsuarioId() ?: return@runCatching
-        authClient.post("auth/logout") {
-            parameter("usuarioId", usuarioId)
-        }
+        if (tokenStorage.getJwt() == null) return@runCatching
+        authClient.post("auth/logout")
         tokenStorage.clear()
     }
 }

@@ -5,6 +5,7 @@ import org.example.apiusuarios.model.FotoProgreso;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.FotoProgresoRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,14 @@ public class FotoProgresoService {
 
     @Autowired private FotoProgresoRepository repo;
     @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired private SecurityUtils securityUtils;
 
     public FotoProgresoDTO save(FotoProgresoDTO dto) {
         if (dto.getUsuarioId() == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
         if (dto.getUrlFoto() == null || dto.getUrlFoto().trim().isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "urlFoto es obligatoria");
+        securityUtils.assertEsDuenoOAdmin(dto.getUsuarioId());
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         FotoProgreso f = new FotoProgreso();
@@ -34,13 +37,15 @@ public class FotoProgresoService {
     }
 
     public List<FotoProgresoDTO> findByUsuario(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return repo.findByUsuario_UsuarioIdOrderByFechaDesc(usuarioId)
                 .stream().map(FotoProgresoDTO::new).collect(Collectors.toList());
     }
 
     public void deleteById(Integer id) {
-        if (!repo.existsById(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Foto no encontrada");
-        repo.deleteById(id);
+        FotoProgreso f = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Foto no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(f.getUsuario().getUsuarioId());
+        repo.delete(f);
     }
 }

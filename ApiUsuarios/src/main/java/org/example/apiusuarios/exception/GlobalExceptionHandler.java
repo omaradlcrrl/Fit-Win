@@ -26,17 +26,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     public ResponseEntity<Object> manejarAccessDenied(org.springframework.security.access.AccessDeniedException ex) {
-        return body(HttpStatus.FORBIDDEN, "Acceso denegado: " + ex.getMessage());
+        return body(HttpStatus.FORBIDDEN, "Acceso denegado");
     }
 
     @ExceptionHandler(org.springframework.security.core.AuthenticationException.class)
     public ResponseEntity<Object> manejarAuthentication(org.springframework.security.core.AuthenticationException ex) {
-        return body(HttpStatus.UNAUTHORIZED, "No autenticado: " + ex.getMessage());
+        return body(HttpStatus.UNAUTHORIZED, "No autenticado");
     }
 
     @ExceptionHandler(CredencialesInvalidasException.class)
     public ResponseEntity<Object> manejarCredencialesInvalidas(CredencialesInvalidasException ex) {
-        return body(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return body(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
     }
 
     @ExceptionHandler(RecursoNoEncontradoException.class)
@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> manejarTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        return body(HttpStatus.NOT_FOUND, "Identificador invalido");
+        return body(HttpStatus.BAD_REQUEST, "Identificador inválido");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

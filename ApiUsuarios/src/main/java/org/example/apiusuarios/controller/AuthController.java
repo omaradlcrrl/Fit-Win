@@ -4,6 +4,7 @@ import org.example.apiusuarios.dto.login.RefreshRequest;
 import org.example.apiusuarios.dto.login.RefreshResponse;
 import org.example.apiusuarios.model.RefreshToken;
 import org.example.apiusuarios.security.JwtService;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.example.apiusuarios.service.RefreshTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ public class AuthController {
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     @PostMapping("/refresh")
     public ResponseEntity<RefreshResponse> refresh(@RequestBody RefreshRequest request) {
         RefreshToken rt = refreshTokenService.verificar(request.getRefreshToken());
@@ -43,7 +47,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestParam Integer usuarioId) {
+    public ResponseEntity<String> logout() {
+        Integer usuarioId = securityUtils.getUsuarioActualId();
         refreshTokenService.revocarPorUsuario(usuarioId);
         return new ResponseEntity<>("Sesión cerrada correctamente", HttpStatus.OK);
     }

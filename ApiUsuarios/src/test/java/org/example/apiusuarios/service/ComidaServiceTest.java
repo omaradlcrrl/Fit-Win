@@ -7,6 +7,7 @@ import org.example.apiusuarios.model.UnidadComida;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.ComidaRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,6 +30,7 @@ class ComidaServiceTest {
 
     @Mock ComidaRepository comidaRepository;
     @Mock UsuarioRepository usuarioRepository;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks ComidaService comidaService;
 
@@ -213,14 +215,14 @@ class ComidaServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(comidaRepository.existsById(1)).thenReturn(true);
+        when(comidaRepository.findById(1)).thenReturn(Optional.of(comidaBase));
         comidaService.deleteById(1);
-        verify(comidaRepository).deleteById(1);
+        verify(comidaRepository).delete(comidaBase);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(comidaRepository.existsById(99)).thenReturn(false);
+        when(comidaRepository.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> comidaService.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

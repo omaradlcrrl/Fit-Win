@@ -236,5 +236,6 @@ data class AppStrings(
     val authActivityLevel: String,
     val authObjective: String,
     val authTerms: String,
-    val authInitialize: String
+    val authInitialize: String,
+    val sessionExpiredOtherDevice: String
 )

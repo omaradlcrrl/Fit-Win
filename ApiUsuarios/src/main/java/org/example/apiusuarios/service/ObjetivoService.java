@@ -5,6 +5,7 @@ import org.example.apiusuarios.model.Objetivo;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.ObjetivoRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,11 @@ public class ObjetivoService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     public ObjetivoDTO generarAutomatico(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -149,6 +154,7 @@ public class ObjetivoService {
     }
 
     public ObjetivoDTO getObjetivoActual(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         Objetivo objetivo = objetivoRepository
@@ -158,6 +164,7 @@ public class ObjetivoService {
     }
 
     public ObjetivoDTO getObjetivoDeHoy(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -171,6 +178,7 @@ public class ObjetivoService {
     }
 
     public List<ObjetivoDTO> findAllByUsuario(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         return objetivoRepository.findByUsuarioOrderByFechaInicioDesc(usuario).stream()
@@ -179,6 +187,7 @@ public class ObjetivoService {
     }
 
     public List<ObjetivoDTO> getByUsuarioAndFechaBetween(Integer usuarioId, LocalDate from, LocalDate to) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         return objetivoRepository.findByUsuarioAndFechaInicioBetween(usuario, from, to).stream()
@@ -189,13 +198,14 @@ public class ObjetivoService {
     public ObjetivoDTO findById(Integer id) {
         Objetivo o = objetivoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Objetivo no encontrado"));
+        securityUtils.assertEsDuenoOAdmin(o.getUsuario().getUsuarioId());
         return new ObjetivoDTO(o);
     }
 
     public void deleteById(Integer id) {
-        if (!objetivoRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Objetivo no encontrado");
-        }
-        objetivoRepository.deleteById(id);
+        Objetivo o = objetivoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Objetivo no encontrado"));
+        securityUtils.assertEsDuenoOAdmin(o.getUsuario().getUsuarioId());
+        objetivoRepository.delete(o);
     }
 }

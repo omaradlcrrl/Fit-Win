@@ -156,54 +156,106 @@ Se queda en el repo como referencia del punto de partida. La gracia está en com
 
 ---
 
-## 🚀 Cómo Probarlo
+## 🚀 Cómo Probarlo (Guía para Ejecución Externa)
 
-### Opción 1: Docker Compose (recomendado)
+Esta sección detalla cómo poner en marcha todo el ecosistema (Base de Datos, API Backend y Aplicación Móvil) desde cero.
 
-Solo necesitas [Docker](https://docs.docker.com/get-docker/) instalado.
+### Opción 1: Despliegue Rápido con Docker Compose (Recomendado)
 
-```bash
-docker-compose up -d --build
-```
+Esta opción levanta automáticamente la base de datos MariaDB, compila y despliega el backend, y ejecuta el script seeder que precarga datos reales de prueba. Solo necesitas tener instalado [Docker Desktop](https://www.docker.com/products/docker-desktop/).
 
-Esto levanta tres servicios en orden:
-1. **MariaDB** — base de datos limpia
-2. **API Spring Boot** — compila y arranca (~60s la primera vez)
-3. **Seeder** — crea automáticamente un usuario de prueba con datos completos y se para
-
-Cuando el seeder termina, la API está en `http://localhost:3036/api/v1/FWBBD/` con estos datos listos:
-
-> **Email:** `prueba@fitwin.com` · **Password:** `fitwin123`
->
-> Incluye: 20 ejercicios globales, rutina PPL, 2 sesiones de entrenamiento con records automáticos, comidas del día, medición corporal y objetivo calórico calculado.
-
-Para ver los logs del proceso de seed:
-```bash
-docker logs fitwin-seeder
-```
-
----
-
-### Opción 2: App Android (APK precompilada)
-
-1. Descarga `FitWin-debug.apk` desde [Google Drive](https://drive.google.com/file/d/1P4V2i3sp2HEdp0LFTBK7-iCz5zR2x0El/view?usp=drive_link)
-2. Instala la APK en un dispositivo Android o emulador
-3. Levanta el backend con Docker Compose (Opción 1)
-4. Inicia sesión con `prueba@fitwin.com` / `fitwin123`
-
-> La app conecta a `10.0.2.2:3036` por defecto — dirección del host desde el emulador Android. En dispositivo físico necesita la IP local del host en la red.
-
----
-
-### Opción 3: Manual (sin Docker)
-
-1. Tener MariaDB instalado con una base de datos llamada `fit_win`.
-2. Arrancar la API:
+1. **Clonar e iniciar contenedores**:
    ```bash
-   cd ApiUsuarios
-   ./mvnw spring-boot:run
+   docker-compose up -d --build
    ```
-3. Abrir `FitWinKMP` en Android Studio y ejecutar en emulador.
+
+2. **¿Qué ocurre por debajo?**
+   - **MariaDB** (`fitwin-db`): Arranca con el volumen persistente de base de datos.
+   - **API Spring Boot** (`fitwin-api`): Compila el código, descarga dependencias, gestiona las migraciones JPA y expone el puerto `3036` en `http://localhost:3036/api/v1/FWBBD/`.
+   - **Seeder** (`fitwin-seeder`): Espera a que la API esté lista (healthcheck activo) e inyecta un set completo de datos iniciales.
+
+3. **Datos de prueba listos para iniciar sesión**:
+   Una vez que el contenedor `fitwin-seeder` se apague correctamente (puedes verificarlo con `docker ps -a`), tendrás este usuario disponible:
+   > **Usuario:** `prueba@fitwin.com`
+   > **Contraseña:** `fitwin123`
+   >
+   > *Datos precargados:* 20 ejercicios en catálogo global, rutina preestablecida PPL, histórico de 2 sesiones de entrenamiento completas con records personales autodetectados, mediciones físicas iniciales, objetivos calóricos y comidas registradas del día de hoy.
+
+4. **Verificar estado de carga**:
+   ```bash
+   docker logs fitwin-seeder
+   ```
+
+---
+
+### Opción 2: Compilar y Ejecutar la Aplicación Móvil (KMP)
+
+El frontend es un desarrollo de **Kotlin Multiplatform**. Puedes compilar e instalar la aplicación móvil directamente desde el código fuente para probarla en tu propio dispositivo o emulador.
+
+#### Requisitos Previos:
+- Java JDK 17 o superior.
+- [Android Studio Koala](https://developer.android.com/studio) o superior con Android SDK configurado.
+
+#### Pasos para Compilar la APK desde la terminal:
+1. Navega al directorio del cliente móvil:
+   ```bash
+   cd FitWinKMP
+   ```
+2. Ejecuta el empaquetado de Gradle para generar la APK de depuración:
+   - **En Windows (CMD / PowerShell)**:
+     ```powershell
+     .\gradlew.bat assembleDebug
+     ```
+   - **En macOS / Linux**:
+     ```bash
+     ./gradlew assembleDebug
+     ```
+3. **Localizar e Instalar la APK**:
+   Una vez completada con éxito la compilación, el archivo APK generado se encontrará en la ruta:
+   `FitWinKMP/composeApp/build/outputs/apk/debug/composeApp-debug.apk`
+   Puedes arrastrar esta APK a un emulador Android abierto o instalarla en un terminal físico mediante `adb install composeApp-debug.apk`.
+
+> 💡 **Nota de Conectividad**:
+> - Si ejecutas la app en un **emulador Android**, conectará al host automáticamente mediante la dirección IP puente `10.0.2.2:3036`.
+> - Si la ejecutas en un **dispositivo móvil real**, asegúrate de que el terminal móvil y tu ordenador estén en la misma red local (Wi-Fi), y configura la IP local de tu máquina en el archivo de configuración `ApiClient.kt` de la app móvil.
+
+---
+
+### Opción 3: Ejecución Manual y Local (Sin Docker)
+
+Si prefieres ejecutar los servicios de manera nativa sin el aislamiento de Docker, sigue estos pasos:
+
+#### 1. Preparar la Base de Datos
+- Levanta una instancia local de **MariaDB** o MySQL.
+- Crea un esquema de base de datos vacío llamado `fit_win`:
+  ```sql
+  CREATE DATABASE fit_win CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+  ```
+
+#### 2. Configurar y Arrancar el Backend (API)
+Debido a las directivas de seguridad robustas de la API, **es obligatorio** pasar la clave secreta JWT como variable de entorno, ya que no se permiten fallbacks por defecto en producción:
+
+- **En Windows (PowerShell)**:
+  ```powershell
+  $env:JWT_SECRET="una_clave_secreta_super_larga_y_segura_de_al_menos_32_bytes_12345"
+  $env:DB_PASSWORD="tu_password_de_mariadb" # Opcional si no es 'root'
+  cd ApiUsuarios
+  .\mvnw.cmd spring-boot:run
+  ```
+- **En macOS / Linux**:
+  ```bash
+  export JWT_SECRET="una_clave_secreta_super_larga_y_segura_de_al_menos_32_bytes_12345"
+  export DB_PASSWORD="tu_password_de_mariadb" # Opcional si no es 'root'
+  cd ApiUsuarios
+  ./mvnw spring-boot:run
+  ```
+
+El servidor web de Spring Boot se iniciará en el puerto `3036`. Las tablas se auto-generarán gracias a Hibernate DDL en la primera ejecución.
+
+#### 3. Ejecutar el Frontend
+- Abre la carpeta raíz `FitWinKMP` utilizando **Android Studio**.
+- Espera a que finalice la sincronización del proyecto con Gradle.
+- Selecciona el dispositivo/emulador objetivo en la barra de herramientas superior y pulsa el botón **Run** (ícono de play).
 
 ---
 

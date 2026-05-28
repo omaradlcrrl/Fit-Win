@@ -5,6 +5,7 @@ import org.example.apiusuarios.model.Rutina;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.RutinaRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,15 @@ public class RutinaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     public RutinaDTO save(RutinaDTO dto) {
         if (dto.getUsuarioId() == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
         if (dto.getNombre() == null || dto.getNombre().trim().isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El nombre de la rutina es obligatorio");
+        securityUtils.assertEsDuenoOAdmin(dto.getUsuarioId());
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
         Rutina r = new Rutina();
@@ -39,22 +44,27 @@ public class RutinaService {
     }
 
     public List<RutinaDTO> findByUsuario(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return rutinaRepository.findByUsuario_UsuarioId(usuarioId)
                 .stream().map(RutinaDTO::new).collect(Collectors.toList());
     }
 
     public List<RutinaDTO> findAll() {
+        securityUtils.assertEsDuenoOAdmin(-1);
         return rutinaRepository.findAll().stream().map(RutinaDTO::new).collect(Collectors.toList());
     }
 
     public RutinaDTO findById(Integer id) {
-        return new RutinaDTO(rutinaRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada")));
+        Rutina r = rutinaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(r.getUsuario().getUsuarioId());
+        return new RutinaDTO(r);
     }
 
     public RutinaDTO update(Integer id, RutinaDTO dto) {
         Rutina r = rutinaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(r.getUsuario().getUsuarioId());
         if (dto.getNombre() != null) r.setNombre(dto.getNombre());
         if (dto.getEtiqueta() != null) r.setEtiqueta(dto.getEtiqueta());
         if (dto.getDiasActivos() != null) r.setDiasActivos(dto.getDiasActivos());
@@ -71,6 +81,7 @@ public class RutinaService {
     @Transactional
     public void deleteById(Integer id) {
         Rutina rutina = rutinaRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(rutina.getUsuario().getUsuarioId());
         
         // Desvincular las sesiones de entrenamiento para no perder el historial al borrar la rutina
         List<org.example.apiusuarios.model.SesionEntrenamiento> sesiones = sesionRepository.findByRutina_RutinaId(id);

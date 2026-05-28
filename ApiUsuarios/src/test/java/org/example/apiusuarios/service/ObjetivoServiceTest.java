@@ -5,6 +5,7 @@ import org.example.apiusuarios.model.Objetivo;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.ObjetivoRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,7 @@ class ObjetivoServiceTest {
 
     @Mock ObjetivoRepository objetivoRepository;
     @Mock UsuarioRepository usuarioRepository;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks ObjetivoService objetivoService;
 
@@ -256,14 +258,15 @@ class ObjetivoServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(objetivoRepository.existsById(1)).thenReturn(true);
+        Objetivo obj = buildObjetivoMock(usuario);
+        when(objetivoRepository.findById(1)).thenReturn(Optional.of(obj));
         objetivoService.deleteById(1);
-        verify(objetivoRepository).deleteById(1);
+        verify(objetivoRepository).delete(obj);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(objetivoRepository.existsById(99)).thenReturn(false);
+        when(objetivoRepository.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> objetivoService.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

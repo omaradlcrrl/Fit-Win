@@ -7,6 +7,7 @@ import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.RutinaRepository;
 import org.example.apiusuarios.repository.SesionEntrenamientoRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ class SesionEntrenamientoServiceTest {
     @Mock SesionEntrenamientoRepository repo;
     @Mock UsuarioRepository usuarioRepository;
     @Mock RutinaRepository rutinaRepository;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks SesionEntrenamientoService sesionService;
 
@@ -158,6 +160,7 @@ class SesionEntrenamientoServiceTest {
     void finalizar_asignaFechaFin() {
         SesionEntrenamiento sesion = new SesionEntrenamiento();
         sesion.setSesionId(1);
+        sesion.setUsuario(usuario);
         sesion.setFechaInicio(LocalDateTime.now().minusMinutes(10));
 
         when(repo.findById(1)).thenReturn(Optional.of(sesion));
@@ -181,6 +184,7 @@ class SesionEntrenamientoServiceTest {
     void finalizar_actualizaNivelIntensidad() {
         SesionEntrenamiento sesion = new SesionEntrenamiento();
         sesion.setSesionId(1);
+        sesion.setUsuario(usuario);
         sesion.setFechaInicio(LocalDateTime.now().minusMinutes(30));
 
         when(repo.findById(1)).thenReturn(Optional.of(sesion));
@@ -221,14 +225,17 @@ class SesionEntrenamientoServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(repo.existsById(1)).thenReturn(true);
+        SesionEntrenamiento sesion = new SesionEntrenamiento();
+        sesion.setSesionId(1);
+        sesion.setUsuario(usuario);
+        when(repo.findById(1)).thenReturn(Optional.of(sesion));
         sesionService.deleteById(1);
-        verify(repo).deleteById(1);
+        verify(repo).delete(sesion);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(repo.existsById(99)).thenReturn(false);
+        when(repo.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> sesionService.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

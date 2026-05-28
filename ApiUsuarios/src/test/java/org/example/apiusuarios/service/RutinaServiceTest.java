@@ -4,7 +4,10 @@ import org.example.apiusuarios.dto.RutinaDTO;
 import org.example.apiusuarios.model.Rutina;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.RutinaRepository;
+import org.example.apiusuarios.repository.SerieRealizadaRepository;
+import org.example.apiusuarios.repository.SesionEntrenamientoRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +28,9 @@ class RutinaServiceTest {
 
     @Mock RutinaRepository rutinaRepository;
     @Mock UsuarioRepository usuarioRepository;
+    @Mock SesionEntrenamientoRepository sesionRepository;
+    @Mock SerieRealizadaRepository serieRealizadaRepository;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks RutinaService service;
 
@@ -131,14 +137,15 @@ class RutinaServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(rutinaRepository.existsById(1)).thenReturn(true);
+        when(rutinaRepository.findById(1)).thenReturn(Optional.of(rutina));
+        when(sesionRepository.findByRutina_RutinaId(1)).thenReturn(List.of());
         service.deleteById(1);
         verify(rutinaRepository).deleteById(1);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(rutinaRepository.existsById(99)).thenReturn(false);
+        when(rutinaRepository.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

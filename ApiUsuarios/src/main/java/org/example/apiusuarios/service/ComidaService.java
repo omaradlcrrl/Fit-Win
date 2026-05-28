@@ -5,6 +5,7 @@ import org.example.apiusuarios.model.Comida;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.ComidaRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,15 @@ public class ComidaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     public ComidaDTO save(ComidaDTO comidaDTO) {
         if (comidaDTO == null || comidaDTO.getUsuarioId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "El usuario es obligatorio");
         }
+
+        securityUtils.assertEsDuenoOAdmin(comidaDTO.getUsuarioId());
 
         Usuario usuario = usuarioRepository.findById(comidaDTO.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
@@ -40,6 +46,7 @@ public class ComidaService {
         if (usuarioId == null || nombre == null || nombre.trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId y nombre son obligatorios");
         }
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
 
         LocalDate hoy = LocalDate.now();
         List<Comida> comidas = comidaRepository.findByUsuario_UsuarioIdAndFecha(usuarioId, hoy);
@@ -59,6 +66,8 @@ public class ComidaService {
     }
 
     public List<ComidaDTO> findAll() {
+        // Solo admin puede listar todas las comidas.
+        securityUtils.assertEsDuenoOAdmin(-1);
         return comidaRepository.findAll().stream()
                 .map(ComidaDTO::new)
                 .collect(java.util.stream.Collectors.toList());
@@ -67,6 +76,7 @@ public class ComidaService {
     public ComidaDTO findById(Integer id) {
         Comida comida = comidaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comida no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(comida.getUsuario().getUsuarioId());
         return new ComidaDTO(comida);
     }
 
@@ -74,6 +84,7 @@ public class ComidaService {
         if (usuarioId == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
         }
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         LocalDate hoy = LocalDate.now();
         List<Comida> comidas = comidaRepository.findByUsuario_UsuarioIdAndFecha(usuarioId, hoy);
         return comidas.stream()
@@ -82,33 +93,37 @@ public class ComidaService {
     }
 
     public List<ComidaDTO> findByUsuario(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return comidaRepository.findByUsuario_UsuarioIdOrderByFechaDesc(usuarioId)
                 .stream().map(ComidaDTO::new)
                 .collect(java.util.stream.Collectors.toList());
     }
 
     public List<ComidaDTO> findByUsuarioAndFecha(Integer usuarioId, LocalDate fecha) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return comidaRepository.findByUsuario_UsuarioIdAndFecha(usuarioId, fecha)
                 .stream().map(ComidaDTO::new)
                 .collect(java.util.stream.Collectors.toList());
     }
 
     public List<ComidaDTO> findByUsuarioAndRango(Integer usuarioId, LocalDate from, LocalDate to) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return comidaRepository.findByUsuario_UsuarioIdAndFechaBetweenOrderByFechaAsc(usuarioId, from, to)
                 .stream().map(ComidaDTO::new)
                 .collect(java.util.stream.Collectors.toList());
     }
 
     public void deleteById(Integer id) {
-        if (!comidaRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comida no encontrada");
-        }
-        comidaRepository.deleteById(id);
+        Comida comida = comidaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comida no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(comida.getUsuario().getUsuarioId());
+        comidaRepository.delete(comida);
     }
 
     public ComidaDTO update(Integer id, ComidaDTO dto) {
         Comida entidad = comidaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Comida no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(entidad.getUsuario().getUsuarioId());
 
         if (dto.getNombre() != null)
             entidad.setNombre(dto.getNombre());
@@ -129,7 +144,11 @@ public class ComidaService {
         if (dto.getUnidad() != null)
             entidad.setUnidad(dto.getUnidad());
 
-        if (dto.getUsuarioId() != null) {
+        // Reasignación de dueño solo por admin.
+        if (dto.getUsuarioId() != null && !dto.getUsuarioId().equals(entidad.getUsuario().getUsuarioId())) {
+            if (!securityUtils.esAdmin()) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No puedes reasignar el dueño");
+            }
             Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
             entidad.setUsuario(usuario);

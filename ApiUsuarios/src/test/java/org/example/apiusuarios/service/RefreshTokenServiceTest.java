@@ -93,7 +93,7 @@ class RefreshTokenServiceTest {
         token.setRevocado(false);
         token.setFechaExpiracion(Instant.now().plusSeconds(3600));
 
-        when(repo.findByToken("valid-token")).thenReturn(Optional.of(token));
+        when(repo.findByToken(anyString())).thenReturn(Optional.of(token));
 
         RefreshToken result = refreshTokenService.verificar("valid-token");
         assertThat(result.getToken()).isEqualTo("valid-token");
@@ -101,7 +101,7 @@ class RefreshTokenServiceTest {
 
     @Test
     void verificar_tokenNoExiste_throws401() {
-        when(repo.findByToken("inexistente")).thenReturn(Optional.empty());
+        when(repo.findByToken(anyString())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> refreshTokenService.verificar("inexistente"))
                 .isInstanceOf(ResponseStatusException.class)
@@ -115,7 +115,7 @@ class RefreshTokenServiceTest {
         token.setRevocado(true);
         token.setFechaExpiracion(Instant.now().plusSeconds(3600));
 
-        when(repo.findByToken("revoked-token")).thenReturn(Optional.of(token));
+        when(repo.findByToken(anyString())).thenReturn(Optional.of(token));
 
         assertThatThrownBy(() -> refreshTokenService.verificar("revoked-token"))
                 .isInstanceOf(ResponseStatusException.class)
@@ -131,7 +131,7 @@ class RefreshTokenServiceTest {
         token.setRevocado(false);
         token.setFechaExpiracion(Instant.now().minusSeconds(1)); // ya expiró
 
-        when(repo.findByToken("expired-token")).thenReturn(Optional.of(token));
+        when(repo.findByToken(anyString())).thenReturn(Optional.of(token));
 
         assertThatThrownBy(() -> refreshTokenService.verificar("expired-token"))
                 .isInstanceOf(ResponseStatusException.class)
@@ -147,7 +147,7 @@ class RefreshTokenServiceTest {
         token.setRevocado(false);
         token.setFechaExpiracion(Instant.now().plusSeconds(1));
 
-        when(repo.findByToken("barely-valid")).thenReturn(Optional.of(token));
+        when(repo.findByToken(anyString())).thenReturn(Optional.of(token));
 
         assertThatCode(() -> refreshTokenService.verificar("barely-valid"))
                 .doesNotThrowAnyException();

@@ -8,6 +8,7 @@ import org.example.apiusuarios.repository.EjercicioGlobalRepository;
 import org.example.apiusuarios.repository.RecordPersonalRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
 import org.example.apiusuarios.exception.RecursoNoEncontradoException;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,13 @@ public class RecordPersonalService {
     @Autowired
     private EjercicioGlobalRepository ejercicioGlobalRepository;
 
+    @Autowired
+    private SecurityUtils securityUtils;
+
     public RecordPersonalDTO save(RecordPersonalDTO dto) {
         if (dto.getUsuarioId() == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
+        securityUtils.assertEsDuenoOAdmin(dto.getUsuarioId());
         if (dto.getEjercicioGlobalId() == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ejercicioGlobalId es obligatorio");
         if (dto.getPesoKg() == null && dto.getRepeticiones() == null)
@@ -50,16 +55,19 @@ public class RecordPersonalService {
     }
 
     public List<RecordPersonalDTO> findByUsuario(Integer usuarioId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return repo.findByUsuario_UsuarioIdOrderByFechaDesc(usuarioId)
                 .stream().map(RecordPersonalDTO::new).collect(Collectors.toList());
     }
 
     public List<RecordPersonalDTO> findByUsuarioAndEjercicio(Integer usuarioId, Integer ejercicioGlobalId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(usuarioId, ejercicioGlobalId)
                 .stream().map(RecordPersonalDTO::new).collect(Collectors.toList());
     }
 
     public RecordPersonalDTO findMaxByUsuarioAndEjercicio(Integer usuarioId, Integer ejercicioGlobalId) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return repo.findByUsuario_UsuarioIdAndEjercicioGlobal_EjercicioGlobalId(usuarioId, ejercicioGlobalId)
                 .stream()
                 .max(java.util.Comparator.comparingDouble(r -> r.getPesoKg() != null ? r.getPesoKg() : 0))
@@ -86,13 +94,16 @@ public class RecordPersonalService {
     }
 
     public RecordPersonalDTO findById(Integer id) {
-        return new RecordPersonalDTO(repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Record no encontrado")));
+        RecordPersonal r = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Record no encontrado"));
+        securityUtils.assertEsDuenoOAdmin(r.getUsuario().getUsuarioId());
+        return new RecordPersonalDTO(r);
     }
 
     public void deleteById(Integer id) {
-        if (!repo.existsById(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Record no encontrado");
-        repo.deleteById(id);
+        RecordPersonal r = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Record no encontrado"));
+        securityUtils.assertEsDuenoOAdmin(r.getUsuario().getUsuarioId());
+        repo.delete(r);
     }
 }

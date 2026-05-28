@@ -5,6 +5,7 @@ import org.example.apiusuarios.model.FotoProgreso;
 import org.example.apiusuarios.model.Usuario;
 import org.example.apiusuarios.repository.FotoProgresoRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +27,7 @@ class FotoProgresoServiceTest {
 
     @Mock FotoProgresoRepository repo;
     @Mock UsuarioRepository usuarioRepository;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks FotoProgresoService service;
 
@@ -117,14 +119,14 @@ class FotoProgresoServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(repo.existsById(1)).thenReturn(true);
+        when(repo.findById(1)).thenReturn(Optional.of(foto));
         service.deleteById(1);
-        verify(repo).deleteById(1);
+        verify(repo).delete(foto);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(repo.existsById(99)).thenReturn(false);
+        when(repo.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

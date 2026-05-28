@@ -3,6 +3,7 @@ package org.example.apiusuarios.service;
 import org.example.apiusuarios.dto.EjercicioDTO;
 import org.example.apiusuarios.model.*;
 import org.example.apiusuarios.repository.*;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,7 @@ class EjercicioServiceTest {
     @Mock UsuarioRepository usuarioRepository;
     @Mock RutinaRepository rutinaRepository;
     @Mock EjercicioGlobalRepository ejercicioGlobalRepository;
+    @Mock SecurityUtils securityUtils;
 
     @InjectMocks EjercicioService service;
 
@@ -41,6 +43,7 @@ class EjercicioServiceTest {
         rutina = new Rutina();
         rutina.setRutinaId(1);
         rutina.setNombre("Full Body");
+        rutina.setUsuario(usuario);
 
         global = new EjercicioGlobal();
         global.setEjercicioGlobalId(1);
@@ -123,6 +126,7 @@ class EjercicioServiceTest {
 
     @Test
     void findByRutina_retornaEjercicios() {
+        when(rutinaRepository.findById(1)).thenReturn(Optional.of(rutina));
         when(ejercicioRepository.findByRutina_RutinaId(1)).thenReturn(List.of(ejercicio));
         assertThat(service.findByRutina(1)).hasSize(1);
     }
@@ -162,14 +166,14 @@ class EjercicioServiceTest {
 
     @Test
     void deleteById_existe_elimina() {
-        when(ejercicioRepository.existsById(1)).thenReturn(true);
+        when(ejercicioRepository.findById(1)).thenReturn(Optional.of(ejercicio));
         service.deleteById(1);
-        verify(ejercicioRepository).deleteById(1);
+        verify(ejercicioRepository).delete(ejercicio);
     }
 
     @Test
     void deleteById_noExiste_throws404() {
-        when(ejercicioRepository.existsById(99)).thenReturn(false);
+        when(ejercicioRepository.findById(99)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.deleteById(99))
                 .isInstanceOf(ResponseStatusException.class);
     }

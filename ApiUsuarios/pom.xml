@@ -83,6 +83,13 @@
             <version>8.9.0</version>
         </dependency>
 
+        <!-- Caffeine: cache con expiración para los buckets del RateLimitFilter -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.1.8</version>
+        </dependency>
+
     </dependencies>
 
     <build>

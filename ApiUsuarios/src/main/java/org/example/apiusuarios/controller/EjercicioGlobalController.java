@@ -6,6 +6,7 @@ import org.example.apiusuarios.service.EjercicioGlobalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class EjercicioGlobalController {
     private EjercicioGlobalService ejercicioGlobalService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EjercicioGlobalDTO> save(@RequestBody EjercicioGlobalDTO ejercicioGlobalDTO) {
         return new ResponseEntity<>(ejercicioGlobalService.save(ejercicioGlobalDTO), HttpStatus.CREATED);
     }
@@ -36,11 +38,13 @@ public class EjercicioGlobalController {
     }
 
     @PutMapping("/actualizar/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EjercicioGlobalDTO> update(@PathVariable Integer id, @RequestBody EjercicioGlobalDTO ejercicioGlobalDTO) {
         return new ResponseEntity<>(ejercicioGlobalService.update(id, ejercicioGlobalDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
         ejercicioGlobalService.deleteById(id);
         return new ResponseEntity<>("Ejercicio global con ID " + id + " eliminado exitosamente", HttpStatus.OK);

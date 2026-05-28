@@ -9,6 +9,7 @@ import org.example.apiusuarios.repository.EjercicioGlobalRepository;
 import org.example.apiusuarios.repository.EjercicioRepository;
 import org.example.apiusuarios.repository.RutinaRepository;
 import org.example.apiusuarios.repository.UsuarioRepository;
+import org.example.apiusuarios.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,13 @@ public class EjercicioService {
     @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private RutinaRepository rutinaRepository;
     @Autowired private EjercicioGlobalRepository ejercicioGlobalRepository;
+    @Autowired private SecurityUtils securityUtils;
 
     public EjercicioDTO save(EjercicioDTO dto) {
         if (dto.getUsuarioId() == null)
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "usuarioId es obligatorio");
-            
+        securityUtils.assertEsDuenoOAdmin(dto.getUsuarioId());
+
         Usuario usuario = usuarioRepository.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuario no encontrado"));
 
@@ -59,27 +62,35 @@ public class EjercicioService {
     }
 
     public List<EjercicioDTO> findByUsuarioAndDia(Integer usuarioId, String diaSemana) {
+        securityUtils.assertEsDuenoOAdmin(usuarioId);
         return ejercicioRepository.findByUsuario_UsuarioIdAndDiaSemanaOrderByPosicionAsc(usuarioId, diaSemana)
                 .stream().map(EjercicioDTO::new).collect(Collectors.toList());
     }
 
     public List<EjercicioDTO> findByRutina(Integer rutinaId) {
+        Rutina rutina = rutinaRepository.findById(rutinaId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rutina no encontrada"));
+        securityUtils.assertEsDuenoOAdmin(rutina.getUsuario().getUsuarioId());
         return ejercicioRepository.findByRutina_RutinaId(rutinaId)
                 .stream().map(EjercicioDTO::new).collect(Collectors.toList());
     }
 
     public List<EjercicioDTO> findAll() {
+        securityUtils.assertEsDuenoOAdmin(-1);
         return ejercicioRepository.findAll().stream().map(EjercicioDTO::new).collect(Collectors.toList());
     }
 
     public EjercicioDTO findById(Integer id) {
-        return new EjercicioDTO(ejercicioRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejercicio no encontrado")));
+        Ejercicio e = ejercicioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejercicio no encontrado"));
+        securityUtils.assertEsDuenoOAdmin(e.getUsuario().getUsuarioId());
+        return new EjercicioDTO(e);
     }
 
     public EjercicioDTO update(Integer id, EjercicioDTO dto) {
         Ejercicio e = ejercicioRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejercicio no encontrado"));
+        securityUtils.assertEsDuenoOAdmin(e.getUsuario().getUsuarioId());
         if (dto.getDiaSemana() != null) e.setDiaSemana(dto.getDiaSemana());
         if (dto.getSeries() != null) e.setSeries(dto.getSeries());
         if (dto.getRepeticionesMin() != null) e.setRepeticionesMin(dto.getRepeticionesMin());
@@ -91,8 +102,9 @@ public class EjercicioService {
     }
 
     public void deleteById(Integer id) {
-        if (!ejercicioRepository.existsById(id))
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejercicio no encontrado");
-        ejercicioRepository.deleteById(id);
+        Ejercicio e = ejercicioRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Ejercicio no encontrado"));
+        securityUtils.assertEsDuenoOAdmin(e.getUsuario().getUsuarioId());
+        ejercicioRepository.delete(e);
     }
 }
